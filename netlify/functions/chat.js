@@ -46,7 +46,10 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." }) };
     }
     if (!res.ok) {
-      return { statusCode: 200, headers, body: JSON.stringify({ answer: "No pude responder ahora. Intenta más tarde." }) };
+      // Diagnóstico temporal: muestra el código y el motivo que devuelve Google.
+      let detalle = "";
+      try { detalle = (await res.json()).error?.message || ""; } catch (e) {}
+      return { statusCode: 200, headers, body: JSON.stringify({ answer: `Error ${res.status} de Google: ${detalle.slice(0, 200)}` }) };
     }
     const data = await res.json();
     const answer = data.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "No encontré una respuesta.";
