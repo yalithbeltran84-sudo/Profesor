@@ -9,15 +9,16 @@ const CONTENIDO = `
 `; // Aquí agregarás tus propios artículos.
 
 const INSTRUCCIONES = `Eres el asistente de Profesor, una plataforma de Contaduría Pública en Colombia.
-Respondes preguntas sobre contabilidad, impuestos, finanzas, auditoría y normatividad contable y tributaria.
-Escribe en español, con lenguaje sencillo, en máximo 180 palabras y en texto plano, sin asteriscos ni símbolos de formato.
+Respondes preguntas sobre contabilidad financiera, contabilidad pública (sector gobierno), impuestos, finanzas, auditoría, control interno y normatividad contable y tributaria colombiana.
+Escribe en español, con lenguaje sencillo, en máximo 220 palabras y en texto plano, sin asteriscos ni símbolos de formato.
 
 Cómo responder:
-1. Si el contenido de Profesor (abajo) cubre la pregunta, úsalo primero y menciona el artículo o la herramienta de donde sale.
-2. Si no está en el contenido de Profesor, responde con tu conocimiento general de contabilidad y deja claro que es información general, no del material de Profesor.
-3. No inventes cifras, tarifas, porcentajes, plazos ni números de artículos. Si dependen del año o pueden haber cambiado (UVT, tarifas, fechas, topes), explica el concepto y recomienda confirmar el valor vigente en la DIAN o en la norma.
-4. Si la pregunta no es sobre contabilidad, impuestos, finanzas o temas afines, indica amablemente que solo ayudas con esos temas.
-5. Recuerda que no reemplazas la asesoría de un contador público.
+1. Si el contenido de Profesor (abajo) cubre la pregunta, úsalo primero y menciona de qué artículo sale.
+2. Si no, responde con fuentes confiables y nómbralas dentro de la respuesta. Prefiere en este orden: normas y entidades oficiales (DIAN, Contaduría General de la Nación, Consejo Técnico de la Contaduría Pública, Estatuto Tributario, Decreto 2420 de 2015, Ley 1314 de 2009, y para contabilidad pública el Régimen de Contabilidad Pública y su marco normativo para entidades de gobierno), luego portales contables reconocidos (por ejemplo Siigo o Actualícese) y libros o artículos académicos.
+3. Nunca inventes fuentes, autores, libros, enlaces, números de artículos, resoluciones, cifras, tarifas ni fechas. Cita una fuente solo si estás seguro de que existe. Si no estás seguro, di que es información general y recomienda verificar en dian.gov.co o contaduria.gov.co.
+4. Para valores que cambian cada año (UVT, tarifas, plazos, topes) explica el concepto y pide confirmar el dato vigente en la fuente oficial.
+5. Si la pregunta no es de contabilidad, impuestos, finanzas, auditoría o temas afines, indica amablemente que solo ayudas con esos temas.
+6. Termina recordando, en una frase corta, que no reemplazas la asesoría de un contador público.
 
 CONTENIDO DE PROFESOR:
 ${CONTENIDO}`;
@@ -37,16 +38,20 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: "Falta configurar la clave de la IA." }) };
   }
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+  const useSearch = process.env.GEMINI_SEARCH === "on"; // activa búsqueda con fuentes reales
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const call = (withSearch) => {
+    const body = {
+      systemInstruction: { parts: [{ text: INSTRUCCIONES }] },
+      contents: [{ role: "user", parts: [{ text: question }] }],
+      generationConfig: { maxOutputTokens: 900, temperature: 0.2 }
+    };
+    if (withSearch) body.tools = [{ google_search: {} }];
+    return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": key }, body: JSON.stringify(body) });
+  };
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: INSTRUCCIONES }] },
-        contents: [{ role: "user", parts: [{ text: question }] }],
-        generationConfig: { maxOutputTokens: 700, temperature: 0.3 }
-      })
-    });
+    let res = await call(useSearch);
+    if (useSearch && !res.ok) res = await call(false); // si la búsqueda no está disponible, responde sin ella
     if (res.status === 429) {
       return { statusCode: 200, headers, body: JSON.stringify({ answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." }) };
     }
@@ -57,8 +62,13 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ answer: "No pude responder ahora. Intenta de nuevo en un momento." }) };
     }
     const data = await res.json();
-    const answer = data.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "No encontré una respuesta.";
-    return { statusCode: 200, headers, body: JSON.stringify({ answer }) };
+    const cand = data.candidates?.[0];
+    const answer = cand?.content?.parts?.map(p => p.text).join("") || "No encontré una respuesta.";
+    const vistos = new Set();
+    const sources = (cand?.groundingMetadata?.groundingChunks || [])
+      .map(c => c.web).filter(w => w && w.uri && !vistos.has(w.uri) && vistos.add(w.uri))
+      .slice(0, 5).map(w => ({ title: w.title || "Fuente", uri: w.uri }));
+    return { statusCode: 200, headers, body: JSON.stringify({ answer, sources }) };
   } catch (e) {
     return { statusCode: 200, headers, body: JSON.stringify({ answer: "Error de conexión. Intenta de nuevo." }) };
   }
