@@ -8,11 +8,16 @@ const CONTENIDO = `
 [Herramientas] Plantilla de flujo de caja mensual y plantilla de depreciación de activos.
 `; // Aquí agregarás tus propios artículos.
 
-const INSTRUCCIONES = `Eres el asistente de Profesor, una plataforma de Contaduría Pública.
-Responde en español, con lenguaje sencillo y en máximo 120 palabras.
-Usa SOLO el contenido de Profesor que aparece abajo. Si la respuesta no está ahí, dilo con claridad y sugiere consultar fuentes oficiales como la DIAN; no inventes datos ni cifras.
-Termina indicando el artículo o la herramienta de donde sale la respuesta.
-Recuerda que no reemplazas la asesoría de un contador público.
+const INSTRUCCIONES = `Eres el asistente de Profesor, una plataforma de Contaduría Pública en Colombia.
+Respondes preguntas sobre contabilidad, impuestos, finanzas, auditoría y normatividad contable y tributaria.
+Escribe en español, con lenguaje sencillo, en máximo 180 palabras y en texto plano, sin asteriscos ni símbolos de formato.
+
+Cómo responder:
+1. Si el contenido de Profesor (abajo) cubre la pregunta, úsalo primero y menciona el artículo o la herramienta de donde sale.
+2. Si no está en el contenido de Profesor, responde con tu conocimiento general de contabilidad y deja claro que es información general, no del material de Profesor.
+3. No inventes cifras, tarifas, porcentajes, plazos ni números de artículos. Si dependen del año o pueden haber cambiado (UVT, tarifas, fechas, topes), explica el concepto y recomienda confirmar el valor vigente en la DIAN o en la norma.
+4. Si la pregunta no es sobre contabilidad, impuestos, finanzas o temas afines, indica amablemente que solo ayudas con esos temas.
+5. Recuerda que no reemplazas la asesoría de un contador público.
 
 CONTENIDO DE PROFESOR:
 ${CONTENIDO}`;
@@ -39,17 +44,17 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: INSTRUCCIONES }] },
         contents: [{ role: "user", parts: [{ text: question }] }],
-        generationConfig: { maxOutputTokens: 400, temperature: 0.3 }
+        generationConfig: { maxOutputTokens: 700, temperature: 0.3 }
       })
     });
     if (res.status === 429) {
       return { statusCode: 200, headers, body: JSON.stringify({ answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." }) };
     }
     if (!res.ok) {
-      // Diagnóstico temporal: muestra el código y el motivo que devuelve Google.
       let detalle = "";
       try { detalle = (await res.json()).error?.message || ""; } catch (e) {}
-      return { statusCode: 200, headers, body: JSON.stringify({ answer: `Error ${res.status} de Google: ${detalle.slice(0, 200)}` }) };
+      console.error("Error de Gemini", res.status, detalle);
+      return { statusCode: 200, headers, body: JSON.stringify({ answer: "No pude responder ahora. Intenta de nuevo en un momento." }) };
     }
     const data = await res.json();
     const answer = data.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "No encontré una respuesta.";
