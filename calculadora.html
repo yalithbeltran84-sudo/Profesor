@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calcula cesantías, intereses, prima, vacaciones e indemnización con los valores de 2026. Gratis y sin registro.">
+<title>Calculadora de liquidación · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif;padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3,.sans,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:60ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px}
+.panel h2{font-size:19px;margin:22px 0 12px;letter-spacing:0}
+.panel h2:first-child{margin-top:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:10px 12px;font-size:16px;min-height:44px}
+input:disabled{opacity:.7}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.chk{display:flex;gap:10px;align-items:center;font-size:15px;color:var(--ink);min-height:44px}
+.chk input{width:20px;min-height:20px;height:20px}
+.hint{font-size:13px;color:var(--mute);margin:2px 0 0}
+details{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;color:var(--ink);min-height:32px}
+details .row{margin-top:12px}
+.result{position:sticky;top:16px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px}
+.big{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(34px,5vw,48px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.alerts{margin:10px 0 4px;display:grid;gap:8px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.err{border-left-color:#B3261E}
+table.book{width:100%;border-collapse:collapse;margin-top:10px}
+.book td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.book td.v{text-align:right;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:14px}
+.book .n{font:700 16px "Bricolage Grotesque",sans-serif}
+.book .f{display:block;font:400 13.5px/1.4 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.book tr.sub td{font-weight:700}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-size:18px}
+.neg{color:#B3261E}
+:root:not([data-theme="light"]) .neg{color:#F2B8B5}
+@media(prefers-color-scheme:light){.neg{color:#B3261E}}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+#ai{margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+#ai a{color:var(--green)}
+.cmp{display:grid;grid-template-columns:1fr auto;gap:6px 14px;margin-top:10px;font:500 15px "Bricolage Grotesque",sans-serif}
+.cmp b{font-variant-numeric:tabular-nums;text-align:right}
+.mini{display:none}
+.src{font-size:14px;color:var(--mute);margin:8px 0 0}
+.src a{color:var(--green)}
+ul.sup{margin:8px 0 0;padding-left:20px;font-size:15px;color:var(--mute)}
+#doc{display:none}
+@media(min-width:901px){.result{max-height:calc(100vh - 32px);overflow-y:auto}}
+@media(max-width:900px){
+ .grid{grid-template-columns:1fr}.result{position:static}
+ .mini{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:5;justify-content:space-between;align-items:center;gap:12px;padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px));background:var(--green);color:var(--onbtn);text-decoration:none;font:700 16px "Bricolage Grotesque",sans-serif}
+ .mini strong{font-size:20px}
+ body{padding-bottom:70px}
+}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media print{
+ body{background:#fff;color:#000;font:13px/1.5 Georgia,serif;padding:0}
+ .wrap,.mini{display:none!important}
+ #doc{display:block;padding:24px;color:#000}
+ #doc h1{font-size:24px;margin:0 0 4px;text-align:center}
+ #doc .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0;font-size:13px}
+ #doc table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+ #doc td,#doc th{padding:6px 4px;border-bottom:1px solid #999;text-align:left}
+ #doc td.v,#doc th.v{text-align:right}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700;font-size:15px}
+ #doc .sign{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:70px;font-size:13px}
+ #doc .sign div{border-top:1px solid #000;padding-top:6px}
+ #doc .foot{margin-top:28px;font-size:11px;color:#444}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html">Volver al inicio</a></header>
+
+<h1>Calculadora de liquidación laboral</h1>
+<p class="lead">Escribe los datos del contrato y el resultado se actualiza al instante, con la fórmula de cada concepto. No pide correo ni registro, y lo que escribes no sale de tu navegador.</p>
+
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+  <h2>El contrato</h2>
+  <div class="row">
+    <label class="fld full">Causa de terminación
+      <select id="causa">
+        <option value="renuncia">Renuncia (retiro voluntario)</option>
+        <option value="sinjusta">Despido sin justa causa</option>
+        <option value="justa">Despido con justa causa</option>
+        <option value="mutuo">Mutuo acuerdo</option>
+        <option value="vence">Vencimiento del plazo (contrato fijo)</option>
+      </select></label>
+    <label class="fld">Tipo de contrato
+      <select id="tipo"><option value="indefinido">Término indefinido</option><option value="fijo">Término fijo</option></select></label>
+    <label class="fld" id="wfp" hidden>Fecha de fin pactada<input id="finPactada" type="date"></label>
+    <label class="fld">Fecha de inicio<input id="inicio" type="date" value="2024-02-05"></label>
+    <label class="fld">Fecha de liquidación<input id="fin" type="date"></label>
+    <label class="chk full"><input id="prueba" type="checkbox"> La terminación fue en el período de prueba</label>
+  </div>
+
+  <h2>El salario</h2>
+  <div class="row">
+    <label class="fld">Salario base mensual ($)<input id="salario" type="number" min="0" step="1000" inputmode="numeric" value="1750905"></label>
+    <label class="fld">Otros ingresos salariales mensuales ($)<input id="otros" type="number" min="0" step="1000" inputmode="numeric" value="0"></label>
+    <label class="fld">Días de salario sin pagar<input id="dsp" type="number" min="0" step="1" inputmode="numeric" value="0"></label>
+    <label class="chk"><input id="aux" type="checkbox" checked> Recibe auxilio de transporte</label>
+  </div>
+  <p class="hint">El auxilio de transporte aplica cuando se gana hasta 2 salarios mínimos. Se marca solo, pero puedes cambiarlo.</p>
+
+  <h2>Vacaciones y otros valores</h2>
+  <div class="row">
+    <label class="fld">Días de vacaciones ya disfrutados<input id="vt" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Opcional"></label>
+    <label class="fld">Días de vacaciones pendientes<input id="vp" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+  </div>
+  <p class="hint" id="vhint"></p>
+  <div class="row" style="margin-top:12px">
+    <label class="fld">Bonificaciones pendientes ($)<input id="bonif" type="number" min="0" step="1000" inputmode="numeric" value="0"></label>
+    <label class="fld">Préstamos pendientes ($)<input id="prest" type="number" min="0" step="1000" inputmode="numeric" value="0"></label>
+    <label class="fld">Otras deducciones ($)<input id="dedu" type="number" min="0" step="1000" inputmode="numeric" value="0"></label>
+  </div>
+
+  <details>
+    <summary>Datos para el documento (opcional)</summary>
+    <div class="row">
+      <label class="fld">Nombre del trabajador<input id="tn" type="text"></label>
+      <label class="fld">Documento del trabajador<input id="td" type="text"></label>
+      <label class="fld">Nombre del empleador<input id="en" type="text"></label>
+      <label class="fld">NIT del empleador<input id="ed" type="text"></label>
+    </div>
+  </details>
+  <details>
+    <summary>Valores legales de 2026 (editables)</summary>
+    <div class="row">
+      <label class="fld">Salario mínimo mensual ($)<input id="smmlv" type="number" min="0" inputmode="numeric" value="1750905"></label>
+      <label class="fld">Auxilio de transporte ($)<input id="auxv" type="number" min="0" inputmode="numeric" value="249095"></label>
+    </div>
+    <p class="hint">Fijados por los decretos 1469 y 1470 de 2025. Cámbialos si calculas una liquidación de otro año.</p>
+  </details>
+</form>
+
+<aside class="result" id="out" aria-label="Resultado de la liquidación">
+  <div class="big"><span id="cap">Total a pagar al trabajador</span><strong id="tot" aria-live="polite">$ 0</strong></div>
+  <div class="alerts" id="alerts"></div>
+  <table class="book" id="tbl"></table>
+  <div class="actions">
+    <button class="btn" id="btnPrint" type="button">Imprimir o guardar PDF</button>
+    <button class="ghost" id="btnAI" type="button">Explícame esto con IA</button>
+  </div>
+  <div id="ai" hidden></div>
+
+  <details open>
+    <summary>¿Y si la causa fuera otra?</summary>
+    <div class="cmp" id="cmp"></div>
+  </details>
+  <details>
+    <summary>Asiento contable referencial</summary>
+    <table class="book" id="asiento"></table>
+    <p class="hint">Supone que las prestaciones se provisionaron mes a mes, por eso se debitan las cuentas por pagar. Si no hubo provisión, el débito va a las cuentas de gasto 5105. Confirma los códigos con el PUC de tu empresa.</p>
+  </details>
+  <details>
+    <summary>Supuestos y fuentes</summary>
+    <ul class="sup">
+      <li>Cesantías y prima cuentan solo el tiempo del año o semestre en curso. Se supone que lo anterior ya se consignó al fondo y se pagó.</li>
+      <li>Los días se cuentan en base 360 (meses de 30 días), contando el día de inicio y el de liquidación.</li>
+      <li>No incluye salario integral, horas extras ni aportes a seguridad social.</li>
+      <li>La indemnización se calcula con el salario sin auxilio de transporte.</li>
+    </ul>
+    <p class="src">Normas: Código Sustantivo del Trabajo, artículos 64 (indemnización, modificado por la Ley 789 de 2002), 186 (vacaciones), 249 (cesantías) y 306 (prima); Ley 52 de 1975 (intereses de cesantías). Valores 2026: decretos 1469 y 1470 de 2025. Verifica siempre en el Ministerio del Trabajo.</p>
+  </details>
+</aside>
+</div>
+</div>
+
+<a class="mini" href="#out"><span>Total a pagar</span><strong id="mini">$ 0</strong></a>
+<div id="doc" aria-hidden="true"></div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var fmt=new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0});
+function money(n){return fmt.format(Math.round(n)).replace(/ /g,' ')}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function num(id){var v=parseFloat($(id).value);return isFinite(v)&&v>0?v:0}
+function dt(id){var v=$(id).value;if(!v)return null;var p=v.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
+function fdate(d){return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})}
+function dec(n){return (Math.round(n*100)/100).toString().replace('.',',')}
+
+// LOGIC START
+function d360(a,b){
+  function p(d){var y=d.getFullYear(),m=d.getMonth()+1,x=d.getDate();
+    if(m===2&&x===new Date(y,2,0).getDate())x=30;
+    if(x===31)x=30;
+    return [y,m,x]}
+  var A=p(a),B=p(b);
+  return (B[0]-A[0])*360+(B[1]-A[1])*30+(B[2]-A[2]);
+}
+function calcular(p){
+  var base=p.salario+p.otros;
+  var aux=p.auxSi?p.auxValor:0;
+  var baseCes=base+aux;
+  var diasTotal=d360(p.inicio,p.fin)+1;
+  var iniAnio=new Date(p.fin.getFullYear(),0,1);
+  var iniCes=p.inicio>iniAnio?p.inicio:iniAnio;
+  var diasCes=d360(iniCes,p.fin)+1;
+  var iniSem=new Date(p.fin.getFullYear(),p.fin.getMonth()>=6?6:0,1);
+  var iniPrima=p.inicio>iniSem?p.inicio:iniSem;
+  var diasPrima=d360(iniPrima,p.fin)+1;
+  var r={base:base,aux:aux,baseCes:baseCes,diasTotal:diasTotal,diasCes:diasCes,diasPrima:diasPrima};
+  r.cesantias=Math.round(baseCes*diasCes/360);
+  r.intereses=Math.round(r.cesantias*diasCes*0.12/360);
+  r.prima=Math.round(baseCes*diasPrima/360);
+  r.vacaciones=Math.round(base/30*p.vacPend);
+  r.salarioPend=Math.round(baseCes/30*p.diasSalPend);
+  r.bonif=Math.round(p.bonif);
+  r.indem=0;r.indemDias=0;r.alto=false;
+  if(p.causa==='sinjusta'&&!p.prueba){
+    if(p.tipo==='indefinido'){
+      r.alto=base>=10*p.smmlv;
+      var d1=r.alto?20:30,d2=r.alto?15:20;
+      r.indemDias=diasTotal<=360?d1:d1+d2*(diasTotal-360)/360;
+    }else if(p.finPactada&&p.finPactada>p.fin){
+      r.indemDias=d360(p.fin,p.finPactada);
+    }
+    r.indem=Math.round(base/30*r.indemDias);
+  }
+  r.ingresos=r.cesantias+r.intereses+r.prima+r.vacaciones+r.salarioPend+r.bonif+r.indem;
+  r.egresos=Math.round(p.prestamos+p.deducciones);
+  r.neto=r.ingresos-r.egresos;
+  return r;
+}
+// LOGIC END
+
+var CAUSAS={renuncia:'Renuncia (retiro voluntario)',sinjusta:'Despido sin justa causa',justa:'Despido con justa causa',mutuo:'Mutuo acuerdo',vence:'Vencimiento del plazo'};
+var auxManual=false,ultimo=null,ultimoP=null;
+
+function vacPendiente(){
+  var ini=dt('inicio'),fin=dt('fin'),t=$('vt').value;
+  if(t!==''&&ini&&fin&&fin>=ini){
+    var tot=(d360(ini,fin)+1)*15/360;
+    var v=Math.max(0,Math.round((tot-(parseFloat(t)||0))*100)/100);
+    $('vp').value=v;$('vp').disabled=true;
+    $('vhint').textContent='Por el tiempo trabajado tienes derecho a '+dec(tot)+' días en total.';
+    return v;
+  }
+  $('vp').disabled=false;
+  $('vhint').textContent='Si no sabes cuántos son, escribe arriba cuántos días ya disfrutaste y se calcula solo.';
+  return num('vp');
+}
+function leer(){
+  return {causa:$('causa').value,tipo:$('tipo').value,finPactada:dt('finPactada'),prueba:$('prueba').checked,
+    inicio:dt('inicio'),fin:dt('fin'),salario:num('salario'),otros:num('otros'),diasSalPend:num('dsp'),
+    auxSi:$('aux').checked,auxValor:num('auxv'),smmlv:num('smmlv'),vacPend:vacPendiente(),
+    bonif:num('bonif'),prestamos:num('prest'),deducciones:num('dedu')};
+}
+function row(n,f,v,cls){return '<tr class="'+(cls||'')+'"><td><span class="n">'+n+'</span>'+(f?'<span class="f">'+f+'</span>':'')+'</td><td class="v">'+v+'</td></tr>'}
+
+function render(){
+  $('wfp').hidden=$('tipo').value!=='fijo';
+  if(!auxManual){var b=num('salario')+num('otros');$('aux').checked=b>0&&b<=2*num('smmlv')}
+  var p=leer(),al=[];
+  if(!p.inicio||!p.fin||p.fin<p.inicio||p.salario<=0){
+    ultimo=null;ultimoP=null;
+    $('tot').textContent='$ 0';$('mini').textContent='$ 0';$('tbl').innerHTML='';$('cmp').innerHTML='';$('asiento').innerHTML='';
+    $('btnPrint').disabled=true;$('btnAI').disabled=true;
+    $('alerts').innerHTML='<div class="alert err">'+(p.salario<=0?'Escribe el salario base mensual.':'Revisa las fechas: la liquidación debe ser igual o posterior al inicio del contrato.')+'</div>';
+    return;
+  }
+  $('btnPrint').disabled=false;$('btnAI').disabled=false;
+  var r=calcular(p);ultimo=r;ultimoP=p;
+  $('tot').textContent=money(r.neto);$('mini').textContent=money(r.neto);
+  $('cap').textContent='Total a pagar al trabajador al '+fdate(p.fin);
+
+  var a='$ '+Math.round(r.aux).toLocaleString('es-CO');
+  var bc=p.auxSi?'('+money(r.base)+' + '+money(r.aux)+')':money(r.base);
+  var h='';
+  h+=row('Cesantías',bc+' × '+r.diasCes+' días ÷ 360',money(r.cesantias));
+  h+=row('Intereses de cesantías',money(r.cesantias)+' × '+r.diasCes+' días × 12% ÷ 360',money(r.intereses));
+  h+=row('Prima de servicios',bc+' × '+r.diasPrima+' días ÷ 360',money(r.prima));
+  h+=row('Vacaciones',money(r.base)+' ÷ 30 × '+dec(p.vacPend)+' días',money(r.vacaciones));
+  if(r.salarioPend)h+=row('Salario pendiente',bc+' ÷ 30 × '+p.diasSalPend+' días',money(r.salarioPend));
+  if(r.bonif)h+=row('Bonificaciones pendientes','',money(r.bonif));
+  if(r.indem){
+    var fm=p.tipo==='indefinido'?(r.alto?'20 días el primer año + 15 por cada año adicional':'30 días el primer año + 20 por cada año adicional')+' = '+dec(r.indemDias)+' días':'Salarios del tiempo que falta: '+dec(r.indemDias)+' días';
+    h+=row('Indemnización por despido',fm+'<br>'+money(r.base)+' ÷ 30 × '+dec(r.indemDias),money(r.indem));
+  }
+  h+=row('Total ingresos','',money(r.ingresos),'sub');
+  if(p.prestamos)h+=row('Préstamos pendientes','','<span class="neg">('+money(p.prestamos)+')</span>');
+  if(p.deducciones)h+=row('Otras deducciones','','<span class="neg">('+money(p.deducciones)+')</span>');
+  h+=row('Total a pagar','Después de deducciones',money(r.neto),'fin');
+  $('tbl').innerHTML=h;
+
+  if(p.causa==='sinjusta'&&p.prueba)al.push('En período de prueba no se genera indemnización por despido.');
+  else if(p.causa!=='sinjusta')al.push('Con esta causa de terminación no se genera indemnización por despido.');
+  if(p.causa==='sinjusta'&&p.tipo==='fijo'&&!p.finPactada)al.push('Indica la fecha de fin pactada para calcular la indemnización del contrato a término fijo.');
+  if(p.tipo==='fijo'&&p.causa==='vence')al.push('Si el empleador no avisó la no renovación con 30 días de anticipación, el contrato podría haberse renovado. Consúltalo.');
+  if(r.alto&&p.causa==='sinjusta')al.push('El salario es de 10 salarios mínimos o más, por eso se usa la regla de 20 días el primer año y 15 por año adicional.');
+  if(!p.auxSi&&r.base<=2*p.smmlv)al.push('Tu salario da derecho a auxilio de transporte, pero está desmarcado.');
+  if(p.auxSi&&r.base>2*p.smmlv)al.push('Tu salario supera 2 salarios mínimos, normalmente no hay auxilio de transporte.');
+  $('alerts').innerHTML=al.map(function(t){return '<div class="alert">'+esc(t)+'</div>'}).join('');
+
+  var sin=calcular(Object.assign({},p,{causa:'renuncia'})),con=calcular(Object.assign({},p,{causa:'sinjusta'}));
+  $('cmp').innerHTML='<span>Renuncia, mutuo acuerdo, justa causa o vencimiento</span><b>'+money(sin.neto)+'</b><span>Despido sin justa causa</span><b>'+money(con.neto)+'</b><span>Diferencia (la indemnización)</span><b>'+money(con.neto-sin.neto)+'</b>';
+
+  var d=[['2510 Cesantías consolidadas',r.cesantias],['2515 Intereses sobre cesantías',r.intereses],['2520 Prima de servicios',r.prima],['2525 Vacaciones consolidadas',r.vacaciones],['2505 Salarios por pagar',r.salarioPend],['510548 Bonificaciones',r.bonif],['510560 Indemnizaciones laborales',r.indem]].filter(function(x){return x[1]>0});
+  var c=[['1365 Cuentas por cobrar a trabajadores',Math.round(p.prestamos)],['2370 Retenciones y aportes de nómina',Math.round(p.deducciones)],['1110 Bancos',r.neto]].filter(function(x){return x[1]>0});
+  var s='<tr><td><span class="n">Cuenta</span></td><td class="v">Débito</td><td class="v">Crédito</td></tr>';
+  d.forEach(function(x){s+='<tr><td>'+esc(x[0])+'</td><td class="v">'+money(x[1])+'</td><td class="v"></td></tr>'});
+  c.forEach(function(x){s+='<tr><td style="padding-left:18px">'+esc(x[0])+'</td><td class="v"></td><td class="v">'+money(x[1])+'</td></tr>'});
+  s+='<tr class="sub"><td>Sumas iguales</td><td class="v">'+money(r.ingresos)+'</td><td class="v">'+money(r.ingresos)+'</td></tr>';
+  $('asiento').innerHTML=s;
+
+  buildDoc(p,r);
+}
+
+function buildDoc(p,r){
+  var t=$('tn').value||'—',td=$('td').value,e=$('en').value||'—',ed=$('ed').value;
+  var rows=[['Cesantías',r.diasCes+' días',r.cesantias],['Intereses de cesantías',r.diasCes+' días',r.intereses],['Prima de servicios',r.diasPrima+' días',r.prima],['Vacaciones',dec(p.vacPend)+' días',r.vacaciones]];
+  if(r.salarioPend)rows.push(['Salario pendiente',p.diasSalPend+' días',r.salarioPend]);
+  if(r.bonif)rows.push(['Bonificaciones pendientes','',r.bonif]);
+  if(r.indem)rows.push(['Indemnización por despido',dec(r.indemDias)+' días',r.indem]);
+  var h='<h1>Liquidación laboral</h1><div style="text-align:center">'+esc(fdate(p.fin))+'</div>';
+  h+='<div class="meta"><div><b>Empleador</b><br>'+esc(e)+(ed?'<br>NIT: '+esc(ed):'')+'</div><div><b>Trabajador</b><br>'+esc(t)+(td?'<br>Documento: '+esc(td):'')+'</div><div><b>Causa</b><br>'+esc(CAUSAS[p.causa])+'<br>Contrato '+(p.tipo==='fijo'?'a término fijo':'a término indefinido')+'</div></div>';
+  h+='<div class="meta"><div><b>Inicio del contrato</b><br>'+esc(fdate(p.inicio))+'</div><div><b>Fecha de liquidación</b><br>'+esc(fdate(p.fin))+'</div><div><b>Días a liquidar</b><br>'+r.diasTotal+'<br>Base: '+money(r.base)+'</div></div>';
+  h+='<table><tr><th>Concepto</th><th>Días</th><th class="v">Valor</th></tr>';
+  rows.forEach(function(x){h+='<tr><td>'+x[0]+'</td><td>'+x[1]+'</td><td class="v">'+money(x[2])+'</td></tr>'});
+  h+='<tr><td><b>Total ingresos</b></td><td></td><td class="v"><b>'+money(r.ingresos)+'</b></td></tr>';
+  if(r.egresos)h+='<tr><td>Deducciones</td><td></td><td class="v">('+money(r.egresos)+')</td></tr>';
+  h+='<tr class="fin"><td>Valor total de la liquidación</td><td></td><td class="v">'+money(r.neto)+'</td></tr></table>';
+  h+='<div class="sign"><div>'+esc(e)+(ed?'<br>NIT: '+esc(ed):'')+'</div><div>'+esc(t)+(td?'<br>Documento: '+esc(td):'')+'</div></div>';
+  h+='<div class="foot">Cálculo orientativo generado en Profesor. Revísalo con un contador o abogado laboral antes de firmar.</div>';
+  $('doc').innerHTML=h;
+}
+
+$('btnPrint').onclick=function(){window.print()};
+$('btnAI').onclick=function(){
+  if(!ultimo)return;
+  var r=ultimo,p=ultimoP,box=$('ai');
+  var q='Explica en lenguaje sencillo esta liquidación laboral en Colombia y qué debo revisar. Causa: '+CAUSAS[p.causa]+'; contrato '+(p.tipo==='fijo'?'fijo':'indefinido')+'; '+r.diasTotal+' días; base '+money(r.base)+'. Cesantías '+money(r.cesantias)+', intereses '+money(r.intereses)+', prima '+money(r.prima)+', vacaciones '+money(r.vacaciones)+(r.indem?', indemnización '+money(r.indem):'')+'. Total '+money(r.neto)+'.';
+  box.hidden=false;box.textContent='Pensando...';$('btnAI').disabled=true;
+  fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q.slice(0,490)})})
+   .then(function(x){return x.json()})
+   .then(function(d){
+     box.textContent=d.answer||d.error||'No pude responder ahora.';
+     if(d.sources&&d.sources.length){var s=document.createElement('div');s.className='src';s.appendChild(document.createTextNode('Fuentes: '));
+       d.sources.forEach(function(x,i){var a=document.createElement('a');a.href=x.uri;a.target='_blank';a.rel='noopener';a.textContent=x.title;s.appendChild(a);if(i<d.sources.length-1)s.appendChild(document.createTextNode(' · '))});box.appendChild(s)}
+   })
+   .catch(function(){box.textContent='El asistente solo funciona en la página publicada de Profesor. Intenta de nuevo allí.'})
+   .then(function(){$('btnAI').disabled=false});
+};
+
+$('aux').addEventListener('change',function(){auxManual=true;render()});
+['causa','tipo','finPactada','prueba','inicio','fin','salario','otros','dsp','smmlv','auxv','vt','vp','bonif','prest','dedu','tn','td','en','ed'].forEach(function(id){
+  $(id).addEventListener('input',render);$(id).addEventListener('change',render)});
+(function(){var n=new Date(),m=String(n.getMonth()+1).padStart(2,'0'),d=String(n.getDate()).padStart(2,'0');$('fin').value=n.getFullYear()+'-'+m+'-'+d;render()})();
+</script>
+</body>
+</html>
