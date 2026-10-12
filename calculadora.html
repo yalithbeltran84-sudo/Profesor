@@ -196,6 +196,7 @@ ul.sup{margin:8px 0 0;padding-left:20px;font-size:15px;color:var(--mute)}
 <a class="mini" href="#out"><span>Total a pagar</span><strong id="mini">$ 0</strong></a>
 <div id="doc" aria-hidden="true"></div>
 
+<script src="profesor.js"></script>
 <script>
 var $=function(i){return document.getElementById(i)};
 var fmt=new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0});
@@ -358,14 +359,12 @@ $('btnAI').onclick=function(){
   var r=ultimo,p=ultimoP,box=$('ai');
   var q='Explica en lenguaje sencillo esta liquidación laboral en Colombia y qué debo revisar. Causa: '+CAUSAS[p.causa]+'; contrato '+(p.tipo==='fijo'?'fijo':'indefinido')+'; '+r.diasTotal+' días; base '+money(r.base)+'. Cesantías '+money(r.cesantias)+', intereses '+money(r.intereses)+', prima '+money(r.prima)+', vacaciones '+money(r.vacaciones)+(r.indem?', indemnización '+money(r.indem):'')+'. Total '+money(r.neto)+'.';
   box.hidden=false;box.textContent='Pensando...';$('btnAI').disabled=true;
-  fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q.slice(0,490)})})
-   .then(function(x){return x.json()})
+  Profesor.preguntar(q.slice(0,490),[])
    .then(function(d){
      box.textContent=d.answer||d.error||'No pude responder ahora.';
      if(d.sources&&d.sources.length){var s=document.createElement('div');s.className='src';s.appendChild(document.createTextNode('Fuentes: '));
        d.sources.forEach(function(x,i){var a=document.createElement('a');a.href=x.uri;a.target='_blank';a.rel='noopener';a.textContent=x.title;s.appendChild(a);if(i<d.sources.length-1)s.appendChild(document.createTextNode(' · '))});box.appendChild(s)}
    })
-   .catch(function(){box.textContent='El asistente solo funciona en la página publicada de Profesor. Intenta de nuevo allí.'})
    .then(function(){$('btnAI').disabled=false});
 };
 
