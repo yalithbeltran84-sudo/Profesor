@@ -38,7 +38,7 @@
     if (restantes() <= 0) {
       return Promise.resolve({ ok: false, limite: true, answer: "Llegaste al límite de " + PLANS[plan()].limite + " preguntas de hoy en el plan " + PLANS[plan()].nombre + ". Vuelve mañana o cambia de plan." });
     }
-    return fetch("/.netlify/functions/chat", {
+    return fetch("/api/chat", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: q, plan: plan(), history: historial || [] })
     }).then(function (r) { return r.json(); }).then(function (d) {
