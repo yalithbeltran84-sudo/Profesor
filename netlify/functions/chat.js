@@ -8,9 +8,17 @@ const CONTENIDO = `
 [Herramientas] Plantilla de flujo de caja mensual y plantilla de depreciación de activos.
 `; // Aquí agregarás tus propios artículos.
 
+// Cómo responde la IA según el plan (más memoria y respuestas más completas en los planes altos).
+const PLANES = {
+  gratis:       { palabras: 120, memoria: 2,  tokens: 500 },
+  estudiante:   { palabras: 200, memoria: 6,  tokens: 800 },
+  profesional:  { palabras: 300, memoria: 10, tokens: 1200 },
+  master:       { palabras: 450, memoria: 16, tokens: 1800 }
+};
+
 const INSTRUCCIONES = `Eres el asistente de Profesor, una plataforma de Contaduría Pública en Colombia.
 Respondes preguntas sobre contabilidad financiera, contabilidad pública (sector gobierno), impuestos, finanzas, auditoría, control interno, nómina y liquidaciones laborales, y normatividad contable, tributaria y laboral colombiana.
-Escribe en español, con lenguaje sencillo, en máximo 220 palabras y en texto plano, sin asteriscos ni símbolos de formato.
+Escribe en español, con lenguaje sencillo, en máximo __PALABRAS__ palabras y en texto plano, sin asteriscos ni símbolos de formato.
 
 Cómo responder:
 1. Si el contenido de Profesor (abajo) cubre la pregunta, úsalo primero y menciona de qué artículo sale.
@@ -28,8 +36,20 @@ exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Método no permitido." }) };
   }
-  let question = "";
-  try { question = String(JSON.parse(event.body).question || "").trim().slice(0, 500); } catch (e) {}
+  let question = "", plan = "gratis", history = [];
+  try {
+    const b = JSON.parse(event.body);
+    question = String(b.question || "").trim().slice(0, 500);
+    if (PLANES[b.plan]) plan = b.plan;
+    if (Array.isArray(b.history)) history = b.history;
+  } catch (e) {}
+  const cfg = PLANES[plan];
+  // Memoria de la conversación: solo los últimos mensajes que permite el plan.
+  const previos = history
+    .filter(m => m && (m.role === "user" || m.role === "model") && typeof m.text === "string" && m.text.trim())
+    .slice(-cfg.memoria)
+    .map(m => ({ role: m.role, parts: [{ text: m.text.slice(0, 700) }] }));
+  while (previos.length && previos[0].role !== "user") previos.shift();
   if (!question) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: "Escribe una pregunta." }) };
   }
@@ -42,9 +62,9 @@ exports.handler = async (event) => {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
   const call = (withSearch) => {
     const body = {
-      systemInstruction: { parts: [{ text: INSTRUCCIONES }] },
-      contents: [{ role: "user", parts: [{ text: question }] }],
-      generationConfig: { maxOutputTokens: 900, temperature: 0.2 }
+      systemInstruction: { parts: [{ text: INSTRUCCIONES.replace("__PALABRAS__", cfg.palabras) }] },
+      contents: [...previos, { role: "user", parts: [{ text: question }] }],
+      generationConfig: { maxOutputTokens: cfg.tokens, temperature: 0.2 }
     };
     if (withSearch) body.tools = [{ google_search: {} }];
     return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": key }, body: JSON.stringify(body) });
@@ -53,13 +73,13 @@ exports.handler = async (event) => {
     let res = await call(useSearch);
     if (useSearch && !res.ok) res = await call(false); // si la búsqueda no está disponible, responde sin ella
     if (res.status === 429) {
-      return { statusCode: 200, headers, body: JSON.stringify({ answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." }) };
+      return { statusCode: 200, headers, body: JSON.stringify({ ok: false, answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." }) };
     }
     if (!res.ok) {
       let detalle = "";
       try { detalle = (await res.json()).error?.message || ""; } catch (e) {}
       console.error("Error de Gemini", res.status, detalle);
-      return { statusCode: 200, headers, body: JSON.stringify({ answer: "No pude responder ahora. Intenta de nuevo en un momento." }) };
+      return { statusCode: 200, headers, body: JSON.stringify({ ok: false, answer: "No pude responder ahora. Intenta de nuevo en un momento." }) };
     }
     const data = await res.json();
     const cand = data.candidates?.[0];
@@ -68,8 +88,8 @@ exports.handler = async (event) => {
     const sources = (cand?.groundingMetadata?.groundingChunks || [])
       .map(c => c.web).filter(w => w && w.uri && !vistos.has(w.uri) && vistos.add(w.uri))
       .slice(0, 5).map(w => ({ title: w.title || "Fuente", uri: w.uri }));
-    return { statusCode: 200, headers, body: JSON.stringify({ answer, sources }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ ok: true, answer, sources }) };
   } catch (e) {
-    return { statusCode: 200, headers, body: JSON.stringify({ answer: "Error de conexión. Intenta de nuevo." }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ ok: false, answer: "Error de conexión. Intenta de nuevo." }) };
   }
 };
