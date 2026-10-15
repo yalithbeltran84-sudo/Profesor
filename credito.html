@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Simula tu crédito: cuota, intereses, tabla de amortización, abonos extra, costo efectivo anual y comparación con la tasa de usura. Gratis y sin registro.">
+<title>Simulador de crédito · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--cap:#0F3D3E;--int:#E9A927;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--cap:#7FC8B5;--int:#E9A927;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--cap:#7FC8B5;--int:#E9A927;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,.sans,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:62ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px}
+.panel h2{font-size:19px;margin:22px 0 12px}
+.panel h2:first-child{margin-top:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:10px 12px;font-size:16px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible,.hit:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);color:var(--ink);padding:10px 8px;font:600 14px "Bricolage Grotesque",sans-serif;min-height:44px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--onbtn)}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row{margin-top:12px}
+.result{min-width:0}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.err{border-left-color:var(--bad)}
+.alert.good{border-left-color:var(--ok)}
+.tabs{display:flex;gap:8px;margin:18px 0 8px;align-items:center;flex-wrap:wrap}
+.tabs h3{font-size:17px;margin:0 auto 0 0}
+.tab{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:6px;padding:6px 12px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:36px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.legend{display:flex;gap:16px;font:500 13.5px "Bricolage Grotesque",sans-serif;color:var(--ink);margin:0 0 6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+.gl{stroke:var(--line);stroke-width:1}
+.bc{fill:var(--cap)}.bi{fill:var(--int)}
+.hit{fill:transparent;cursor:pointer}
+.hit:hover{fill:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);border-radius:6px;padding:8px 10px;font:500 12.5px/1.45 "Bricolage Grotesque",sans-serif;z-index:3;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.tip b{font-weight:700}
+.tablewrap{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+table.am{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.am th,.am td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.am th:first-child,.am td:first-child{text-align:left}
+.am thead th{position:sticky;top:0;background:var(--soft);font-weight:700;z-index:1}
+.am td.dot{color:var(--mute)}
+table.eq{width:100%;border-collapse:collapse;margin-top:6px;font-size:14.5px;font-variant-numeric:tabular-nums}
+.eq td{padding:7px 0;border-bottom:1px solid var(--line)}
+.eq td:last-child{text-align:right;font-weight:700}
+.eq tr.hl td{font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+.sec h3{font-size:17px;margin:20px 0 4px}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 12px;margin:14px 0}
+ #doc table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px}
+ #doc th,#doc td{padding:3px 4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html">Volver al inicio</a></header>
+
+<h1>Simulador de crédito</h1>
+<p class="lead">Escribe el valor, el plazo y la tasa. Ves la cuota, los intereses y la tabla de amortización al instante, y puedes probar abonos extra, costos adicionales y comparar con la tasa de usura. No pide registro y lo que escribes no sale de tu navegador.</p>
+
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+  <h2>El crédito</h2>
+  <div class="row">
+    <label class="fld full">Valor del crédito ($)<input id="monto" type="text" inputmode="numeric" value="6.000.000"></label>
+    <label class="fld">Plazo (meses)<input id="plazo" type="number" min="1" max="480" step="1" inputmode="numeric" value="32"></label>
+    <label class="fld">Tasa de interés (%)<input id="tasa" type="number" min="0" max="200" step="0.01" inputmode="decimal" value="2.00"></label>
+    <div class="fld full">¿Cómo está expresada la tasa?
+      <div class="seg" role="group" aria-label="Tipo de tasa" id="tipoTasa">
+        <button type="button" data-v="mv" aria-pressed="true">Mensual (MV)</button>
+        <button type="button" data-v="ea" aria-pressed="false">Efectiva anual (EA)</button>
+        <button type="button" data-v="na" aria-pressed="false">Nominal anual</button>
+      </div>
+      <p class="hint" id="tasaHint"></p>
+    </div>
+    <div class="fld full">Sistema de amortización
+      <div class="seg" role="group" aria-label="Sistema" id="sistema">
+        <button type="button" data-v="fr" aria-pressed="true">Cuota fija (francés)</button>
+        <button type="button" data-v="al" aria-pressed="false">Abono fijo a capital (alemán)</button>
+      </div>
+      <p class="hint" id="sisHint"></p>
+    </div>
+  </div>
+
+  <details open>
+    <summary>Abono extra a capital</summary>
+    <div class="row">
+      <label class="fld full">Pago extra cada mes ($)<input id="extra" type="text" inputmode="numeric" value="0"></label>
+    </div>
+    <p class="hint">Se aplica todo a capital. Con cuota fija, la cuota se mantiene y el crédito termina antes. Te muestro cuánto ahorras.</p>
+  </details>
+
+  <details>
+    <summary>Costos adicionales (seguros, comisiones)</summary>
+    <div class="row">
+      <label class="fld">Seguro o cuota de manejo mensual ($)<input id="seguro" type="text" inputmode="numeric" value="0"></label>
+      <label class="fld">Comisión o estudio de crédito ($)<input id="comision" type="text" inputmode="numeric" value="0"></label>
+    </div>
+    <p class="hint">Con estos costos calculo el costo efectivo anual real, que casi siempre es mayor que la tasa que anuncian.</p>
+  </details>
+
+  <details>
+    <summary>Tasa de usura</summary>
+    <div class="row">
+      <label class="fld full">Tope de usura vigente (% EA)<input id="usura" type="number" min="0" step="0.01" inputmode="decimal" value="28.59"></label>
+    </div>
+    <p class="hint">Valor de consumo y ordinario para octubre de 2026 según la Superfinanciera. Cambia cada mes: <a href="https://www.superfinanciera.gov.co" target="_blank" rel="noopener" style="color:var(--green)">confírmalo en superfinanciera.gov.co</a>.</p>
+  </details>
+</form>
+
+<section class="result" aria-live="polite">
+  <div class="big"><span id="lblCuota">Cuota mensual</span><strong id="cuota">—</strong></div>
+  <div class="kpis">
+    <div class="kpi"><span>Total de intereses</span><b id="kInt">—</b></div>
+    <div class="kpi"><span>Total a pagar</span><b id="kTot">—</b></div>
+    <div class="kpi"><span>Tasa efectiva anual</span><b id="kEA">—</b></div>
+  </div>
+  <div class="alerts" id="alerts"></div>
+
+  <div class="tabs">
+    <h3>Cuánto de cada cuota es capital e interés</h3>
+    <button class="tab" type="button" id="tGraf" aria-pressed="true">Gráfico</button>
+    <button class="tab" type="button" id="tTab" aria-pressed="false">Tabla</button>
+  </div>
+  <div id="vGraf">
+    <div class="legend"><span><i style="background:var(--cap)"></i>Capital</span><span><i style="background:var(--int)"></i>Interés</span></div>
+    <div class="chartbox" id="chartbox"></div>
+    <p class="hint" id="chartNote"></p>
+  </div>
+  <div id="vTab" hidden><div class="tablewrap"><table class="am" id="am"></table></div></div>
+
+  <div class="sec">
+    <h3>Tu tasa en las tres formas</h3>
+    <table class="eq" id="eq"></table>
+    <h3 id="costH" hidden>Costo real del crédito</h3>
+    <table class="eq" id="costT" hidden></table>
+  </div>
+
+  <div class="actions">
+    <button class="btn" type="button" id="bIA">Explícame este crédito</button>
+    <button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button>
+    <button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+  </div>
+  <div id="ai" hidden></div>
+  <p class="src">Cálculo con la convención colombiana: la tasa efectiva anual se convierte a mensual con (1 + EA)^(1/12) − 1 y la nominal anual mes vencido se divide entre 12. El resultado es una simulación; la cuota final la fija tu entidad. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var state={tipo:"mv",sis:"fr"};
+var last=null;
+
+function num(el){var v=String(el.value||"").replace(/[^\d,.-]/g,"");
+  // acepta 6.000.000 y 6000000; coma decimal opcional
+  v=v.replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return "$"+Math.round(n).toLocaleString("es-CO")}
+function pct(n,d){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d})+"%"}
+function compact(n){if(n>=1e6)return (n/1e6).toLocaleString("es-CO",{maximumFractionDigits:1})+" M";if(n>=1e3)return Math.round(n/1e3)+" mil";return String(Math.round(n))}
+
+// ---------- matemática ----------
+function toMonthly(r,tipo){ // r en fracción
+  if(tipo==="ea")return Math.pow(1+r,1/12)-1;
+  if(tipo==="na")return r/12;
+  return r;
+}
+function pmt(P,i,n){return i===0?P/n:P*i/(1-Math.pow(1+i,-n))}
+function schedule(P,i,n,sis,extra){
+  var rows=[],bal=P,cf=pmt(P,i,n),cap0=P/n,k=0;
+  while(bal>0.5&&k<1200){
+    k++;
+    var int=bal*i,cap;
+    if(sis==="fr"){cap=cf-int}else{cap=cap0}
+    cap+=extra;
+    if(k===n&&extra===0)cap=bal;      // cierra redondeos en la última cuota
+    if(cap>bal)cap=bal;
+    bal-=cap;
+    rows.push({k:k,cuota:int+cap,cap:cap,int:int,saldo:Math.max(0,bal)});
+  }
+  return rows;
+}
+function irr(flows){ // tasa mensual por bisección
+  var lo=0,hi=1,f=function(r){var s=0;for(var t=0;t<flows.length;t++)s+=flows[t]/Math.pow(1+r,t);return s};
+  if(f(lo)*f(hi)>0)return null;
+  for(var j=0;j<200;j++){var m=(lo+hi)/2;if(f(lo)*f(m)<=0)hi=m;else lo=m}
+  return (lo+hi)/2;
+}
+
+// ---------- cálculo y pintado ----------
+function calc(){
+  var P=num($("monto")),n=Math.round(+$("plazo").value||0),r=(+$("tasa").value||0)/100,
+      extra=num($("extra")),seguro=num($("seguro")),comision=num($("comision")),usura=(+$("usura").value||0)/100;
+  var al=$("alerts");al.innerHTML="";
+  function alert(t,c){var d=document.createElement("div");d.className="alert "+(c||"");d.textContent=t;al.appendChild(d)}
+  if(P<=0||n<1||r<0){
+    ["cuota","kInt","kTot","kEA"].forEach(function(x){$(x).textContent="—"});
+    $("chartbox").innerHTML="";$("am").innerHTML="";$("eq").innerHTML="";$("costT").hidden=$("costH").hidden=true;last=null;
+    alert("Escribe un valor, un plazo y una tasa para empezar.","err");return}
+  var i=toMonthly(r,state.tipo),ea=Math.pow(1+i,12)-1,na=i*12;
+  var base=schedule(P,i,n,state.sis,0),rows=extra>0?schedule(P,i,n,state.sis,extra):base;
+  var sum=function(a,k){return a.reduce(function(s,x){return s+x[k]},0)};
+  var intT=sum(rows,"int"),intB=sum(base,"int"),tot=P+intT;
+
+  $("lblCuota").textContent=state.sis==="fr"?"Cuota mensual":"Primera cuota mensual";
+  $("cuota").textContent=fmt(rows[0].cuota);
+  $("kInt").textContent=fmt(intT);$("kTot").textContent=fmt(tot);$("kEA").textContent=pct(ea);
+
+  // equivalencias
+  $("eq").innerHTML="<tr class='hl'><td>Mensual vencida (MV)</td><td>"+pct(i,4)+"</td></tr><tr><td>Efectiva anual (EA)</td><td>"+pct(ea)+"</td></tr><tr><td>Nominal anual mes vencido</td><td>"+pct(na)+"</td></tr>";
+
+  // costo efectivo (TIR) con costos adicionales
+  var flows=[P-comision];
+  rows.forEach(function(x){flows.push(-(x.cuota+seguro))});
+  var rm=irr(flows),cea=rm==null?null:Math.pow(1+rm,12)-1;
+  var hasCost=(seguro>0||comision>0);
+  var costos=comision+seguro*rows.length;
+  $("costH").hidden=$("costT").hidden=!hasCost;
+  if(hasCost){
+    $("costT").innerHTML="<tr><td>Costos adicionales en total</td><td>"+fmt(costos)+"</td></tr><tr><td>Total pagado con costos</td><td>"+fmt(tot+costos)+"</td></tr><tr class='hl'><td>Costo efectivo anual (con costos)</td><td>"+(cea==null?"—":pct(cea))+"</td></tr>";
+  }
+
+  // alertas
+  var tasaRef=hasCost&&cea!=null?cea:ea;
+  if(usura>0){
+    if(ea>usura)alert("Tu tasa ("+pct(ea)+" EA) supera el tope de usura ("+pct(usura)+" EA). Una tasa por encima del tope no es legal: pregunta a la entidad o reclama ante la Superfinanciera.","err");
+    else if(hasCost&&cea!=null&&cea>usura)alert("La tasa anunciada está bajo la usura, pero con los costos adicionales el costo efectivo ("+pct(cea)+" EA) la supera. Revisa qué cobros se pueden quitar.","");
+    else alert("Tu tasa ("+pct(ea)+" EA) está por debajo del tope de usura ("+pct(usura)+" EA).","good");
+  }
+  if(extra>0){
+    var ahorro=intB-intT,meses=base.length-rows.length;
+    alert("Con el pago extra terminas "+meses+(meses===1?" mes":" meses")+" antes y te ahorras "+fmt(ahorro)+" en intereses.","good");
+  }
+  if(state.sis==="al")alert("En el sistema alemán la cuota baja cada mes: la primera es "+fmt(rows[0].cuota)+" y la última "+fmt(rows[rows.length-1].cuota)+".","");
+
+  last={P:P,n:n,ea:ea,i:i,na:na,rows:rows,intT:intT,tot:tot,cea:cea,hasCost:hasCost,extra:extra,seguro:seguro,comision:comision,sis:state.sis,tipo:state.tipo,r:r};
+  chart(rows);table(rows);
+}
+
+// ---------- gráfico (barras apiladas, SVG) ----------
+function chart(rows){
+  var grp=rows.length>48?12:1,data=[];
+  for(var s=0;s<rows.length;s+=grp){
+    var sl=rows.slice(s,s+grp),c=0,t=0;sl.forEach(function(x){c+=x.cap;t+=x.int});
+    data.push({label:grp===1?String(sl[0].k):"Año "+(s/12+1),cap:c,int:t,from:sl[0].k,to:sl[sl.length-1].k});
+  }
+  var W=640,H=250,L=46,B=26,T=8,R=6,pw=W-L-R,ph=H-T-B;
+  var max=0;data.forEach(function(d){max=Math.max(max,d.cap+d.int)});
+  var step=Math.pow(10,Math.floor(Math.log10(max/4||1)));var m=max/4/step;step*=m>5?10:m>2?5:m>1?2:1;
+  var top=Math.ceil(max/step)*step||step;
+  var bw=Math.min(24,pw/data.length*0.7),slot=pw/data.length;
+  var svg="<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Barras apiladas de capital e interés por "+(grp===1?"mes":"año")+". La tabla tiene los mismos datos.'>";
+  for(var g=0;g<=top/step+0.001;g++){var v=g*step,y=T+ph-v/top*ph;
+    svg+="<line class='gl' x1='"+L+"' x2='"+(W-R)+"' y1='"+y+"' y2='"+y+"'/><text x='"+(L-6)+"' y='"+(y+4)+"' text-anchor='end'>"+compact(v)+"</text>"}
+  var every=Math.ceil(data.length/12);
+  data.forEach(function(d,j){
+    var x=L+slot*j+(slot-bw)/2,hc=d.cap/top*ph,hi=d.int/top*ph,yb=T+ph;
+    var gap=(hc>3&&hi>3)?2:0;
+    // capital abajo, interés arriba, 2px de aire entre ambos; punta superior redondeada
+    if(hc>0)svg+="<rect class='bc' x='"+x+"' y='"+(yb-hc)+"' width='"+bw+"' height='"+hc+"'/>";
+    if(hi>0)svg+="<path class='bi' d='"+topRound(x,yb-hc-hi-gap,bw,Math.max(hi-0,0.5),Math.min(4,bw/2,hi))+"'/>";
+    if(j%every===0)svg+="<text x='"+(x+bw/2)+"' y='"+(H-8)+"' text-anchor='middle'>"+(grp===1?d.label:d.label.replace("Año ","A"))+"</text>";
+  });
+  data.forEach(function(d,j){
+    svg+="<rect class='hit' tabindex='0' data-j='"+j+"' x='"+(L+slot*j)+"' y='"+T+"' width='"+slot+"' height='"+ph+"'><title>"+tipText(d,grp).replace(/<[^>]+>/g,"")+"</title></rect>"});
+  svg+="</svg>";
+  var box=$("chartbox");box.innerHTML=svg+"<div class='tip' hidden></div>";
+  var tip=box.querySelector(".tip");
+  function show(el){var j=+el.getAttribute("data-j"),d=data[j];tip.innerHTML=tipText(d,grp);tip.hidden=false;
+    var bb=el.getBoundingClientRect(),cb=box.getBoundingClientRect();
+    var x=bb.left-cb.left+bb.width/2-tip.offsetWidth/2;x=Math.max(0,Math.min(cb.width-tip.offsetWidth,x));
+    tip.style.left=x+"px";tip.style.top=Math.max(0,bb.top-cb.top+8)+"px"}
+  box.querySelectorAll(".hit").forEach(function(h){
+    h.addEventListener("mouseenter",function(){show(h)});h.addEventListener("focus",function(){show(h)});
+    h.addEventListener("click",function(){show(h)});
+    h.addEventListener("mouseleave",function(){tip.hidden=true});h.addEventListener("blur",function(){tip.hidden=true})});
+  $("chartNote").textContent=grp===1?"Cada barra es una cuota. Al principio pagas más interés; al final, más capital.":"Cada barra suma los 12 meses de un año. Pasa el cursor o toca una barra para ver el detalle.";
+}
+function topRound(x,y,w,h,r){ // rectángulo con las dos esquinas superiores redondeadas
+  r=Math.max(0,Math.min(r,h,w/2));
+  return "M"+x+" "+(y+h)+"V"+(y+r)+"Q"+x+" "+y+" "+(x+r)+" "+y+"H"+(x+w-r)+"Q"+(x+w)+" "+y+" "+(x+w)+" "+(y+r)+"V"+(y+h)+"Z";
+}
+function tipText(d,grp){
+  var t=grp===1?"Cuota "+d.label:d.label+" (cuotas "+d.from+" a "+d.to+")";
+  return "<b>"+t+"</b><br>Capital: "+fmt(d.cap)+"<br>Interés: "+fmt(d.int)+"<br>Total: "+fmt(d.cap+d.int);
+}
+
+// ---------- tabla de amortización ----------
+function table(rows){
+  var h="<thead><tr><th>Cuota</th><th>Valor cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead><tbody>";
+  rows.forEach(function(x){h+="<tr><td>"+x.k+"</td><td>"+fmt(x.cuota)+"</td><td>"+fmt(x.cap)+"</td><td>"+fmt(x.int)+"</td><td>"+fmt(x.saldo)+"</td></tr>"});
+  $("am").innerHTML=h+"</tbody>";
+}
+
+// ---------- controles ----------
+function seg(id,key){
+  $(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+    state[key]=b.getAttribute("data-v");
+    $(id).querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});
+    hints();calc()});
+}
+function hints(){
+  $("tasaHint").textContent={mv:"Es la que casi siempre aparece en tarjetas y créditos de libranza: por ejemplo 2% mensual.",ea:"La que publica la Superfinanciera y usan los bancos para anunciar el crédito.",na:"Nominal anual mes vencido: se divide entre 12 para hallar la tasa mensual."}[state.tipo];
+  $("sisHint").textContent=state.sis==="fr"?"La cuota es igual todos los meses. Es el sistema más usado en Colombia.":"Pagas el mismo capital cada mes; la cuota empieza alta y va bajando, y pagas menos intereses en total.";
+}
+seg("tipoTasa","tipo");seg("sistema","sis");
+["monto","plazo","tasa","extra","seguro","comision","usura"].forEach(function(id){$(id).addEventListener("input",calc)});
+["monto","extra","seguro","comision"].forEach(function(id){ // miles con punto al salir del campo
+  $(id).addEventListener("blur",function(){var v=num($(id));$(id).value=v?Math.round(v).toLocaleString("es-CO"):"0"});
+  $(id).addEventListener("focus",function(){$(id).select()})});
+$("tGraf").addEventListener("click",function(){$("vGraf").hidden=false;$("vTab").hidden=true;$("tGraf").setAttribute("aria-pressed","true");$("tTab").setAttribute("aria-pressed","false")});
+$("tTab").addEventListener("click",function(){$("vGraf").hidden=true;$("vTab").hidden=false;$("tTab").setAttribute("aria-pressed","true");$("tGraf").setAttribute("aria-pressed","false")});
+
+// ---------- CSV ----------
+$("bCsv").addEventListener("click",function(){
+  if(!last)return;
+  var lines=["Cuota;Valor cuota;Capital;Interes;Saldo"];
+  last.rows.forEach(function(x){lines.push([x.k,x.cuota,x.cap,x.int,x.saldo].map(function(v,j){return j?Math.round(v):v}).join(";"))});
+  var blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="amortizacion-credito.csv";document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+});
+
+// ---------- imprimir ----------
+$("bPdf").addEventListener("click",function(){
+  if(!last)return;var L=last;
+  var d="<h1>Simulación de crédito</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+
+   "<div class='meta'><div><b>Valor</b><br>"+fmt(L.P)+"</div><div><b>Plazo</b><br>"+L.rows.length+" meses</div><div><b>Tasa</b><br>"+pct(L.ea)+" EA ("+pct(L.i,4)+" mensual)</div>"+
+   "<div><b>Total intereses</b><br>"+fmt(L.intT)+"</div><div><b>Total a pagar</b><br>"+fmt(L.tot)+"</div><div><b>Sistema</b><br>"+(L.sis==="fr"?"Cuota fija":"Abono fijo a capital")+"</div></div>"+
+   "<table><thead><tr><th>Cuota</th><th>Valor cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead><tbody>"+
+   L.rows.map(function(x){return "<tr><td>"+x.k+"</td><td>"+fmt(x.cuota)+"</td><td>"+fmt(x.cap)+"</td><td>"+fmt(x.int)+"</td><td>"+fmt(x.saldo)+"</td></tr>"}).join("")+"</tbody></table>"+
+   "<p class='foot'>Simulación informativa; la cuota final la fija la entidad financiera. No reemplaza la asesoría de un contador público.</p>";
+  $("doc").innerHTML=d;window.print();
+});
+
+// ---------- IA ----------
+$("bIA").addEventListener("click",function(){
+  if(!last)return;var L=last,out=$("ai"),b=$("bIA");
+  if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+  var q="Explica en palabras sencillas este crédito: valor "+fmt(L.P)+", "+L.rows.length+" meses, tasa "+pct(L.ea)+" EA, sistema "+(L.sis==="fr"?"cuota fija":"abono fijo a capital")+", intereses totales "+fmt(L.intT)+(L.hasCost&&L.cea!=null?", costo efectivo anual "+pct(L.cea):"")+". Dime si conviene y qué debo revisar antes de firmar.";
+  b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+  Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false});
+});
+
+hints();calc();
+})();
+</script>
+</body>
+</html>
