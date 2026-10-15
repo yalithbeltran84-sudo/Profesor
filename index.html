@@ -25,6 +25,8 @@ h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:0 0 16px;letter-spacin
 .hero p{color:var(--mute);max-width:46ch;margin:0 0 22px}
 .btn{display:inline-block;background:var(--green);color:var(--on);padding:12px 20px;border-radius:6px;font:700 16px "Bricolage Grotesque",sans-serif;text-decoration:none;border:0;cursor:pointer}
 .cta{display:flex;flex-wrap:wrap;gap:12px}
+.codigo{display:flex;gap:8px;margin-top:16px;max-width:440px}
+.codigo input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif}
 .btn.alt{background:transparent;color:var(--green);border:2px solid var(--green);padding:10px 18px}
 .btn:focus-visible,button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .ledger{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:0 0 0 4px var(--soft)}
@@ -131,6 +133,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 <div class="plan master" data-plan="master"><span class="tag">Lo más completo</span><h3>Master</h3><div class="price">$60.000<small> /mes</small></div><ul><li>300 preguntas a la IA al día</li><li>Respuestas largas y memoria máxima</li><li>Todo el contenido y los cursos mientras tu plan esté activo</li></ul><button class="pick" type="button">Elegir Master</button></div>
 </div>
 <p class="note" id="planmsg" aria-live="polite"></p>
+<div class="codigo"><input id="cod" placeholder="Código de activación" aria-label="Código de activación" autocomplete="off"><button class="btn" type="button" id="activar">Activar</button></div>
 <p class="note">Las plantillas, los cursos y las herramientas descargables también se podrán comprar por separado.</p>
 </section>
 
@@ -193,10 +196,14 @@ var PRECIOS={estudiante:"$10.000",profesional:"$30.000",master:"$60.000"};
 var LLAVE="@PLATA3232015094",CORREO="nanisdiaz18n@gmail.com";
 document.querySelectorAll(".plan .pick").forEach(function(b){b.onclick=function(){var id=b.parentNode.getAttribute("data-plan");var m=document.getElementById("planmsg");
 if(id==="gratis"){if(id===Profesor.plan())return;Profesor.setPlan(id);estado();m.textContent="Plan Gratis activado: tienes 5 preguntas al día en el asistente.";return}
-var p=Profesor.PLANS[id];m.innerHTML="<b>Plan "+p.nombre+" · "+PRECIOS[id]+" al mes.</b> Para activarlo: 1) Transfiere "+PRECIOS[id]+" por Bre-B a la llave <b>"+LLAVE+"</b>. 2) Envía el comprobante con tu nombre y el plan a <a href=\"mailto:"+CORREO+"?subject=Pago%20plan%20"+encodeURIComponent(p.nombre)+"\">"+CORREO+"</a>. 3) Activamos tu plan cuando verifiquemos el pago.";
+var p=Profesor.PLANS[id];m.innerHTML="<b>Plan "+p.nombre+" · "+PRECIOS[id]+" al mes.</b> Para activarlo: 1) Transfiere "+PRECIOS[id]+" por Bre-B a la llave <b>"+LLAVE+"</b>. 2) Envía el comprobante con tu nombre y el plan a <a href=\"mailto:"+CORREO+"?subject=Pago%20plan%20"+encodeURIComponent(p.nombre)+"\">"+CORREO+"</a>. 3) Cuando verifiquemos el pago te enviamos un código de activación: escríbelo en el cuadro de abajo y tu plan queda activo.";
 m.scrollIntoView({behavior:"smooth",block:"nearest"})}});
 document.querySelectorAll(".buy").forEach(function(b){b.onclick=function(){document.getElementById("buymsg").innerHTML="Para comprar: transfiere el valor por Bre-B a la llave <b>"+LLAVE+"</b> y envía el comprobante con el nombre de la plantilla a <a href=\"mailto:"+CORREO+"\">"+CORREO+"</a>. Te la enviamos cuando verifiquemos el pago."}});
 document.getElementById("f").onsubmit=function(e){e.preventDefault();var i=document.getElementById("q");if(i.value.trim()){ask(i.value.trim());i.value=""}};
+function activar(){var c=document.getElementById("cod").value.trim();var m=document.getElementById("planmsg");if(!c)return;m.textContent="Verificando código...";
+Profesor.activarCodigo(c).then(function(d){estado();if(d.ok){var n=Profesor.PLANS[d.plan].nombre;m.textContent="Plan "+n+" activado: ahora tienes "+Profesor.PLANS[d.plan].limite+" preguntas al día.";document.getElementById("cod").value=""}else{m.textContent=d.error?"No pude conectarme. Intenta de nuevo.":"Código no válido o vencido. Revisa que esté bien escrito."}})}
+document.getElementById("activar").onclick=activar;
+document.getElementById("cod").onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();activar()}};
 document.getElementById("probar").onclick=function(){setTimeout(function(){document.getElementById("q").focus()},400)};
 pintar();estado();
 </script>
