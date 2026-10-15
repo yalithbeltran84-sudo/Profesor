@@ -1,5 +1,7 @@
 // Worker de Profesor (Cloudflare): recibe la pregunta en /api/chat y consulta a Gemini.
 // La clave NO va aquí: se guarda en Cloudflare como secreto GEMINI_API_KEY.
+// Los códigos de activación de planes pagos tampoco van aquí: se guardan como secreto CODIGOS
+// con este formato (separados por coma):  CODIGO1=estudiante,CODIGO2=profesional,CODIGO3=master
 
 const CONTENIDO = `
 [Artículo: IVA] El IVA es un impuesto indirecto sobre el consumo. El vendedor lo cobra en cada venta y lo traslada al Estado. En Colombia la tarifa general es del 19%, con bienes excluidos y exentos.
@@ -34,17 +36,46 @@ ${CONTENIDO}`;
 const JSON_HEADERS = { "Content-Type": "application/json" };
 const responder = (status, obj) => new Response(JSON.stringify(obj), { status, headers: JSON_HEADERS });
 
+// Devuelve el plan que corresponde a un código de activación, o "" si no es válido.
+// El plan lo decide siempre el servidor; lo que diga el navegador no cuenta.
+function planDeCodigo(codigo, env) {
+  const c = String(codigo || "").trim().toUpperCase();
+  if (c.length < 6) return "";
+  const lista = String(env.CODIGOS || "").split(",");
+  for (const par of lista) {
+    const i = par.indexOf("=");
+    if (i < 1) continue;
+    const cod = par.slice(0, i).trim().toUpperCase();
+    const plan = par.slice(i + 1).trim().toLowerCase();
+    if (cod === c && PLANES[plan] && plan !== "gratis") return plan;
+  }
+  return "";
+}
+
+// Verifica un código y dice a qué plan da acceso.
+async function codigo(request, env) {
+  if (request.method !== "POST") {
+    return responder(405, { ok: false });
+  }
+  let c = "";
+  try { c = String((await request.json()).codigo || ""); } catch (e) {}
+  const plan = planDeCodigo(c, env);
+  if (!plan) return responder(200, { ok: false });
+  return responder(200, { ok: true, plan });
+}
+
 async function chat(request, env) {
   if (request.method !== "POST") {
     return responder(405, { ok: false, answer: "Método no permitido." });
   }
-  let question = "", plan = "gratis", history = [];
+  let question = "", cod = "", history = [];
   try {
     const b = await request.json();
     question = String(b.question || "").trim().slice(0, 500);
-    if (PLANES[b.plan]) plan = b.plan;
+    cod = String(b.codigo || "");
     if (Array.isArray(b.history)) history = b.history;
   } catch (e) {}
+  const plan = planDeCodigo(cod, env) || "gratis";
   const cfg = PLANES[plan];
   // Memoria de la conversación: solo los últimos mensajes que permite el plan.
   const previos = history
@@ -75,13 +106,13 @@ async function chat(request, env) {
     let res = await call(useSearch);
     if (useSearch && !res.ok) res = await call(false); // si la búsqueda no está disponible, responde sin ella
     if (res.status === 429) {
-      return responder(200, { ok: false, answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." });
+      return responder(200, { ok: false, plan, answer: "Hay muchas consultas en este momento. Intenta de nuevo en un minuto." });
     }
     if (!res.ok) {
       let detalle = "";
       try { detalle = (await res.json()).error?.message || ""; } catch (e) {}
       console.error("Error de Gemini", res.status, detalle);
-      return responder(200, { ok: false, answer: "No pude responder ahora. Intenta de nuevo en un momento." });
+      return responder(200, { ok: false, plan, answer: "No pude responder ahora. Intenta de nuevo en un momento." });
     }
     const data = await res.json();
     const cand = data.candidates?.[0];
@@ -90,9 +121,9 @@ async function chat(request, env) {
     const sources = (cand?.groundingMetadata?.groundingChunks || [])
       .map(c => c.web).filter(w => w && w.uri && !vistos.has(w.uri) && vistos.add(w.uri))
       .slice(0, 5).map(w => ({ title: w.title || "Fuente", uri: w.uri }));
-    return responder(200, { ok: true, answer, sources });
+    return responder(200, { ok: true, plan, answer, sources });
   } catch (e) {
-    return responder(200, { ok: false, answer: "Error de conexión. Intenta de nuevo." });
+    return responder(200, { ok: false, plan, answer: "Error de conexión. Intenta de nuevo." });
   }
 }
 
@@ -100,6 +131,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/chat") return chat(request, env);
+    if (url.pathname === "/api/codigo") return codigo(request, env);
     return env.ASSETS.fetch(request); // el resto del sitio (index.html, calculadora.html, profesor.js)
   }
 };
