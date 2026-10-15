@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Simula tu crédito: cuota, intereses, tabla de amortización, abonos extra, costo efectivo anual y comparación con la tasa de usura. Gratis y sin registro.">
-<title>Simulador de crédito · Profesor</title>
+<meta name="description" content="Calcula tu crédito: cuota, intereses, tabla de amortización, abonos extra, costo efectivo anual y comparación con la tasa de usura. Gratis y sin registro.">
+<title>Calculadora de crédito · Profesor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
@@ -104,7 +104,7 @@ table.eq{width:100%;border-collapse:collapse;margin-top:6px;font-size:14.5px;fon
 <div class="wrap">
 <header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html">Volver al inicio</a></header>
 
-<h1>Simulador de crédito</h1>
+<h1>Calculadora de crédito</h1>
 <p class="lead">Escribe el valor, el plazo y la tasa. Ves la cuota, los intereses y la tabla de amortización al instante, y puedes probar abonos extra, costos adicionales y comparar con la tasa de usura. No pide registro y lo que escribes no sale de tu navegador.</p>
 
 <div class="grid">
@@ -191,7 +191,7 @@ table.eq{width:100%;border-collapse:collapse;margin-top:6px;font-size:14.5px;fon
     <button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
   </div>
   <div id="ai" hidden></div>
-  <p class="src">Cálculo con la convención colombiana: la tasa efectiva anual se convierte a mensual con (1 + EA)^(1/12) − 1 y la nominal anual mes vencido se divide entre 12. El resultado es una simulación; la cuota final la fija tu entidad. No reemplaza la asesoría de un contador público.</p>
+  <p class="src">Cálculo con la convención colombiana: la tasa efectiva anual se convierte a mensual con (1 + EA)^(1/12) − 1 y la nominal anual mes vencido se divide entre 12. El resultado es una estimación; la cuota final la fija tu entidad. No reemplaza la asesoría de un contador público.</p>
 </section>
 </div>
 </div>
@@ -377,12 +377,12 @@ $("bCsv").addEventListener("click",function(){
 // ---------- imprimir ----------
 $("bPdf").addEventListener("click",function(){
   if(!last)return;var L=last;
-  var d="<h1>Simulación de crédito</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+
+  var d="<h1>Cálculo de crédito</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+
    "<div class='meta'><div><b>Valor</b><br>"+fmt(L.P)+"</div><div><b>Plazo</b><br>"+L.rows.length+" meses</div><div><b>Tasa</b><br>"+pct(L.ea)+" EA ("+pct(L.i,4)+" mensual)</div>"+
    "<div><b>Total intereses</b><br>"+fmt(L.intT)+"</div><div><b>Total a pagar</b><br>"+fmt(L.tot)+"</div><div><b>Sistema</b><br>"+(L.sis==="fr"?"Cuota fija":"Abono fijo a capital")+"</div></div>"+
    "<table><thead><tr><th>Cuota</th><th>Valor cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead><tbody>"+
    L.rows.map(function(x){return "<tr><td>"+x.k+"</td><td>"+fmt(x.cuota)+"</td><td>"+fmt(x.cap)+"</td><td>"+fmt(x.int)+"</td><td>"+fmt(x.saldo)+"</td></tr>"}).join("")+"</tbody></table>"+
-   "<p class='foot'>Simulación informativa; la cuota final la fija la entidad financiera. No reemplaza la asesoría de un contador público.</p>";
+   "<p class='foot'>Cálculo informativo; la cuota final la fija la entidad financiera. No reemplaza la asesoría de un contador público.</p>";
   $("doc").innerHTML=d;window.print();
 });
 
