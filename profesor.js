@@ -7,7 +7,7 @@
     profesional: { nombre: "Profesional", limite: 100 },
     master:      { nombre: "Master",      limite: 300 }
   };
-  var K = { plan: "profesor_plan", uso: "profesor_uso", chats: "profesor_chats" };
+  var K = { codigo: "profesor_codigo", plan: "profesor_plan", uso: "profesor_uso", chats: "profesor_chats" };
 
   function get(k, def) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
   function set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -15,7 +15,22 @@
 
   var mem = {}; // respaldo si el navegador bloquea localStorage
   function plan() { var p = get(K.plan, null) || mem.plan; return PLANS[p] ? p : "gratis"; }
-  function setPlan(p) { if (PLANS[p]) { mem.plan = p; set(K.plan, p); } }
+  function codigo() { return get(K.codigo, "") || mem.codigo || ""; }
+  function setPlan(p) {
+    if (!PLANS[p]) return;
+    mem.plan = p; set(K.plan, p);
+    if (p === "gratis") { mem.codigo = ""; set(K.codigo, ""); } // volver a Gratis borra el código guardado
+  }
+  // Verifica un código de activación con el servidor. Solo si es válido se activa el plan.
+  function activarCodigo(c) {
+    c = String(c || "").trim();
+    return fetch("/api/codigo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ codigo: c }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.ok && PLANS[d.plan]) { mem.codigo = c; set(K.codigo, c); setPlan(d.plan); mem.codigo = c; set(K.codigo, c); return { ok: true, plan: d.plan }; }
+        return { ok: false };
+      }).catch(function () { return { ok: false, error: true }; });
+  }
   function usadas() { var u = get(K.uso, null) || mem.uso; return u && u.dia === hoy() ? u.n : 0; }
   function restantes() { return Math.max(0, PLANS[plan()].limite - usadas()); }
   function contar() { var u = { dia: hoy(), n: usadas() + 1 }; mem.uso = u; set(K.uso, u); }
@@ -40,13 +55,14 @@
     }
     return fetch("/api/chat", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q, plan: plan(), history: historial || [] })
+      body: JSON.stringify({ question: q, codigo: codigo(), history: historial || [] })
     }).then(function (r) { return r.json(); }).then(function (d) {
       if (d.ok) contar();
+      if (d.plan && d.plan !== plan()) setPlan(d.plan); // si el código venció, vuelve a Gratis
       return d;
     }).catch(function () { return { ok: false, answer: "No pude conectarme. Intenta de nuevo." }; });
   }
 
-  window.Profesor = { PLANS: PLANS, plan: plan, setPlan: setPlan, usadas: usadas, restantes: restantes,
+  window.Profesor = { PLANS: PLANS, plan: plan, setPlan: setPlan, activarCodigo: activarCodigo, usadas: usadas, restantes: restantes,
     chats: chats, nuevoChat: nuevoChat, guardarChat: guardarChat, borrarChat: borrarChat, preguntar: preguntar };
 })();
