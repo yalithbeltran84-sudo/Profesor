@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Plan Único de Cuentas (PUC) de Colombia con buscador: clases, grupos y cuentas con su naturaleza débito o crédito. Gratis y sin registro.">
+<title>PUC Colombia · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--deb:#0F3D3E;--cre:#8A5A00}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--deb:#7FC8B5;--cre:#F0C46A}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--deb:#7FC8B5;--cre:#F0C46A}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,.sans{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 56px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:62ch;margin:0 0 22px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--line)}
+input[type=search]{width:100%;border:2px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);padding:12px 14px;font-size:17px;min-height:50px}
+input:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:36px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--green);color:var(--onbtn);border-color:var(--green)}
+.count{font:500 14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:12px 0 4px}
+details.cl{border-bottom:1px solid var(--line)}
+details.cl>summary{list-style:none;cursor:pointer;padding:14px 0;font:800 20px "Bricolage Grotesque",sans-serif;display:flex;gap:12px;align-items:baseline}
+details.cl>summary::-webkit-details-marker{display:none}
+details.cl>summary::before{content:"▸";color:var(--mute);font-size:16px;transition:transform .15s}
+details.cl[open]>summary::before{transform:rotate(90deg)}
+.num{font-variant-numeric:tabular-nums;color:var(--green)}
+.gr{margin:4px 0 14px 22px}
+.gr h3{margin:14px 0 4px;font-size:16px;color:var(--mute);font-weight:700}
+.acc{display:grid;grid-template-columns:64px 1fr auto;gap:4px 12px;align-items:baseline;padding:9px 6px;border-radius:6px;cursor:pointer;border:0;background:transparent;width:100%;text-align:left;color:var(--ink);font:inherit}
+.acc:hover{background:var(--soft)}
+.acc .code{font:800 16px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;color:var(--green)}
+.acc .nm{font:500 16px/1.35 "Bricolage Grotesque",sans-serif}
+.nat{font:700 12px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.nat.d{color:var(--deb)}.nat.c{color:var(--cre)}
+.det{grid-column:2/-1;font:400 14.5px/1.45 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.acc.open{background:var(--soft)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;grid-column:2/-1}
+.mini{border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:6px;padding:6px 10px;font:700 13px "Bricolage Grotesque",sans-serif;min-height:34px;cursor:pointer}
+#ai{margin:12px 0;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+mark{background:var(--amber);color:#12261F;border-radius:3px;padding:0 2px}
+.empty{padding:28px 0;color:var(--mute)}
+.note{font-size:14px;color:var(--mute);margin-top:22px}
+.note a{color:var(--green)}
+.top{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.btn{background:var(--green);color:var(--onbtn);border:0;border-radius:6px;padding:10px 14px;font:700 14px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+@media(max-width:520px){.acc{grid-template-columns:54px 1fr}.acc .nat{grid-column:2;justify-self:start}.gr{margin-left:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html">Volver al inicio</a></header>
+
+<h1>PUC de Colombia</h1>
+<p class="lead">Busca una cuenta por su código o por una palabra: «caja», «iva», «cesantías», «depreciación»… Toca una cuenta para ver para qué sirve y copiar su código. No pide registro.</p>
+
+<div class="bar">
+  <input id="q" type="search" placeholder="Busca: 1105, bancos, retención, nómina…" autocomplete="off" aria-label="Buscar cuenta">
+  <div class="chips" id="chips" role="group" aria-label="Filtrar por clase"></div>
+</div>
+<div class="count" id="count" aria-live="polite"></div>
+<div id="out"></div>
+<div id="ai" hidden></div>
+
+<div class="top"><button class="btn" id="csv" type="button">Descargar listado (CSV)</button></div>
+<p class="note">Este listado sigue la estructura del Plan Único de Cuentas para comerciantes (Decreto 2650 de 1993 y sus modificaciones): clase, grupo y cuenta de cuatro dígitos. Muestra las cuentas principales, no todas las subcuentas. Las entidades que aplican NIIF y las del sector público usan su propio catálogo, y cada empresa puede ampliar el suyo, así que confirma siempre con la norma vigente o con tu contador. Para el sector público consulta el <a href="https://www.contaduria.gov.co" target="_blank" rel="noopener">catálogo de la Contaduría General de la Nación</a>. No reemplaza la asesoría de un contador público.</p>
+</div>
+
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+
+var CLASES={1:"Activo",2:"Pasivo",3:"Patrimonio",4:"Ingresos",5:"Gastos",6:"Costos de ventas",7:"Costos de producción",8:"Cuentas de orden deudoras",9:"Cuentas de orden acreedoras"};
+
+// Formato: código|nombre|palabras clave (opcional)
+var RAW=[
+"11|Disponible",
+"1105|Caja|efectivo dinero caja menor caja general",
+"1110|Bancos|banco cuenta corriente",
+"1115|Remesas en tránsito|cheques",
+"1120|Cuentas de ahorro|ahorros banco",
+"1125|Fondos|fondo",
+"12|Inversiones",
+"1205|Acciones",
+"1210|Cuotas o partes de interés social",
+"1215|Bonos",
+"1220|Cédulas",
+"1225|Certificados|cdt",
+"1230|Papeles comerciales",
+"1235|Títulos",
+"1240|Aceptaciones bancarias o financieras",
+"1245|Derechos fiduciarios|fiducia",
+"1295|Otras inversiones",
+"1299|Provisiones|inversiones deterioro",
+"13|Deudores",
+"1305|Clientes|cartera cuentas por cobrar ventas a credito",
+"1310|Cuentas corrientes comerciales",
+"1315|Cuentas por cobrar a casa matriz",
+"1320|Cuentas por cobrar a vinculados económicos",
+"1325|Cuentas por cobrar a socios y accionistas",
+"1330|Anticipos y avances|anticipo proveedores",
+"1335|Depósitos|deposito garantia",
+"1340|Promesas de compraventa",
+"1345|Ingresos por cobrar|intereses por cobrar",
+"1350|Retención sobre contratos",
+"1355|Anticipo de impuestos y contribuciones o saldos a favor|retencion en la fuente a favor autorretencion saldo a favor renta iva ica",
+"1360|Reclamaciones",
+"1365|Cuentas por cobrar a trabajadores|prestamos empleados",
+"1370|Préstamos a particulares",
+"1380|Deudores varios",
+"1390|Deudas de difícil cobro|cartera mala",
+"1399|Provisiones|deudores cartera deterioro cuentas incobrables",
+"14|Inventarios",
+"1405|Materias primas",
+"1410|Productos en proceso",
+"1430|Productos terminados",
+"1435|Mercancías no fabricadas por la empresa|mercancia inventario de mercancias para la venta",
+"1440|Bienes raíces para la venta",
+"1450|Terrenos",
+"1455|Materiales, repuestos y accesorios",
+"1460|Envases y empaques",
+"1465|Inventarios en tránsito",
+"1499|Provisiones|inventarios deterioro",
+"15|Propiedades, planta y equipo",
+"1504|Terrenos|lotes",
+"1508|Construcciones en curso",
+"1512|Maquinaria y equipos en montaje",
+"1516|Construcciones y edificaciones|edificios bodegas locales",
+"1520|Maquinaria y equipo|maquinas",
+"1524|Equipo de oficina|muebles y enseres escritorios sillas",
+"1528|Equipo de computación y comunicación|computadores celulares",
+"1532|Equipo médico-científico",
+"1536|Equipo de hoteles y restaurantes",
+"1540|Flota y equipo de transporte|vehiculos carros motos camiones",
+"1556|Acueductos, plantas y redes",
+"1564|Plantaciones agrícolas y forestales|cultivos",
+"1568|Vías de comunicación",
+"1588|Propiedades, planta y equipo en tránsito",
+"1592|Depreciación acumulada|depreciacion",
+"1596|Depreciación diferida",
+"1597|Amortización acumulada",
+"1598|Agotamiento acumulado",
+"1599|Provisiones|propiedad planta y equipo deterioro",
+"16|Intangibles",
+"1605|Crédito mercantil|goodwill",
+"1610|Marcas",
+"1615|Patentes",
+"1620|Concesiones y franquicias",
+"1625|Derechos",
+"1630|Know how",
+"1635|Licencias|software",
+"1698|Depreciación y/o amortización acumulada",
+"1699|Provisiones|intangibles deterioro",
+"17|Diferidos",
+"1705|Gastos pagados por anticipado|seguros pagados arriendo anticipado",
+"1710|Cargos diferidos",
+"1715|Costos de exploración por amortizar",
+"1720|Costos de explotación y desarrollo",
+"1798|Amortización acumulada|diferidos",
+"18|Otros activos",
+"1805|Bienes de arte y cultura",
+"1895|Diversos",
+"1899|Provisiones|otros activos deterioro",
+"19|Valorizaciones",
+"1905|De inversiones",
+"1910|De propiedades, planta y equipo",
+"1995|De otros activos",
+
+"21|Obligaciones financieras",
+"2105|Bancos nacionales|prestamo bancario credito sobregiro",
+"2110|Bancos del exterior",
+"2115|Corporaciones financieras",
+"2120|Compañías de financiamiento comercial",
+"2125|Corporaciones de ahorro y vivienda|hipoteca",
+"2130|Entidades financieras del exterior",
+"2135|Compromisos de recompra de inversiones negociadas",
+"2140|Compromisos de recompra de cartera negociada",
+"2145|Obligaciones gubernamentales",
+"2195|Otras obligaciones|tarjeta de credito",
+"22|Proveedores",
+"2205|Nacionales|proveedores",
+"2210|Del exterior|importaciones proveedores",
+"2215|Cuentas corrientes comerciales",
+"2220|Casa matriz",
+"2225|Compañías vinculadas",
+"2230|Contratistas",
+"23|Cuentas por pagar",
+"2305|Cuentas corrientes comerciales",
+"2310|A casa matriz",
+"2315|A compañías vinculadas",
+"2320|A contratistas",
+"2335|Costos y gastos por pagar|servicios publicos arriendos honorarios por pagar",
+"2340|Instalamentos por pagar",
+"2345|Acreedores oficiales",
+"2350|Regalías por pagar",
+"2355|Deudas con accionistas o socios",
+"2357|Deudas con directores",
+"2360|Dividendos o participaciones por pagar|utilidades por pagar",
+"2365|Retención en la fuente|retefuente rte fte renta por pagar dian",
+"2367|Impuesto a las ventas retenido|reteiva",
+"2368|Impuesto de industria y comercio retenido|reteica ica retenido",
+"2370|Retenciones y aportes de nómina|salud pension eps arl parafiscales aportes",
+"2375|Cuotas por devolver",
+"2380|Acreedores varios",
+"24|Impuestos, gravámenes y tasas",
+"2404|De renta y complementarios|impuesto de renta por pagar",
+"2408|Impuesto sobre las ventas por pagar|iva generado descontable por pagar",
+"2412|De industria y comercio|ica por pagar",
+"2416|A la propiedad raíz|predial",
+"2420|Derechos sobre instrumentos públicos",
+"2424|De valorización",
+"2428|De turismo",
+"2432|Tasa por utilización de puertos",
+"2436|De vehículos|impuesto vehicular",
+"2440|De espectáculos públicos",
+"2444|De hidrocarburos y minas",
+"2495|Otros",
+"25|Obligaciones laborales",
+"2505|Salarios por pagar|sueldos nomina por pagar",
+"2510|Cesantías consolidadas|cesantias",
+"2515|Intereses sobre cesantías|intereses cesantias",
+"2520|Prima de servicios|prima",
+"2525|Vacaciones consolidadas|vacaciones",
+"2530|Prestaciones extralegales",
+"2532|Pensiones por pagar",
+"2535|Pensiones de jubilación",
+"26|Pasivos estimados y provisiones",
+"2605|Para costos y gastos",
+"2610|Para obligaciones laborales",
+"2615|Para obligaciones fiscales|provision impuesto de renta",
+"2620|Pensiones de jubilación",
+"2625|Para obras de urbanismo",
+"2630|Para mantenimiento y reparaciones",
+"2635|Para contingencias|demandas",
+"2640|Para obligaciones de garantías",
+"2695|Provisiones diversas",
+"27|Diferidos",
+"2705|Ingresos recibidos por anticipado",
+"2710|Abonos diferidos",
+"2715|Utilidad diferida en ventas a plazos",
+"2725|Impuestos diferidos",
+"28|Otros pasivos",
+"2805|Anticipos y avances recibidos|anticipo de clientes",
+"2810|Depósitos recibidos",
+"2815|Ingresos recibidos para terceros",
+"2820|Cuentas de operación conjunta",
+"2825|Retenciones a terceros sobre contratos",
+"2830|Embargos judiciales",
+"2895|Diversos",
+"29|Bonos y papeles comerciales",
+"2905|Bonos en circulación",
+"2910|Bonos obligatoriamente convertibles en acciones",
+"2915|Papeles comerciales",
+
+"31|Capital social",
+"3105|Capital suscrito y pagado|aportes socios capital",
+"3115|Aportes sociales",
+"3120|Capital asignado",
+"3125|Inversión suplementaria al capital asignado",
+"3130|Capital de personas naturales",
+"32|Superávit de capital",
+"3205|Prima en colocación de acciones, cuotas o partes de interés social",
+"3210|Donaciones",
+"3215|Crédito mercantil",
+"3220|Know how",
+"3225|Superávit método de participación",
+"33|Reservas",
+"3305|Reservas obligatorias|reserva legal",
+"3310|Reservas estatutarias",
+"3315|Reservas ocasionales",
+"34|Revalorización del patrimonio",
+"3405|Ajustes por inflación",
+"35|Dividendos o participaciones decretados en acciones, cuotas o partes de interés social",
+"3505|Dividendos o participaciones decretados en acciones, cuotas o partes de interés social",
+"36|Resultados del ejercicio",
+"3605|Utilidad del ejercicio|ganancia",
+"3610|Pérdida del ejercicio",
+"37|Resultados de ejercicios anteriores",
+"3705|Utilidades acumuladas",
+"3710|Pérdidas acumuladas",
+"38|Superávit por valorizaciones",
+"3805|De inversiones",
+"3810|De propiedades, planta y equipo",
+"3895|De otros activos",
+
+"41|Operacionales",
+"4105|Agricultura, ganadería, caza y silvicultura",
+"4110|Pesca",
+"4115|Explotación de minas y canteras",
+"4120|Industrias manufactureras",
+"4125|Suministro de electricidad, gas y agua",
+"4130|Construcción",
+"4135|Comercio al por mayor y al por menor|ventas de mercancias ingresos por ventas",
+"4140|Hoteles y restaurantes",
+"4145|Transporte, almacenamiento y comunicaciones",
+"4150|Actividad financiera",
+"4155|Actividades inmobiliarias, empresariales y de alquiler",
+"4160|Enseñanza",
+"4165|Servicios sociales y de salud",
+"4170|Otras actividades de servicios comunitarios, sociales y personales|servicios prestados ingresos por servicios",
+"4175|Devoluciones, rebajas y descuentos en ventas|devolucion en ventas",
+"42|No operacionales",
+"4205|Otras ventas",
+"4210|Financieros|intereses ganados rendimientos",
+"4215|Dividendos y participaciones",
+"4220|Arrendamientos|alquiler ingreso",
+"4225|Comisiones",
+"4230|Honorarios",
+"4235|Servicios",
+"4240|Utilidad en venta de inversiones",
+"4245|Utilidad en venta de propiedades, planta y equipo",
+"4250|Recuperaciones",
+"4255|Indemnizaciones",
+"4260|Participaciones en concesiones",
+"4265|Ingresos de ejercicios anteriores",
+"4295|Diversos|aprovechamientos",
+
+"51|Operacionales de administración",
+"5105|Gastos de personal|sueldos salarios nomina prestaciones",
+"5110|Honorarios|contador abogado asesoria",
+"5115|Impuestos|ica predial gravamen",
+"5120|Arrendamientos|alquiler arriendo",
+"5125|Contribuciones y afiliaciones",
+"5130|Seguros|polizas",
+"5135|Servicios|agua luz internet telefono energia aseo vigilancia",
+"5140|Gastos legales|notaria camara de comercio registro",
+"5145|Mantenimiento y reparaciones",
+"5150|Adecuación e instalación",
+"5155|Gastos de viaje",
+"5160|Depreciaciones|depreciacion gasto",
+"5165|Amortizaciones",
+"5195|Diversos|papeleria cafeteria elementos de aseo",
+"5199|Provisiones",
+"52|Operacionales de ventas",
+"5205|Gastos de personal|comisiones vendedores",
+"5210|Honorarios",
+"5215|Impuestos",
+"5220|Arrendamientos",
+"5225|Contribuciones y afiliaciones",
+"5230|Seguros",
+"5235|Servicios|publicidad fletes",
+"5240|Gastos legales",
+"5245|Mantenimiento y reparaciones",
+"5250|Adecuación e instalación",
+"5255|Gastos de viaje",
+"5260|Depreciaciones",
+"5265|Amortizaciones",
+"5295|Diversos",
+"5299|Provisiones",
+"53|No operacionales",
+"5305|Financieros|intereses pagados comisiones bancarias gravamen 4x1000 gmf",
+"5310|Pérdida en venta y retiro de bienes",
+"5313|Pérdida en método de participación",
+"5315|Gastos extraordinarios|multas sanciones",
+"5395|Gastos diversos",
+"54|Impuesto de renta y complementarios",
+"5405|Impuesto de renta y complementarios|provision renta gasto",
+"59|Ganancias y pérdidas",
+"5905|Ganancias y pérdidas|cierre estado de resultados",
+
+"61|Costo de ventas y de prestación de servicios",
+"6105|Agricultura, ganadería, caza y silvicultura",
+"6110|Pesca",
+"6115|Explotación de minas y canteras",
+"6120|Industrias manufactureras",
+"6125|Suministro de electricidad, gas y agua",
+"6130|Construcción",
+"6135|Comercio al por mayor y al por menor|costo de mercancia vendida cmv costo de ventas",
+"6140|Hoteles y restaurantes",
+"6145|Transporte, almacenamiento y comunicaciones",
+"6150|Actividad financiera",
+"6155|Actividades inmobiliarias, empresariales y de alquiler",
+"6160|Enseñanza",
+"6165|Servicios sociales y de salud",
+"6170|Otras actividades de servicios comunitarios, sociales y personales",
+"62|Compras",
+"6205|De mercancías|compras",
+"6210|De materias primas",
+"6225|Devoluciones en compras de mercancías|devolucion en compras",
+
+"71|Materia prima",
+"72|Mano de obra directa",
+"73|Costos indirectos",
+"74|Contratos de servicios",
+
+"81|Derechos contingentes",
+"82|Deudoras fiscales",
+"83|Deudoras de control",
+"84|Derechos contingentes por contra (cr)",
+"85|Deudoras de control por contra (cr)",
+"91|Responsabilidades contingentes",
+"92|Acreedoras fiscales",
+"93|Acreedoras de control",
+"94|Responsabilidades contingentes por contra (db)",
+"95|Acreedoras de control por contra (db)"
+];
+
+// Cuentas de la clase 1 y otras que van contra la regla de su clase
+var CONTRA_CR={"1299":1,"1399":1,"1499":1,"1592":1,"1596":1,"1597":1,"1598":1,"1599":1,"1698":1,"1699":1,"1798":1,"1899":1};
+var CONTRA_DB={"3610":1,"3710":1,"4175":1,"6225":1,"3505":0};
+var USO={
+"1105":"Dinero en efectivo de la empresa: caja general y cajas menores. Se debita cuando entra efectivo y se acredita cuando sale.",
+"1110":"Dinero en cuentas corrientes de bancos. Debe cuadrar con el extracto bancario en la conciliación.",
+"1305":"Lo que los clientes le deben a la empresa por ventas a crédito.",
+"1355":"Retenciones, anticipos y saldos a favor de impuestos que la empresa puede descontar después (por ejemplo, retenciones que le practicaron).",
+"1435":"Mercancía comprada para revender. Se usa en el inventario permanente o al cierre del periodo.",
+"1592":"Acumula la depreciación de los activos fijos. Resta al valor del activo: tiene naturaleza crédito aunque está en el activo.",
+"2205":"Lo que la empresa debe a proveedores nacionales por compras a crédito.",
+"2365":"Retenciones en la fuente que la empresa practicó a terceros y debe consignar a la DIAN.",
+"2370":"Descuentos a empleados (salud, pensión) y aportes por pagar de la nómina.",
+"2408":"IVA generado en ventas menos IVA descontable de compras; el saldo se declara y se paga a la DIAN.",
+"2505":"Salarios causados que aún no se han pagado a los empleados.",
+"2510":"Cesantías causadas a favor de los trabajadores que aún no se consignan al fondo.",
+"2515":"Intereses sobre cesantías causados (12 % anual proporcional) pendientes de pago.",
+"2520":"Prima de servicios causada y pendiente de pago.",
+"2525":"Vacaciones causadas y pendientes de disfrutar o pagar.",
+"3105":"Aportes que los socios han suscrito y pagado a la empresa.",
+"3605":"Resultado positivo del periodo, que se determina al cerrar las cuentas de ingresos, gastos y costos.",
+"4135":"Ingresos por ventas de mercancías en empresas comerciales.",
+"4175":"Resta de los ingresos: devoluciones, rebajas y descuentos. Tiene naturaleza débito aunque está en ingresos.",
+"5105":"Sueldos, prestaciones y demás gastos del personal administrativo.",
+"5160":"Gasto del periodo por el desgaste de los activos fijos; su contrapartida es la 1592.",
+"6135":"Costo de las mercancías vendidas en empresas comerciales.",
+"6205":"Compras de mercancía en el sistema de inventario periódico."
+};
+
+function nat(code){
+  if(CONTRA_CR[code])return "c";
+  if(CONTRA_DB[code])return "d";
+  var cl=code.charAt(0);
+  return (cl==="2"||cl==="3"||cl==="4"||cl==="9")?"c":"d";
+}
+function norm(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")}
+
+var DATA=RAW.map(function(l){var p=l.split("|"),c=p[0];
+  return {code:c,name:p[1],kw:p[2]||"",len:c.length,cl:c.charAt(0),g:c.slice(0,2),nat:c.length===4?nat(c):null,n:norm(p[1]+" "+(p[2]||"")),uso:USO[c]||""}});
+
+var state={cl:"",q:""};
+var chips=$("chips");
+function chip(v,t){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=t;b.setAttribute("data-v",v);b.setAttribute("aria-pressed",String(v===state.cl));chips.appendChild(b)}
+chip("","Todas");
+Object.keys(CLASES).forEach(function(k){chip(k,k+" · "+CLASES[k])});
+chips.addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;state.cl=b.getAttribute("data-v");
+  chips.querySelectorAll(".chip").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});render()});
+$("q").addEventListener("input",function(){state.q=this.value;render()});
+
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function hl(name,terms){
+  var h=esc(name),nn=norm(name);if(!terms.length)return h;
+  // resalta sin acentos: marca por posición en el texto normalizado (misma longitud)
+  var marks=new Array(name.length).fill(false);
+  terms.forEach(function(t){if(!t||/^\d+$/.test(t))return;var i=-1;while((i=nn.indexOf(t,i+1))>-1){for(var j=0;j<t.length;j++)marks[i+j]=true}});
+  var out="",open=false;
+  for(var k=0;k<name.length;k++){if(marks[k]&&!open){out+="<mark>";open=true}if(!marks[k]&&open){out+="</mark>";open=false}out+=esc(name[k])}
+  return out+(open?"</mark>":"");
+}
+
+function render(){
+  var terms=norm(state.q).trim().split(/\s+/).filter(Boolean);
+  var searching=terms.length>0||state.cl!=="";
+  var list=DATA.filter(function(d){
+    if(state.cl&&d.cl!==state.cl)return false;
+    return terms.every(function(t){
+      if(/^\d+$/.test(t))return d.code.indexOf(t)===0;
+      return d.n.indexOf(t)>-1});
+  });
+  // si hay búsqueda, los grupos (2 dígitos) solo se muestran como encabezado de lo que sí coincide
+  var cuentas=list.filter(function(d){return d.len===4}),grupos=list.filter(function(d){return d.len===2});
+  var html="",total=0;
+  Object.keys(CLASES).forEach(function(k){
+    if(state.cl&&k!==state.cl)return;
+    var gs=DATA.filter(function(d){return d.len===2&&d.cl===k});
+    var inner="",n=0;
+    gs.forEach(function(g){
+      var cs=cuentas.filter(function(c){return c.g===g.code});
+      var hasDetail=DATA.some(function(d){return d.len===4&&d.g===g.code});
+      var gMatch=list.indexOf(g)>-1;
+      if(!cs.length&&!(gMatch&&!hasDetail))return;
+      inner+="<div class='gr'><h3><span class='num'>"+g.code+"</span> "+hl(g.name,terms)+"</h3>";
+      if(!cs.length)inner+="<div class='det' style='padding:4px 6px'>Grupo sin cuentas detalladas en este listado.</div>";
+      cs.forEach(function(c){n++;
+        inner+="<button class='acc' type='button' data-c='"+c.code+"'><span class='code'>"+c.code+"</span><span class='nm'>"+hl(c.name,terms)+"</span><span class='nat "+c.nat+"'>"+(c.nat==="d"?"Débito":"Crédito")+"</span></button>"});
+      inner+="</div>";
+    });
+    if(!inner)return;
+    total+=n;
+    html+="<details class='cl' "+(searching?"open":"")+"><summary><span class='num'>"+k+"</span> "+CLASES[k]+"</summary>"+inner+"</details>";
+  });
+  $("out").innerHTML=html||"<p class='empty'>No encontré cuentas con eso. Prueba con otra palabra (por ejemplo «caja», «iva», «salarios») o con el código.</p>";
+  $("count").textContent=searching?(total+(total===1?" cuenta encontrada":" cuentas encontradas")):"Toca una clase para abrirla, o escribe arriba para buscar.";
+}
+
+// detalle al tocar una cuenta
+$("out").addEventListener("click",function(e){
+  var b=e.target.closest(".acc");
+  if(b){toggle(b);return}
+  var t=e.target.closest("[data-act]");if(!t)return;
+  var code=t.getAttribute("data-code");
+  if(t.getAttribute("data-act")==="copy"){
+    var done=function(){t.textContent="Copiado";setTimeout(function(){t.textContent="Copiar código"},1200)};
+    if(navigator.clipboard)navigator.clipboard.writeText(code).then(done,done);else done();
+  }else if(t.getAttribute("data-act")==="ia")ask(code);
+});
+function toggle(b){
+  var prev=b.querySelector(".tools");
+  if(b.classList.contains("open")){b.classList.remove("open");b.querySelectorAll(".det,.tools").forEach(function(x){x.remove()});return}
+  var c=DATA.filter(function(d){return d.code===b.getAttribute("data-c")})[0];
+  b.classList.add("open");
+  var cls=CLASES[c.cl],txt=(c.nat==="d"?"Naturaleza débito: aumenta con débitos y disminuye con créditos.":"Naturaleza crédito: aumenta con créditos y disminuye con débitos.");
+  var d=document.createElement("span");d.className="det";d.textContent=(c.uso?c.uso+" ":"")+txt+" Clase "+c.cl+" · "+cls+".";
+  var tools=document.createElement("span");tools.className="tools";
+  tools.innerHTML="<span class='mini' role='button' tabindex='0' data-act='copy' data-code='"+c.code+"'>Copiar código</span><span class='mini' role='button' tabindex='0' data-act='ia' data-code='"+c.code+"'>Explícame esta cuenta</span>";
+  b.appendChild(d);b.appendChild(tools);
+}
+$("out").addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.getAttribute&&e.target.getAttribute("data-act")){e.preventDefault();e.target.click()}});
+
+function ask(code){
+  var c=DATA.filter(function(d){return d.code===code})[0],out=$("ai");
+  out.hidden=false;
+  if(!window.Profesor){out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+  out.textContent="Pensando…";out.scrollIntoView({block:"nearest",behavior:"smooth"});
+  var q="Explica en palabras sencillas la cuenta "+c.code+" "+c.name+" del PUC colombiano: para qué sirve, cuándo se debita y cuándo se acredita, y un ejemplo de asiento.";
+  Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora."});
+}
+
+$("csv").addEventListener("click",function(){
+  var L=["Codigo;Nombre;Nivel;Naturaleza"];
+  DATA.forEach(function(d){L.push([d.code,'"'+d.name.replace(/"/g,'""')+'"',d.len===2?"Grupo":"Cuenta",d.nat?(d.nat==="d"?"Debito":"Credito"):""].join(";"))});
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+L.join("\r\n")],{type:"text/csv;charset=utf-8"}));a.download="puc-colombia.csv";document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+});
+
+render();
+})();
+</script>
+</body>
+</html>
