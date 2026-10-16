@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calculadora de IVA para Colombia: agrega o saca el IVA de una factura, separa ventas y compras y calcula el IVA por pagar o el saldo a favor, con el asiento contable. Gratis y sin registro.">
+<title>Calculadora de IVA · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 6px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 10px;font-size:15.5px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lines{display:grid;gap:12px;margin:14px 0}
+.line{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.line label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--mute)}
+.line .full{grid-column:1/-1}
+.line .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:44px}
+.line .chk input{width:20px;min-height:20px;height:20px}
+.line .top{grid-column:1/-1;display:flex;gap:10px;align-items:end}
+.line .top label{flex:1}
+.del{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:44px;padding:0 12px;font:600 13px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.del:hover{color:var(--bad);border-color:var(--bad)}
+.tag{display:inline-block;font:700 11.5px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:6px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+.adds{display:flex;gap:10px;flex-wrap:wrap}
+.opt{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.opt label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;min-height:32px}
+.opt input[type=checkbox]{width:20px;min-height:20px;height:20px;margin-top:3px}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+h3{font-size:17px;margin:20px 0 6px}
+.scroll{overflow-x:auto}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book th,.book td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:14.5px;text-align:right;white-space:nowrap}
+.book th:first-child,.book td:first-child{text-align:left;white-space:normal}
+.book th{font-size:12.5px;color:var(--mute)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-weight:800;font-size:16px}
+table.asi td.c{text-align:left;color:var(--mute);font-size:13px}
+table.asi td:first-child{font-weight:700}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.line{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html">Volver al inicio</a></header>
+
+<h1>Calculadora de IVA</h1>
+<p class="lead">Agrega o saca el IVA de una factura, o junta varias ventas y compras para ver cuánto IVA debes pagar (o cuánto te queda a favor) y el asiento contable. No pide registro y lo que escribes no sale de tu navegador.</p>
+
+<div class="grid">
+<section class="panel">
+  <h2>Facturas del periodo</h2>
+  <p class="hint">Para una sola factura deja una línea. Para el periodo, agrega todas tus ventas y compras.</p>
+  <div class="lines" id="lines"></div>
+  <div class="adds">
+    <button class="ghost" type="button" id="addV">+ Venta</button>
+    <button class="ghost" type="button" id="addC">+ Compra</button>
+  </div>
+  <div class="opt">
+    <label class="chk"><input type="checkbox" id="rete"><span>Me practicaron retención de IVA (ReteIVA) del 15 % sobre el IVA de mis ventas <span class="hint" style="display:block">Solo aplica si quien te compra es agente retenedor. Confírmalo en tu caso.</span></span></label>
+  </div>
+</section>
+
+<section class="result" aria-live="polite">
+  <div class="big"><span id="lblRes">IVA por pagar</span><strong id="res">—</strong></div>
+  <div class="kpis">
+    <div class="kpi"><span>IVA generado (ventas)</span><b id="kGen">—</b></div>
+    <div class="kpi"><span>IVA descontable (compras)</span><b id="kDes">—</b></div>
+    <div class="kpi"><span>Retención de IVA</span><b id="kRet">—</b></div>
+  </div>
+  <div class="alerts" id="alerts"></div>
+
+  <h3>Detalle por factura</h3>
+  <div class="scroll"><table class="book" id="det"></table></div>
+
+  <h3>Asiento contable</h3>
+  <div class="scroll"><table class="book asi" id="asi"></table></div>
+  <p class="hint">Cuentas del PUC de comerciantes. Ábrelas en el <a href="puc.html" target="_blank" rel="noopener" style="color:var(--green)">buscador del PUC</a>. El valor de ventas va a 4135 en una empresa comercial y el de compras a 1435 si es mercancía; cámbialo según tu operación.</p>
+
+  <div class="actions">
+    <button class="btn" type="button" id="bIA">Explícame este cálculo</button>
+    <button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+  </div>
+  <div id="ai" hidden></div>
+  <p class="src">Tarifa general del 19 % (artículo 468 del Estatuto Tributario) y tarifa reducida del 5 % (artículo 468-1) para los bienes y servicios que la ley señala. Los bienes <b>exentos</b> (artículo 477) tienen tarifa 0 % y dan derecho a devolución; los <b>excluidos</b> (artículo 424) no causan IVA. Confirma la tarifa de tu bien o servicio en <a href="https://www.dian.gov.co" target="_blank" rel="noopener">dian.gov.co</a>. Esta es una estimación: la declaración real depende de tu periodo, tu régimen y los topes de cada caso. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+function num(v){v=String(v==null?"":v).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+var TARIFAS=[["19","General 19 %"],["5","Reducida 5 %"],["0","Exento 0 %"],["x","Excluido (no causa IVA)"]];
+var lines=[],uid=0,last=null;
+
+function nuevo(tipo,valor,desc){lines.push({id:++uid,tipo:tipo,desc:desc||"",valor:valor||"",tar:"19",inc:false})}
+function dibujar(){
+  var h="";
+  lines.forEach(function(l){
+    h+="<div class='line' data-id='"+l.id+"'><div class='top'><label>Tipo<select data-k='tipo'><option value='v'"+(l.tipo==="v"?" selected":"")+">Venta</option><option value='c'"+(l.tipo==="c"?" selected":"")+">Compra</option></select></label><button type='button' class='del' data-del='"+l.id+"' aria-label='Quitar esta línea'>Quitar</button></div>"+
+    "<label class='full'>Descripción (opcional)<input data-k='desc' type='text' value='"+esc(l.desc)+"' placeholder='Ej. Factura 123'></label>"+
+    "<label>Valor ($)<input data-k='valor' type='text' inputmode='numeric' value='"+esc(l.valor)+"'></label>"+
+    "<label>Tarifa<select data-k='tar'>"+TARIFAS.map(function(t){return "<option value='"+t[0]+"'"+(l.tar===t[0]?" selected":"")+">"+t[1]+"</option>"}).join("")+"</select></label>"+
+    "<label class='chk full'><input type='checkbox' data-k='inc'"+(l.inc?" checked":"")+"><span>El valor ya incluye el IVA (sacar el IVA del total)</span></label></div>";
+  });
+  $("lines").innerHTML=h||"<p class='hint'>Agrega una venta o una compra para empezar.</p>";
+}
+$("lines").addEventListener("input",edit);$("lines").addEventListener("change",edit);
+function edit(e){
+  var el=e.target,k=el.getAttribute("data-k");if(!k)return;
+  var l=lines.filter(function(x){return String(x.id)===el.closest(".line").getAttribute("data-id")})[0];if(!l)return;
+  l[k]=el.type==="checkbox"?el.checked:el.value;calc();
+}
+$("lines").addEventListener("blur",function(e){var el=e.target;if(el.getAttribute&&el.getAttribute("data-k")==="valor"){var v=num(el.value);el.value=v?Math.round(v).toLocaleString("es-CO"):"";var l=lines.filter(function(x){return String(x.id)===el.closest(".line").getAttribute("data-id")})[0];if(l)l.valor=el.value}},true);
+$("lines").addEventListener("click",function(e){var b=e.target.closest("[data-del]");if(!b)return;lines=lines.filter(function(x){return String(x.id)!==b.getAttribute("data-del")});dibujar();calc()});
+$("addV").addEventListener("click",function(){nuevo("v");dibujar();calc()});
+$("addC").addEventListener("click",function(){nuevo("c");dibujar();calc()});
+$("rete").addEventListener("change",calc);
+
+function calcLinea(l){
+  var v=num(l.valor),r=l.tar==="x"?0:+l.tar/100,base,iva;
+  if(l.inc&&r>0){base=Math.round(v/(1+r));iva=v-base}else{base=v;iva=Math.round(v*r)}
+  return{l:l,base:base,iva:iva,total:base+iva,excl:l.tar==="x"};
+}
+function calc(){
+  var al=$("alerts");al.innerHTML="";
+  function alert(t,c){var d=document.createElement("div");d.className="alert "+(c||"");d.textContent=t;al.appendChild(d)}
+  var rows=lines.map(calcLinea).filter(function(r){return r.base>0});
+  if(!rows.length){["res","kGen","kDes","kRet"].forEach(function(x){$(x).textContent="—"});$("det").innerHTML="";$("asi").innerHTML="";last=null;alert("Escribe el valor de al menos una factura para empezar.");return}
+  var V=rows.filter(function(r){return r.l.tipo==="v"}),C=rows.filter(function(r){return r.l.tipo==="c"});
+  function sum(a,k){return a.reduce(function(s,x){return s+x[k]},0)}
+  var gen=sum(V,"iva"),des=sum(C,"iva"),vb=sum(V,"base"),cb=sum(C,"base");
+  var ret=$("rete").checked?Math.round(gen*.15):0;
+  var saldo=gen-des-ret;
+  $("lblRes").textContent=saldo>=0?"IVA por pagar":"Saldo a favor";
+  $("res").textContent=fmt(Math.abs(saldo));
+  $("kGen").textContent=fmt(gen);$("kDes").textContent=fmt(des);$("kRet").textContent=ret?fmt(ret):"$0";
+  if(saldo<0)alert("Tu IVA descontable es mayor que el generado: te queda un saldo a favor que normalmente pasa al siguiente periodo. Confirma con tu contador si puedes pedir devolución.","good");
+  else if(gen>0)alert("Debes pagar "+fmt(saldo)+" de IVA: lo que cobraste en ventas menos lo que pagaste en compras"+(ret?" y la retención que te practicaron":"")+".","");
+  if(rows.some(function(r){return r.l.tipo==="c"&&r.l.tar==="x"}))alert("Las compras excluidas no tienen IVA, así que no hay IVA descontable en ellas.","");
+  if(rows.some(function(r){return r.l.tipo==="v"&&r.l.tar==="0"}))alert("Las ventas exentas (0 %) no generan IVA, pero sí te dejan descontar el IVA de tus compras relacionadas.","");
+
+  var h="<thead><tr><th>Factura</th><th>Base</th><th>IVA</th><th>Total</th></tr></thead><tbody>";
+  rows.forEach(function(r){var t=r.l.tar==="x"?"excluido":(r.l.tar+" %");
+    h+="<tr><td>"+(r.l.tipo==="v"?"Venta":"Compra")+(r.l.desc?" · "+esc(r.l.desc):"")+" <span class='hint'>("+t+")</span></td><td>"+fmt(r.base)+"</td><td>"+fmt(r.iva)+"</td><td>"+fmt(r.total)+"</td></tr>"});
+  h+="<tr class='sub'><td>Ventas</td><td>"+fmt(vb)+"</td><td>"+fmt(gen)+"</td><td>"+fmt(vb+gen)+"</td></tr><tr class='sub'><td>Compras</td><td>"+fmt(cb)+"</td><td>"+fmt(des)+"</td><td>"+fmt(cb+des)+"</td></tr>";
+  h+="<tr class='fin'><td>"+(saldo>=0?"IVA por pagar":"Saldo a favor")+"</td><td></td><td>"+fmt(Math.abs(saldo))+"</td><td></td></tr>";
+  $("det").innerHTML=h+"</tbody>";
+
+  // asiento
+  var a="<thead><tr><th>Cuenta</th><th>Débito</th><th>Crédito</th></tr></thead><tbody>";
+  function L(n,c,d,cr){a+="<tr><td>"+n+"<span class='hint' style='display:block'>"+c+"</span></td><td>"+(d?fmt(d):"")+"</td><td>"+(cr?fmt(cr):"")+"</td></tr>"}
+  if(V.length){a+="<tr class='sub'><td colspan='3'>Ventas</td></tr>";
+    L("1305 Clientes","Por el total de las facturas (menos la retención de IVA si la hay)",vb+gen-ret,0);
+    if(ret)L("1355 Anticipo de impuestos","ReteIVA que te practicaron",ret,0);
+    L("4135 Ingresos por ventas","Base sin IVA",0,vb);
+    if(gen)L("2408 IVA por pagar","IVA generado",0,gen)}
+  if(C.length){a+="<tr class='sub'><td colspan='3'>Compras</td></tr>";
+    L("1435 Mercancías (o la cuenta de gasto)","Base sin IVA",cb,0);
+    if(des)L("2408 IVA por pagar","IVA descontable",des,0);
+    L("2205 Proveedores","Por el total de las facturas",0,cb+des)}
+  $("asi").innerHTML=a+"</tbody>";
+  last={rows:rows,gen:gen,des:des,ret:ret,saldo:saldo,vb:vb,cb:cb};
+}
+
+$("bPdf").addEventListener("click",function(){
+  if(!last)return;
+  $("doc").innerHTML="<h1>Cálculo de IVA</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("det").outerHTML+
+   "<p style='margin-top:14px'><b>Asiento contable</b></p>"+$("asi").outerHTML.replace(/<span class='hint'[^>]*>/g,"<br><small>").replace(/<\/span>/g,"</small>")+
+   "<p class='foot'>Estimación informativa. Confirma las tarifas con la DIAN. No reemplaza la asesoría de un contador público.</p>";
+  window.print();
+});
+$("bIA").addEventListener("click",function(){
+  if(!last)return;var L=last,out=$("ai"),b=$("bIA");
+  if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+  var q="Explica en palabras sencillas este cálculo de IVA en Colombia: IVA generado "+fmt(L.gen)+", IVA descontable "+fmt(L.des)+", "+(L.saldo>=0?"IVA por pagar "+fmt(L.saldo):"saldo a favor "+fmt(-L.saldo))+". Cuéntame cómo funciona el IVA generado y descontable y cuándo hay saldo a favor.";
+  b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+  Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false});
+});
+
+nuevo("v","1.000.000","Venta de ejemplo");nuevo("c","400.000","Compra de ejemplo");
+dibujar();calc();
+})();
+</script>
+</body>
+</html>

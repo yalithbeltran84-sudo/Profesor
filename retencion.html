@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calcula la retención en la fuente por salarios (procedimiento 1) con los valores de 2026, paso a paso y con ideas para reducirla legalmente. Gratis y sin registro.">
+<title>Calculadora de retención en la fuente · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px}
+.panel h2{font-size:19px;margin:22px 0 12px}
+.panel h2:first-child{margin-top:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+input{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:10px 12px;font-size:16px;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row{margin-top:12px}
+.result{min-width:0}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+.alert.err{border-left-color:var(--bad)}
+h3{font-size:17px;margin:20px 0 6px}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book td,.book th{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+.book th{font-weight:700;text-align:right;color:var(--mute);font-size:12.5px}
+.book th:first-child{text-align:left}
+.book td.n{padding-right:10px}
+.book td.l,.book td.v{text-align:right;white-space:nowrap;padding-left:10px}
+.book td.l{color:var(--mute);font-size:13px}
+.book td.v{font-weight:700}
+.book tr.sec td{font:800 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding-top:16px;border-bottom:2px solid var(--line)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-size:17px;font-weight:800}
+.book .f{display:block;font:400 12.5px/1.35 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.tbl383 td,.tbl383 th{font-size:14px}
+.tbl383 tr.on td{background:var(--amber);color:#12261F;font-weight:700}
+.tbl383 td{text-align:right}.tbl383 td:first-child{text-align:left}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.book td.l{display:none}.book th.l{display:none}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html">Volver al inicio</a></header>
+
+<h1>Calculadora de retención en la fuente</h1>
+<p class="lead">Para calcular la retención mensual de un trabajador por salarios (procedimiento 1). Ves cada paso con su límite, la tarifa del artículo 383 y cuánto te ahorran tus deducciones. No pide registro ni correo, y lo que escribes no sale de tu navegador.</p>
+
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+  <h2>Ingresos del mes</h2>
+  <div class="row">
+    <label class="fld">Ingresos salariales ($)<input id="sal" type="text" inputmode="numeric" value="2.000.000"></label>
+    <label class="fld">Otros ingresos no salariales ($)<input id="nosal" type="text" inputmode="numeric" value="0"></label>
+  </div>
+  <p class="hint">Los aportes a salud y pensión se calculan solos sobre el salario (4 % cada uno, y fondo de solidaridad desde 4 salarios mínimos).</p>
+
+  <h2>Deducciones del mes</h2>
+  <div class="row">
+    <label class="fld">Medicina prepagada ($)<input id="med" type="text" inputmode="numeric" value="0"></label>
+    <label class="fld">Intereses de vivienda ($)<input id="viv" type="text" inputmode="numeric" value="0"></label>
+    <label class="fld full">Deducción por dependientes ($)<input id="dep" type="text" inputmode="numeric" value="0"></label>
+  </div>
+  <p class="hint">Dependientes: hasta el 10 % del ingreso laboral y 32 UVT al mes. Escribe el valor y la calculadora aplica el límite.</p>
+
+  <h2>Rentas exentas del mes</h2>
+  <div class="row">
+    <label class="fld">Aportes voluntarios a pensión ($)<input id="pv" type="text" inputmode="numeric" value="0"></label>
+    <label class="fld">Aportes a cuentas AFC ($)<input id="afc" type="text" inputmode="numeric" value="0"></label>
+  </div>
+
+  <details>
+    <summary>Valores del año (los puedes cambiar)</summary>
+    <div class="row">
+      <label class="fld">UVT ($)<input id="uvt" type="number" min="1" step="1" inputmode="numeric" value="52374"></label>
+      <label class="fld">Salario mínimo mensual ($)<input id="smmlv" type="number" min="1" step="1" inputmode="numeric" value="1750905"></label>
+    </div>
+    <p class="hint">UVT 2026: $52.374 (DIAN). Si comparas con otra calculadora y los resultados no coinciden, revisa que use la misma UVT: algunas siguen con la del año anterior ($49.799).</p>
+  </details>
+
+  <details>
+    <summary>Aportes obligatorios (opcional)</summary>
+    <div class="row">
+      <label class="fld">Salud ($)<input id="salud" type="text" inputmode="numeric" placeholder="Automático"></label>
+      <label class="fld">Pensión ($)<input id="pen" type="text" inputmode="numeric" placeholder="Automático"></label>
+    </div>
+    <p class="hint">Déjalos vacíos para que se calculen solos. Escríbelos solo si tu nómina trae otro valor.</p>
+  </details>
+</form>
+
+<section class="result" aria-live="polite">
+  <div class="big"><span>Retención en la fuente del mes</span><strong id="ret">—</strong></div>
+  <div class="kpis">
+    <div class="kpi"><span>Base gravable</span><b id="kBase">—</b></div>
+    <div class="kpi"><span>Base en UVT</span><b id="kUvt">—</b></div>
+    <div class="kpi"><span>Te la quitan del ingreso</span><b id="kPct">—</b></div>
+  </div>
+  <div class="alerts" id="alerts"></div>
+
+  <h3>Paso a paso</h3>
+  <table class="book" id="steps"></table>
+
+  <h3>Tarifa del artículo 383 (en UVT)</h3>
+  <table class="book tbl383" id="t383"></table>
+
+  <div class="actions">
+    <button class="btn" type="button" id="bIA">Explícame este cálculo</button>
+    <button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+  </div>
+  <div id="ai" hidden></div>
+  <p class="src">Procedimiento 1 del Decreto 1625 de 2016 y artículos 206, 336, 383 y 387 del Estatuto Tributario. La retención se aproxima al múltiplo de mil más cercano. Es una estimación para estudiar o revisar: confirma el valor con la nómina y con la DIAN (<a href="https://www.dian.gov.co" target="_blank" rel="noopener">dian.gov.co</a>). Los valores del año cambian cada enero. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+function num(el){var v=String(el.value==null?el:el.value).replace(/[^\d,.-]/g,"");v=v.replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function uv(n){return n.toLocaleString("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2})}
+var TABLA=[[0,95,0,0],[95,150,.19,0],[150,360,.28,10],[360,640,.33,69],[640,945,.35,162],[945,2300,.37,268],[2300,Infinity,.39,770]];
+function tarifa(bu){ // base en UVT -> {uvts, fila}
+  for(var i=0;i<TABLA.length;i++){var t=TABLA[i];if(bu<=t[1]||i===TABLA.length-1){
+    if(i===0)return{u:0,f:0};
+    return{u:(bu-t[0])*t[2]+t[3],f:i}}}
+}
+function fsp(sal,smmlv){var r=sal/smmlv;if(r<4)return 0;if(r<16)return .01;if(r<17)return .012;if(r<18)return .014;if(r<19)return .016;if(r<20)return .018;return .02}
+
+// Cálculo completo. o = entradas; devuelve todos los pasos.
+function retencion(o){
+  var u=o.uvt,lab=o.sal+o.nosal;
+  var ibc=Math.min(o.sal,25*o.smmlv);
+  var salud=o.saludM!=null?o.saludM:ibc*.04,pen=o.penM!=null?o.penM:ibc*.04,fs=o.penM!=null?0:ibc*fsp(o.sal,o.smmlv);
+  var incr=salud+pen+fs,s1=Math.max(0,lab-incr);
+  var lMed=16*u,lViv=100*u,lDep=Math.min(.10*lab,32*u);
+  var med=Math.min(o.med,lMed),viv=Math.min(o.viv,lViv),dep=Math.min(o.dep,lDep),ded=med+viv+dep;
+  var s2=Math.max(0,s1-ded);
+  var lVol=Math.min(.30*lab,3800/12*u),vol=Math.min(o.pv+o.afc,lVol);
+  var pv=Math.min(o.pv,vol),afc=Math.min(o.afc,Math.max(0,vol-pv)),ex=pv+afc;
+  var s3=Math.max(0,s2-ex);
+  var l25=790/12*u,r25=Math.min(.25*s3,l25);
+  var s4=Math.max(0,s3-r25);
+  var tot=ded+ex+r25,lTot=Math.min(.40*s1,1340/12*u),perm=Math.min(tot,lTot);
+  var base=Math.max(0,s1-perm),bu=base/u,t=tarifa(bu);
+  var ret=Math.round(t.u*u/1000)*1000;
+  return{lab:lab,salud:salud,pen:pen,fs:fs,incr:incr,s1:s1,med:med,viv:viv,dep:dep,lMed:lMed,lViv:lViv,lDep:lDep,ded:ded,s2:s2,pv:pv,afc:afc,ex:ex,lVol:lVol,s3:s3,r25:r25,l25:l25,s4:s4,tot:tot,lTot:lTot,perm:perm,base:base,bu:bu,fila:t.f,ret:ret,u:u};
+}
+
+var last=null;
+function leer(){
+  var sa=$("salud").value.trim(),pe=$("pen").value.trim();
+  return{sal:num($("sal")),nosal:num($("nosal")),med:num($("med")),viv:num($("viv")),dep:num($("dep")),pv:num($("pv")),afc:num($("afc")),
+    uvt:num($("uvt"))||52374,smmlv:num($("smmlv"))||1750905,saludM:sa?num($("salud")):null,penM:pe?num($("pen")):null}
+}
+function calc(){
+  var o=leer(),al=$("alerts");al.innerHTML="";
+  function alert(t,c){var d=document.createElement("div");d.className="alert "+(c||"");d.textContent=t;al.appendChild(d)}
+  if(o.sal+o.nosal<=0){["ret","kBase","kUvt","kPct"].forEach(function(x){$(x).textContent="—"});$("steps").innerHTML="";last=null;alert("Escribe los ingresos del mes para empezar.","err");render383(-1);return}
+  var r=retencion(o);last={o:o,r:r};
+  $("ret").textContent=fmt(r.ret);$("kBase").textContent=fmt(r.base);$("kUvt").textContent=uv(r.bu)+" UVT";
+  $("kPct").textContent=(r.lab>0?(r.ret/r.lab*100).toLocaleString("es-CO",{maximumFractionDigits:2}):"0")+" %";
+  // mensajes
+  if(r.bu<=95)alert("Tu base ("+uv(r.bu)+" UVT) no pasa de 95 UVT, así que este mes no hay retención en la fuente.","good");
+  else alert("Tu base pasó de 95 UVT, por eso hay retención. Está en el rango "+rango(r.fila)+" de la tabla.","");
+  // sin ningún beneficio: solo aportes obligatorios
+  var base0=r.s1,t0=tarifa(base0/r.u),ret0=Math.round(t0.u*r.u/1000)*1000;
+  if(ret0-r.ret>0)alert("Tus deducciones y rentas exentas te ahorran "+fmt(ret0-r.ret)+" de retención este mes.","good");
+  if(r.perm<r.tot)alert("Se aplicó el límite del 40 % (máximo "+fmt(r.lTot)+" al mes): tus beneficios sumaban "+fmt(r.tot)+".","");
+  if(o.med>r.lMed)alert("La medicina prepagada se limitó a 16 UVT ("+fmt(r.lMed)+").","");
+  if(o.viv>r.lViv)alert("Los intereses de vivienda se limitaron a 100 UVT ("+fmt(r.lViv)+").","");
+  if(o.dep>r.lDep)alert("La deducción por dependientes se limitó a "+fmt(r.lDep)+" (10 % del ingreso laboral, máximo 32 UVT).","");
+  if(o.pv+o.afc>r.lVol)alert("Pensión voluntaria y AFC se limitaron a "+fmt(r.lVol)+" (30 % del ingreso laboral, máximo 3.800 UVT al año).","");
+  // idea para bajar la retención
+  if(r.ret>0){
+    var room=Math.max(0,r.lVol-(r.pv+r.afc)),extra=Math.min(room,Math.round(r.lab*0.10/1000)*1000);
+    if(extra>=10000){var r2=retencion(Object.assign({},o,{afc:o.afc+extra}));
+      if(r.ret-r2.ret>=1000)alert("Idea: si aportaras "+fmt(extra)+" más al mes a una cuenta AFC o pensión voluntaria, la retención bajaría a "+fmt(r2.ret)+" ("+fmt(r.ret-r2.ret)+" menos). Es plata tuya que queda ahorrada, no se pierde.","good")}
+  }
+  steps(r,o);render383(r.fila===0&&r.bu<=95?0:r.fila);
+}
+function rango(f){var t=TABLA[f];return (t[0]===0?"0":t[0])+" a "+(t[1]===Infinity?"más":t[1])+" UVT"}
+function row(n,f,l,v,cls){return "<tr class='"+(cls||"")+"'><td class='n'>"+n+(f?"<span class='f'>"+f+"</span>":"")+"</td><td class='l'>"+(l||"")+"</td><td class='v'>"+v+"</td></tr>"}
+function steps(r,o){
+  var h="<thead><tr><th>Concepto</th><th class='l'>Límite</th><th>Valor</th></tr></thead><tbody>";
+  h+="<tr class='sec'><td colspan='3'>Ingresos</td></tr>";
+  h+=row("Ingresos salariales","","",fmt(o.sal))+row("Otros ingresos no salariales","","",fmt(o.nosal))+row("Ingresos laborales","","",fmt(r.lab),"sub");
+  h+="<tr class='sec'><td colspan='3'>Ingresos no constitutivos de renta</td></tr>";
+  h+=row("Aportes obligatorios a salud","4 % del salario","",fmt(r.salud))+row("Aportes obligatorios a pensión","4 % del salario","",fmt(r.pen))+(r.fs>0?row("Fondo de solidaridad pensional","desde 4 salarios mínimos","",fmt(r.fs)):"");
+  h+=row("Subtotal 1","Ingresos laborales menos los aportes","",fmt(r.s1),"sub");
+  h+="<tr class='sec'><td colspan='3'>Deducciones</td></tr>";
+  h+=row("Medicina prepagada","","16 UVT: "+fmt(r.lMed),fmt(r.med))+row("Intereses de vivienda","","100 UVT: "+fmt(r.lViv),fmt(r.viv))+row("Dependientes","","10 % y 32 UVT: "+fmt(r.lDep),fmt(r.dep));
+  h+=row("Subtotal 2","","",fmt(r.s2),"sub");
+  h+="<tr class='sec'><td colspan='3'>Rentas exentas</td></tr>";
+  h+=row("Aportes voluntarios a pensión","","30 % y 3.800 UVT/año: "+fmt(r.lVol),fmt(r.pv))+row("Aportes a cuentas AFC","","Comparte el límite anterior",fmt(r.afc));
+  h+=row("Subtotal 3","","",fmt(r.s3),"sub");
+  h+=row("Renta exenta del 25 % del trabajo","25 % del subtotal 3","790 UVT/año: "+fmt(r.l25),fmt(r.r25))+row("Subtotal 4","","",fmt(r.s4),"sub");
+  h+=row("Total deducciones y rentas exentas","Lo que sí se resta, con el tope global","40 % y 1.340 UVT/año: "+fmt(r.lTot),fmt(r.perm));
+  h+="<tr class='sec'><td colspan='3'>Resultado</td></tr>";
+  h+=row("Base para retención en la fuente","Subtotal 1 menos lo anterior","",fmt(r.base),"sub");
+  h+=row("Base en UVT","Base dividida entre la UVT ("+fmt(r.u)+")","",uv(r.bu));
+  h+=row("Retención en la fuente","Tarifa del artículo 383, al múltiplo de mil","",fmt(r.ret),"fin");
+  $("steps").innerHTML=h+"</tbody>";
+}
+function render383(f){
+  var h="<thead><tr><th>Base en UVT</th><th>Tarifa</th><th>Se suma (UVT)</th></tr></thead><tbody>";
+  TABLA.forEach(function(t,i){
+    var a=t[0]===0?"0":">"+t[0],b=t[1]===Infinity?"en adelante":"a "+t[1];
+    h+="<tr class='"+(i===f?"on":"")+"'><td>"+(t[1]===Infinity?a+" "+b:a+" "+b)+"</td><td>"+Math.round(t[2]*100)+" %</td><td>"+t[3]+"</td></tr>"});
+  $("t383").innerHTML=h+"</tbody>";
+}
+
+["sal","nosal","med","viv","dep","pv","afc","uvt","smmlv","salud","pen"].forEach(function(id){
+  $(id).addEventListener("input",calc);
+  if($(id).type==="text")$(id).addEventListener("blur",function(){if($(id).value.trim()===""&&(id==="salud"||id==="pen"))return;var v=num($(id));$(id).value=v?Math.round(v).toLocaleString("es-CO"):"0"});
+  $(id).addEventListener("focus",function(){$(id).select()});
+});
+
+$("bPdf").addEventListener("click",function(){
+  if(!last)return;var r=last.r;
+  var d="<h1>Retención en la fuente por salarios</h1><p style='text-align:center'>Procedimiento 1 · UVT "+fmt(r.u)+" · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("steps").outerHTML.replace(/<td class='l'>[^<]*<\/td>/g,"").replace(/<th class='l'>[^<]*<\/th>/g,"").replace(/colspan='3'/g,"colspan='2'")+
+   "<p class='foot'>Estimación informativa. Confirma el valor con la nómina y con la DIAN. No reemplaza la asesoría de un contador público.</p>";
+  $("doc").innerHTML=d;window.print();
+});
+$("bIA").addEventListener("click",function(){
+  if(!last)return;var r=last.r,out=$("ai"),b=$("bIA");
+  if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+  var q="Explica en palabras sencillas esta retención en la fuente por salarios (procedimiento 1): ingresos laborales "+fmt(r.lab)+", base gravable "+fmt(r.base)+" ("+uv(r.bu)+" UVT), retención "+fmt(r.ret)+". Cuéntame qué significa cada paso y si hay algo legal para reducirla.";
+  b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+  Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false});
+});
+calc();
+})();
+</script>
+</body>
+</html>
