@@ -491,7 +491,7 @@ function render(){
       inner+="<div class='gr'><h3><span class='num'>"+g.code+"</span> "+hl(g.name,terms)+"</h3>";
       if(!cs.length)inner+="<div class='det' style='padding:4px 6px'>Grupo sin cuentas detalladas en este listado.</div>";
       cs.forEach(function(c){n++;
-        inner+="<button class='acc' type='button' data-c='"+c.code+"'><span class='code'>"+c.code+"</span><span class='nm'>"+hl(c.name,terms)+"</span><span class='nat "+c.nat+"'>"+(c.nat==="d"?"Débito":"Crédito")+"</span></button>"});
+        inner+="<div class='acc' role='button' tabindex='0' data-c='"+c.code+"'><span class='code'>"+c.code+"</span><span class='nm'>"+hl(c.name,terms)+"</span><span class='nat "+c.nat+"'>"+(c.nat==="d"?"Débito":"Crédito")+"</span></div>"});
       inner+="</div>";
     });
     if(!inner)return;
@@ -504,15 +504,21 @@ function render(){
 
 // detalle al tocar una cuenta
 $("out").addEventListener("click",function(e){
+  var t=e.target.closest("[data-act]");
+  if(t){
+    e.stopPropagation();
+    var code=t.getAttribute("data-code");
+    if(t.getAttribute("data-act")==="copy")copiar(code,t);else ask(code);
+    return;
+  }
   var b=e.target.closest(".acc");
-  if(b){toggle(b);return}
-  var t=e.target.closest("[data-act]");if(!t)return;
-  var code=t.getAttribute("data-code");
-  if(t.getAttribute("data-act")==="copy"){
-    var done=function(){t.textContent="Copiado";setTimeout(function(){t.textContent="Copiar código"},1200)};
-    if(navigator.clipboard)navigator.clipboard.writeText(code).then(done,done);else done();
-  }else if(t.getAttribute("data-act")==="ia")ask(code);
+  if(b)toggle(b);
 });
+function copiar(code,t){
+  var ok=function(){t.textContent="¡Copiado!";setTimeout(function(){t.textContent="Copiar código"},1400)};
+  function viejo(){var x=document.createElement("textarea");x.value=code;x.style.position="fixed";x.style.opacity="0";document.body.appendChild(x);x.select();try{document.execCommand("copy")}catch(e){}x.remove();ok()}
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(code).then(ok,viejo);else viejo();
+}
 function toggle(b){
   var prev=b.querySelector(".tools");
   if(b.classList.contains("open")){b.classList.remove("open");b.querySelectorAll(".det,.tools").forEach(function(x){x.remove()});return}
@@ -524,7 +530,7 @@ function toggle(b){
   tools.innerHTML="<span class='mini' role='button' tabindex='0' data-act='copy' data-code='"+c.code+"'>Copiar código</span><span class='mini' role='button' tabindex='0' data-act='ia' data-code='"+c.code+"'>Explícame esta cuenta</span>";
   b.appendChild(d);b.appendChild(tools);
 }
-$("out").addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.getAttribute&&e.target.getAttribute("data-act")){e.preventDefault();e.target.click()}});
+$("out").addEventListener("keydown",function(e){if(e.key!=="Enter"&&e.key!==" ")return;var t=e.target;if(t.getAttribute&&(t.getAttribute("data-act")||t.classList.contains("acc"))){e.preventDefault();t.click()}});
 
 function ask(code){
   var c=DATA.filter(function(d){return d.code===code})[0],out=$("ai");
