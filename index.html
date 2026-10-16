@@ -121,6 +121,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 <div><b>Auditoría</b><span>Control interno, papeles de trabajo y procedimientos.</span></div>
 <div><b>Normatividad</b><span>NIIF, Estatuto Tributario y normas de la DIAN resumidas.</span></div>
 <div><b>Plantillas y herramientas</b><span>Archivos descargables listos para usar en Excel.</span></div>
+<div><b>Para ingenierías</b><span>La parte contable de sistemas, ambiental y agronómica: costos de proyectos, activos y presupuestos.</span></div>
+<div><b>Administración de empresas</b><span>Costos, presupuestos, punto de equilibrio y estados financieros.</span></div>
 </div>
 </section>
 
@@ -141,8 +143,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 <h2>Calculadoras gratis</h2>
 <div class="areas">
 <div><b>Liquidación laboral</b><span>Cesantías, intereses, prima, vacaciones e indemnización con valores de 2026, la fórmula de cada concepto y el asiento contable.</span><br><a class="btn" href="calculadora.html" target="_blank" rel="noopener">Abrir calculadora</a></div>
-<div><b>Crédito</b><span>Cuota, intereses, abonos extra, costo real y tope de usura.</span><br><a class="btn" href="credito.html" target="_blank" rel="noopener">Abrir calculadora</a></div>
-<div><b>PUC de Colombia</b><span>Busca cuentas por código o palabra y mira si son débito o crédito.</span><br><a class="btn" href="puc.html" target="_blank" rel="noopener">Abrir buscador</a></div>
+<div><b>Próximamente</b><span>IVA, retención en la fuente y depreciación.</span></div>
 </div>
 <p class="note">Se abre en otra pestaña. No pide registro y tus datos no salen de tu navegador.</p>
 </section>
@@ -157,7 +158,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </section>
 
 <section id="publico">
-<h2>Hecha para quienes estudian y ejercen la contaduría</h2>
+<h2>Hecha para quienes estudian y ejercen la contaduría, y para quienes necesitan la parte contable de su carrera</h2>
 <div class="who">
 <div><h3>Estudiantes</h3><p>Resuelven dudas de clase y practican con ejemplos y calculadoras.</p></div>
 <div><h3>Profesores</h3><p>Encuentran material educativo y recursos para preparar sus clases.</p></div>
@@ -170,7 +171,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 
 <script src="profesor.js"></script>
 <script>
-var Q=["¿Qué es el IVA?","¿Cómo funciona la retención en la fuente?","¿Cómo se calcula la depreciación en línea recta?"];
+var Q=["¿Qué es el IVA?","¿Cómo funciona la retención en la fuente?","¿Cómo se calcula la depreciación en línea recta?","¿Cómo se calcula el punto de equilibrio?","¿Cómo se registran los costos ambientales?"];
 var log=document.getElementById("log"),chips=document.getElementById("chips"),hist=document.getElementById("hist"),hl=document.getElementById("hl");
 var chat=Profesor.nuevoChat(),busy=false;
 var SALUDO="Hola, soy el asistente de Profesor. Elige una pregunta o escribe la tuya.";
@@ -204,9 +205,4 @@ document.getElementById("f").onsubmit=function(e){e.preventDefault();var i=docum
 function activar(){var c=document.getElementById("cod").value.trim();var m=document.getElementById("planmsg");if(!c)return;m.textContent="Verificando código...";
 Profesor.activarCodigo(c).then(function(d){estado();if(d.ok){var n=Profesor.PLANS[d.plan].nombre;m.textContent="Plan "+n+" activado: ahora tienes "+Profesor.PLANS[d.plan].limite+" preguntas al día.";document.getElementById("cod").value=""}else{m.textContent=d.error?"No pude conectarme. Intenta de nuevo.":"Código no válido o vencido. Revisa que esté bien escrito."}})}
 document.getElementById("activar").onclick=activar;
-document.getElementById("cod").onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();activar()}};
-document.getElementById("probar").onclick=function(){setTimeout(function(){document.getElementById("q").focus()},400)};
-pintar();estado();
-</script>
-</body>
-</html>
+document.getElementById("cod").
