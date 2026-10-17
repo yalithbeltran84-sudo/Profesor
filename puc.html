@@ -45,6 +45,9 @@ details.cl[open]>summary::before{transform:rotate(90deg)}
 .nat.d{color:var(--deb)}.nat.c{color:var(--cre)}
 .det{grid-column:2/-1;font:400 14.5px/1.45 "Bricolage Grotesque",sans-serif;color:var(--mute)}
 .acc.open{background:var(--soft)}
+.acc.sub{margin-left:22px;width:calc(100% - 22px);grid-template-columns:76px 1fr auto;padding:6px}
+.acc.sub .code{font-weight:700;font-size:14.5px}
+.acc.sub .nm{font-size:15px;color:var(--mute)}
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;grid-column:2/-1}
 .mini{border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:6px;padding:6px 10px;font:700 13px "Bricolage Grotesque",sans-serif;min-height:34px;cursor:pointer}
 #ai{margin:12px 0;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
@@ -54,7 +57,7 @@ mark{background:var(--amber);color:#12261F;border-radius:3px;padding:0 2px}
 .note a{color:var(--green)}
 .top{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
 .btn{background:var(--green);color:var(--onbtn);border:0;border-radius:6px;padding:10px 14px;font:700 14px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
-@media(max-width:520px){.acc{grid-template-columns:54px 1fr}.acc .nat{grid-column:2;justify-self:start}.gr{margin-left:6px}}
+@media(max-width:520px){.acc{grid-template-columns:54px 1fr}.acc.sub{margin-left:10px;width:calc(100% - 10px);grid-template-columns:66px 1fr}.acc .nat{grid-column:2;justify-self:start}.gr{margin-left:6px}}
 </style>
 </head>
 <body>
@@ -73,7 +76,7 @@ mark{background:var(--amber);color:#12261F;border-radius:3px;padding:0 2px}
 <div id="ai" hidden></div>
 
 <div class="top"><button class="btn" id="csv" type="button">Descargar listado (CSV)</button></div>
-<p class="note">Este listado sigue la estructura del Plan Único de Cuentas para comerciantes (Decreto 2650 de 1993 y sus modificaciones): clase, grupo y cuenta de cuatro dígitos. Muestra las cuentas principales, no todas las subcuentas. Las entidades que aplican NIIF y las del sector público usan su propio catálogo, y cada empresa puede ampliar el suyo, así que confirma siempre con la norma vigente o con tu contador. Para el sector público consulta el <a href="https://www.contaduria.gov.co" target="_blank" rel="noopener">catálogo de la Contaduría General de la Nación</a>. No reemplaza la asesoría de un contador público.</p>
+<p class="note">Este listado sigue la estructura del Plan Único de Cuentas para comerciantes (Decreto 2650 de 1993 y sus modificaciones): clase, grupo y cuenta de cuatro dígitos. Los nombres de grupos y cuentas se verificaron con el catálogo de <a href="https://puc.com.co/cuentas/" target="_blank" rel="noopener">puc.com.co</a>; las clases 8 y 9 (cuentas de orden) incluyen también sus subcuentas. En esa fuente la clase 7 (costos de producción) aparece solo por grupos, y cada empresa define sus propias subcuentas. Las entidades que aplican NIIF y las del sector público usan su propio catálogo, y cada empresa puede ampliar el suyo, así que confirma siempre con la norma vigente o con tu contador. Para el sector público consulta el <a href="https://www.contaduria.gov.co" target="_blank" rel="noopener">catálogo de la Contaduría General de la Nación</a>. No reemplaza la asesoría de un contador público.</p>
 </div>
 
 <script src="profesor.js"></script>
@@ -102,6 +105,9 @@ var RAW=[
 "1235|Títulos",
 "1240|Aceptaciones bancarias o financieras",
 "1245|Derechos fiduciarios|fiducia",
+"1250|Derechos de recompra de inversiones negociadas (repos)",
+"1255|Obligatorias",
+"1260|Cuentas en participación",
 "1295|Otras inversiones",
 "1299|Provisiones|inversiones deterioro",
 "13|Deudores",
@@ -109,10 +115,13 @@ var RAW=[
 "1310|Cuentas corrientes comerciales",
 "1315|Cuentas por cobrar a casa matriz",
 "1320|Cuentas por cobrar a vinculados económicos",
+"1323|Cuentas por cobrar a directores",
 "1325|Cuentas por cobrar a socios y accionistas",
+"1328|Aportes por cobrar",
 "1330|Anticipos y avances|anticipo proveedores",
+"1332|Cuentas de operación conjunta",
 "1335|Depósitos|deposito garantia",
-"1340|Promesas de compraventa",
+"1340|Promesas de compra venta",
 "1345|Ingresos por cobrar|intereses por cobrar",
 "1350|Retención sobre contratos",
 "1355|Anticipo de impuestos y contribuciones o saldos a favor|retencion en la fuente a favor autorretencion saldo a favor renta iva ica",
@@ -120,14 +129,21 @@ var RAW=[
 "1365|Cuentas por cobrar a trabajadores|prestamos empleados",
 "1370|Préstamos a particulares",
 "1380|Deudores varios",
+"1385|Derechos de recompra de cartera negociada|cartera",
 "1390|Deudas de difícil cobro|cartera mala",
 "1399|Provisiones|deudores cartera deterioro cuentas incobrables",
 "14|Inventarios",
 "1405|Materias primas",
 "1410|Productos en proceso",
+"1415|Obras de construcción en curso",
+"1417|Obras de urbanismo",
+"1420|Contratos en ejecución",
+"1425|Cultivos en desarrollo|cultivos",
+"1428|Plantaciones agrícolas",
 "1430|Productos terminados",
 "1435|Mercancías no fabricadas por la empresa|mercancia inventario de mercancias para la venta",
 "1440|Bienes raíces para la venta",
+"1445|Semovientes|ganado animales",
 "1450|Terrenos",
 "1455|Materiales, repuestos y accesorios",
 "1460|Envases y empaques",
@@ -135,6 +151,7 @@ var RAW=[
 "1499|Provisiones|inventarios deterioro",
 "15|Propiedades, planta y equipo",
 "1504|Terrenos|lotes",
+"1506|Materiales proyectos petroleros",
 "1508|Construcciones en curso",
 "1512|Maquinaria y equipos en montaje",
 "1516|Construcciones y edificaciones|edificios bodegas locales",
@@ -144,9 +161,18 @@ var RAW=[
 "1532|Equipo médico-científico",
 "1536|Equipo de hoteles y restaurantes",
 "1540|Flota y equipo de transporte|vehiculos carros motos camiones",
+"1544|Flota y equipo fluvial y/o marítimo",
+"1548|Flota y equipo aéreo",
+"1552|Flota y equipo férreo",
 "1556|Acueductos, plantas y redes",
+"1560|Armamento de vigilancia",
+"1562|Envases y empaques",
 "1564|Plantaciones agrícolas y forestales|cultivos",
 "1568|Vías de comunicación",
+"1572|Minas y canteras",
+"1576|Pozos artesianos",
+"1580|Yacimientos",
+"1584|Semovientes|ganado",
 "1588|Propiedades, planta y equipo en tránsito",
 "1592|Depreciación acumulada|depreciacion",
 "1596|Depreciación diferida",
@@ -168,6 +194,7 @@ var RAW=[
 "1710|Cargos diferidos",
 "1715|Costos de exploración por amortizar",
 "1720|Costos de explotación y desarrollo",
+"1730|Cargos por corrección monetaria diferida",
 "1798|Amortización acumulada|diferidos",
 "18|Otros activos",
 "1805|Bienes de arte y cultura",
@@ -177,7 +204,6 @@ var RAW=[
 "1905|De inversiones",
 "1910|De propiedades, planta y equipo",
 "1995|De otros activos",
-
 "21|Obligaciones financieras",
 "2105|Bancos nacionales|prestamo bancario credito sobregiro",
 "2110|Bancos del exterior",
@@ -195,12 +221,12 @@ var RAW=[
 "2215|Cuentas corrientes comerciales",
 "2220|Casa matriz",
 "2225|Compañías vinculadas",
-"2230|Contratistas",
 "23|Cuentas por pagar",
 "2305|Cuentas corrientes comerciales",
 "2310|A casa matriz",
 "2315|A compañías vinculadas",
 "2320|A contratistas",
+"2330|Órdenes de compra por utilizar",
 "2335|Costos y gastos por pagar|servicios publicos arriendos honorarios por pagar",
 "2340|Instalamentos por pagar",
 "2345|Acreedores oficiales",
@@ -226,6 +252,14 @@ var RAW=[
 "2436|De vehículos|impuesto vehicular",
 "2440|De espectáculos públicos",
 "2444|De hidrocarburos y minas",
+"2448|Regalías e impuestos a la pequeña y mediana minería",
+"2452|A las exportaciones cafeteras",
+"2456|A las importaciones|importaciones",
+"2460|Cuotas de fomento",
+"2464|De licores, cervezas y cigarrillos",
+"2468|Al sacrificio de ganado",
+"2472|Al azar y juegos|juegos de azar",
+"2476|Gravámenes y regalías por utilización del suelo|suelo",
 "2495|Otros",
 "25|Obligaciones laborales",
 "2505|Salarios por pagar|sueldos nomina por pagar",
@@ -235,7 +269,8 @@ var RAW=[
 "2525|Vacaciones consolidadas|vacaciones",
 "2530|Prestaciones extralegales",
 "2532|Pensiones por pagar",
-"2535|Pensiones de jubilación",
+"2535|Cuotas partes pensiones de jubilación",
+"2540|Indemnizaciones laborales|despido indemnizacion",
 "26|Pasivos estimados y provisiones",
 "2605|Para costos y gastos",
 "2610|Para obligaciones laborales",
@@ -250,6 +285,7 @@ var RAW=[
 "2705|Ingresos recibidos por anticipado",
 "2710|Abonos diferidos",
 "2715|Utilidad diferida en ventas a plazos",
+"2720|Crédito por corrección monetaria diferida",
 "2725|Impuestos diferidos",
 "28|Otros pasivos",
 "2805|Anticipos y avances recibidos|anticipo de clientes",
@@ -258,18 +294,23 @@ var RAW=[
 "2820|Cuentas de operación conjunta",
 "2825|Retenciones a terceros sobre contratos",
 "2830|Embargos judiciales",
+"2835|Acreedores del sistema",
+"2840|Cuentas en participación",
 "2895|Diversos",
 "29|Bonos y papeles comerciales",
 "2905|Bonos en circulación",
 "2910|Bonos obligatoriamente convertibles en acciones",
 "2915|Papeles comerciales",
-
+"2920|Bonos pensionales|pension",
+"2925|Títulos pensionales|pension",
 "31|Capital social",
 "3105|Capital suscrito y pagado|aportes socios capital",
 "3115|Aportes sociales",
 "3120|Capital asignado",
 "3125|Inversión suplementaria al capital asignado",
 "3130|Capital de personas naturales",
+"3135|Aportes del Estado",
+"3140|Fondo social|fondo",
 "32|Superávit de capital",
 "3205|Prima en colocación de acciones, cuotas o partes de interés social",
 "3210|Donaciones",
@@ -282,8 +323,11 @@ var RAW=[
 "3315|Reservas ocasionales",
 "34|Revalorización del patrimonio",
 "3405|Ajustes por inflación",
+"3410|Saneamiento fiscal",
+"3415|Ajustes por inflación Decreto 3019 de 1989",
 "35|Dividendos o participaciones decretados en acciones, cuotas o partes de interés social",
-"3505|Dividendos o participaciones decretados en acciones, cuotas o partes de interés social",
+"3505|Dividendos decretados en acciones",
+"3510|Participaciones decretadas en cuotas o partes de interés social",
 "36|Resultados del ejercicio",
 "3605|Utilidad del ejercicio|ganancia",
 "3610|Pérdida del ejercicio",
@@ -294,7 +338,6 @@ var RAW=[
 "3805|De inversiones",
 "3810|De propiedades, planta y equipo",
 "3895|De otros activos",
-
 "41|Operacionales",
 "4105|Agricultura, ganadería, caza y silvicultura",
 "4110|Pesca",
@@ -310,23 +353,27 @@ var RAW=[
 "4160|Enseñanza",
 "4165|Servicios sociales y de salud",
 "4170|Otras actividades de servicios comunitarios, sociales y personales|servicios prestados ingresos por servicios",
-"4175|Devoluciones, rebajas y descuentos en ventas|devolucion en ventas",
+"4175|Devoluciones en ventas (DB)|devolucion en ventas",
 "42|No operacionales",
 "4205|Otras ventas",
 "4210|Financieros|intereses ganados rendimientos",
 "4215|Dividendos y participaciones",
+"4218|Ingresos método de participación",
 "4220|Arrendamientos|alquiler ingreso",
 "4225|Comisiones",
 "4230|Honorarios",
 "4235|Servicios",
 "4240|Utilidad en venta de inversiones",
 "4245|Utilidad en venta de propiedades, planta y equipo",
+"4248|Utilidad en venta de otros bienes",
 "4250|Recuperaciones",
 "4255|Indemnizaciones",
 "4260|Participaciones en concesiones",
 "4265|Ingresos de ejercicios anteriores",
+"4275|Devoluciones en otras ventas (DB)|devolucion",
 "4295|Diversos|aprovechamientos",
-
+"47|Ajustes por inflación",
+"4705|Corrección monetaria|ajuste inflacion",
 "51|Operacionales de administración",
 "5105|Gastos de personal|sueldos salarios nomina prestaciones",
 "5110|Honorarios|contador abogado asesoria",
@@ -357,19 +404,20 @@ var RAW=[
 "5255|Gastos de viaje",
 "5260|Depreciaciones",
 "5265|Amortizaciones",
+"5270|Financieros-reajuste del sistema",
+"5275|Pérdidas método de participación",
 "5295|Diversos",
 "5299|Provisiones",
 "53|No operacionales",
 "5305|Financieros|intereses pagados comisiones bancarias gravamen 4x1000 gmf",
 "5310|Pérdida en venta y retiro de bienes",
-"5313|Pérdida en método de participación",
+"5313|Pérdidas método de participación",
 "5315|Gastos extraordinarios|multas sanciones",
 "5395|Gastos diversos",
 "54|Impuesto de renta y complementarios",
 "5405|Impuesto de renta y complementarios|provision renta gasto",
 "59|Ganancias y pérdidas",
 "5905|Ganancias y pérdidas|cierre estado de resultados",
-
 "61|Costo de ventas y de prestación de servicios",
 "6105|Agricultura, ganadería, caza y silvicultura",
 "6110|Pesca",
@@ -388,28 +436,154 @@ var RAW=[
 "62|Compras",
 "6205|De mercancías|compras",
 "6210|De materias primas",
-"6225|Devoluciones en compras de mercancías|devolucion en compras",
-
+"6215|De materiales indirectos",
+"6220|Compra de energía|energia electrica",
+"6225|Devoluciones en compras (CR)|devolucion en compras",
 "71|Materia prima",
 "72|Mano de obra directa",
 "73|Costos indirectos",
 "74|Contratos de servicios",
-
 "81|Derechos contingentes",
+"8105|Bienes y valores entregados en custodia",
+"810505|Valores mobiliarios",
+"810510|Bienes muebles",
+"810599|Ajustes por inflación",
+"8110|Bienes y valores entregados en garantía",
+"811005|Valores mobiliarios",
+"811010|Bienes muebles",
+"811015|Bienes inmuebles",
+"811020|Contratos de ganado en participación",
+"811099|Ajustes por inflación",
+"8115|Bienes y valores en poder de terceros",
+"811505|En arrendamiento",
+"811510|En préstamo",
+"811515|En depósito",
+"811520|En consignación",
+"811599|Ajustes por inflación",
+"8120|Litigios y/o demandas",
+"812005|Ejecutivos",
+"812010|Incumplimiento de contratos",
+"8125|Promesas de compraventa",
+"8195|Diversas",
+"819505|Valores adquiridos por recibir",
+"819595|Otras",
+"819599|Ajustes por inflación",
 "82|Deudoras fiscales",
 "83|Deudoras de control",
-"84|Derechos contingentes por contra (cr)",
-"85|Deudoras de control por contra (cr)",
+"8305|Bienes recibidos en arrendamiento financiero",
+"830505|Bienes muebles",
+"830510|Bienes inmuebles",
+"830599|Ajustes por inflación",
+"8310|Títulos de inversión no colocados",
+"831005|Acciones",
+"831010|Bonos",
+"831095|Otros",
+"8315|Propiedades, planta y equipo totalmente depreciados, agotados y/o amortizados",
+"831506|Materiales proyectos petroleros",
+"831516|Construcciones y edificaciones",
+"831520|Maquinaria y equipo",
+"831524|Equipo de oficina",
+"831528|Equipo de computación y comunicación",
+"831532|Equipo médico-científico",
+"831536|Equipo de hoteles y restaurantes",
+"831540|Flota y equipo de transporte",
+"831544|Flota y equipo fluvial y/o marítimo",
+"831548|Flota y equipo aéreo",
+"831552|Flota y equipo férreo",
+"831556|Acueductos, plantas y redes",
+"831560|Armamento de vigilancia",
+"831562|Envases y empaques",
+"831564|Plantaciones agrícolas y forestales",
+"831568|Vías de comunicación",
+"831572|Minas y canteras",
+"831576|Pozos artesianos",
+"831580|Yacimientos",
+"831584|Semovientes",
+"831599|Ajustes por inflación",
+"8320|Créditos a favor no utilizados",
+"832005|País",
+"832010|Exterior",
+"8325|Activos castigados",
+"832505|Inversiones",
+"832510|Deudores",
+"832595|Otros activos",
+"8330|Títulos de inversión amortizados",
+"833005|Bonos",
+"833095|Otros",
+"8335|Capitalización por revalorización de patrimonio",
+"8395|Otras cuentas deudoras de control",
+"839505|Cheques posfechados",
+"839510|Certificados de depósito a término",
+"839515|Cheques devueltos",
+"839520|Bienes y valores en fideicomiso",
+"839525|Intereses sobre deudas vencidas",
+"839595|Diversas",
+"839599|Ajustes por inflación",
+"8399|Ajustes por inflación activos",
+"839905|Inversiones",
+"839910|Inventarios",
+"839915|Propiedades, planta y equipo",
+"839920|Intangibles",
+"839925|Cargos diferidos",
+"839995|Otros activos",
+"84|Derechos contingentes por contra (CR)",
+"85|Deudoras fiscales por contra (CR)",
+"86|Deudoras de control por contra (CR)",
 "91|Responsabilidades contingentes",
+"9105|Bienes y valores recibidos en custodia",
+"910505|Valores mobiliarios",
+"910510|Bienes muebles",
+"910599|Ajustes por inflación",
+"9110|Bienes y valores recibidos en garantía",
+"911005|Valores mobiliarios",
+"911010|Bienes muebles",
+"911015|Bienes inmuebles",
+"911020|Contratos de ganado en participación",
+"911099|Ajustes por inflación",
+"9115|Bienes y valores recibidos de terceros",
+"911505|En arrendamiento",
+"911510|En préstamo",
+"911515|En depósito",
+"911520|En consignación",
+"911525|En comodato",
+"911599|Ajustes por inflación",
+"9120|Litigios y/o demandas",
+"912005|Laborales",
+"912010|Civiles",
+"912015|Administrativos o arbitrales",
+"912020|Tributarios",
+"9125|Promesas de compraventa",
+"9130|Contratos de administración delegada",
+"9135|Cuentas en participación",
+"9195|Otras responsabilidades contingentes",
 "92|Acreedoras fiscales",
 "93|Acreedoras de control",
-"94|Responsabilidades contingentes por contra (db)",
-"95|Acreedoras de control por contra (db)"
+"9305|Contratos de arrendamiento financiero",
+"930505|Bienes muebles",
+"930510|Bienes inmuebles",
+"9395|Otras cuentas de orden acreedoras de control",
+"939505|Documentos por cobrar descontados",
+"939510|Convenios de pago",
+"939515|Contratos de construcciones e instalaciones por ejecutar",
+"939525|Adjudicaciones pendientes de legalizar",
+"939530|Reserva artículo 3º Ley 4ª de 1980",
+"939535|Reserva costo reposición semovientes",
+"939595|Diversas",
+"939599|Ajustes por inflación",
+"9399|Ajustes por inflación patrimonio",
+"939905|Capital social",
+"939910|Superávit de capital",
+"939915|Reservas",
+"939925|Dividendos o participaciones decretadas en acciones, cuotas o partes de interés social",
+"939930|Resultados de ejercicios anteriores",
+"94|Responsabilidades contingentes por contra (DB)",
+"95|Acreedoras fiscales por contra (DB)",
+"96|Acreedoras de control por contra (DB)"
 ];
 
 // Cuentas de la clase 1 y otras que van contra la regla de su clase
-var CONTRA_CR={"1299":1,"1399":1,"1499":1,"1592":1,"1596":1,"1597":1,"1598":1,"1599":1,"1698":1,"1699":1,"1798":1,"1899":1};
-var CONTRA_DB={"3610":1,"3710":1,"4175":1,"6225":1,"3505":0};
+var CONTRA_CR={"1299":1,"1399":1,"1499":1,"1592":1,"1596":1,"1597":1,"1598":1,"1599":1,"1698":1,"1699":1,"1798":1,"1899":1,"6225":1};
+var CONTRA_DB={"3610":1,"3710":1,"4175":1,"4275":1};
 var USO={
 "1105":"Dinero en efectivo de la empresa: caja general y cajas menores. Se debita cuando entra efectivo y se acredita cuando sale.",
 "1110":"Dinero en cuentas corrientes de bancos. Debe cuadrar con el extracto bancario en la conciliación.",
@@ -433,19 +607,34 @@ var USO={
 "5105":"Sueldos, prestaciones y demás gastos del personal administrativo.",
 "5160":"Gasto del periodo por el desgaste de los activos fijos; su contrapartida es la 1592.",
 "6135":"Costo de las mercancías vendidas en empresas comerciales.",
+"71":"Costo de las materias primas que se consumen en la producción. Se debita al trasladar el valor desde la cuenta 1405 Materias primas.",
+"72":"Salarios y prestaciones del personal que trabaja directamente en la producción.",
+"73":"Costos de producción que no se pueden asignar directamente a un producto, como materiales y mano de obra indirectos. Se debita, por ejemplo, al trasladar materiales desde la cuenta 1455.",
+"74":"Costos en que se incurre para ejecutar contratos de servicios.",
+"82":"Registra las diferencias entre los valores contables de los activos y los valores fiscales que se usan en las declaraciones de impuestos (por ejemplo, pérdidas fiscales por amortizar).",
+"92":"Registra las diferencias entre los valores contables y los fiscales de los pasivos y el patrimonio.",
+"84":"Contrapartida (por contra) del grupo 81: se mueve en sentido contrario para que las cuentas de orden queden cuadradas.",
+"85":"Contrapartida (por contra) del grupo 82: se mueve en sentido contrario para que las cuentas de orden queden cuadradas.",
+"86":"Contrapartida (por contra) del grupo 83: se mueve en sentido contrario para que las cuentas de orden queden cuadradas.",
+"94":"Contrapartida (por contra) del grupo 91: se mueve en sentido contrario para que las cuentas de orden queden cuadradas.",
+"95":"Contrapartida (por contra) del grupo 92: se mueve en sentido contrario para que las cuentas de orden queden cuadradas.",
+"96":"Contrapartida (por contra) del grupo 93: se mueve en sentido contrario para que las cuentas de orden queden cuadradas.",
 "6205":"Compras de mercancía en el sistema de inventario periódico."
 };
 
 function nat(code){
   if(CONTRA_CR[code])return "c";
   if(CONTRA_DB[code])return "d";
-  var cl=code.charAt(0);
+  var cl=code.charAt(0),g=code.slice(0,2);
+  if(g==="84"||g==="85"||g==="86")return "c"; // por contra de las deudoras
+  if(g==="94"||g==="95"||g==="96")return "d"; // por contra de las acreedoras
   return (cl==="2"||cl==="3"||cl==="4"||cl==="9")?"c":"d";
 }
 function norm(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")}
 
 var DATA=RAW.map(function(l){var p=l.split("|"),c=p[0];
-  return {code:c,name:p[1],kw:p[2]||"",len:c.length,cl:c.charAt(0),g:c.slice(0,2),nat:c.length===4?nat(c):null,n:norm(p[1]+" "+(p[2]||"")),uso:USO[c]||""}});
+  return {code:c,name:p[1],kw:p[2]||"",len:c.length,cl:c.charAt(0),g:c.slice(0,2),nat:c.length>=4?nat(c):null,n:norm(p[1]+" "+(p[2]||"")),uso:USO[c]||""}});
+DATA.forEach(function(d){if(d.len===2&&!DATA.some(function(x){return x.len>=4&&x.g===d.code}))d.nat=nat(d.code)});
 
 var state={cl:"",q:""};
 var chips=$("chips");
@@ -477,21 +666,23 @@ function render(){
       return d.n.indexOf(t)>-1});
   });
   // si hay búsqueda, los grupos (2 dígitos) solo se muestran como encabezado de lo que sí coincide
-  var cuentas=list.filter(function(d){return d.len===4}),grupos=list.filter(function(d){return d.len===2});
+  var cuentas=list.filter(function(d){return d.len===4}),subsL=list.filter(function(d){return d.len===6}),grupos=list.filter(function(d){return d.len===2});
   var html="",total=0;
+  function fila(c,sub){return "<div class='acc"+(sub?" sub":"")+"' role='button' tabindex='0' data-c='"+c.code+"'><span class='code'>"+c.code+"</span><span class='nm'>"+hl(c.name,terms)+"</span><span class='nat "+c.nat+"'>"+(c.nat==="d"?"Débito":"Crédito")+"</span></div>"}
   Object.keys(CLASES).forEach(function(k){
     if(state.cl&&k!==state.cl)return;
     var gs=DATA.filter(function(d){return d.len===2&&d.cl===k});
     var inner="",n=0;
     gs.forEach(function(g){
-      var cs=cuentas.filter(function(c){return c.g===g.code});
-      var hasDetail=DATA.some(function(d){return d.len===4&&d.g===g.code});
+      var accs=DATA.filter(function(d){return d.len===4&&d.g===g.code});
+      var show=accs.filter(function(c){return cuentas.indexOf(c)>-1||subsL.some(function(x){return x.code.slice(0,4)===c.code})});
       var gMatch=list.indexOf(g)>-1;
-      if(!cs.length&&!(gMatch&&!hasDetail))return;
+      if(!show.length&&!(gMatch&&!accs.length))return;
       inner+="<div class='gr'><h3><span class='num'>"+g.code+"</span> "+hl(g.name,terms)+"</h3>";
-      if(!cs.length)inner+="<div class='det' style='padding:4px 6px'>Grupo sin cuentas detalladas en este listado.</div>";
-      cs.forEach(function(c){n++;
-        inner+="<div class='acc' role='button' tabindex='0' data-c='"+c.code+"'><span class='code'>"+c.code+"</span><span class='nm'>"+hl(c.name,terms)+"</span><span class='nat "+c.nat+"'>"+(c.nat==="d"?"Débito":"Crédito")+"</span></div>"});
+      if(!show.length){n++;inner+=fila(g,false);}
+      show.forEach(function(c){n++;inner+=fila(c,false);
+        var ss=terms.length?subsL.filter(function(x){return x.code.slice(0,4)===c.code}):DATA.filter(function(d){return d.len===6&&d.code.slice(0,4)===c.code});
+        ss.forEach(function(x){n++;inner+=fila(x,true)})});
       inner+="</div>";
     });
     if(!inner)return;
@@ -499,7 +690,7 @@ function render(){
     html+="<details class='cl' "+(searching?"open":"")+"><summary><span class='num'>"+k+"</span> "+CLASES[k]+"</summary>"+inner+"</details>";
   });
   $("out").innerHTML=html||"<p class='empty'>No encontré cuentas con eso. Prueba con otra palabra (por ejemplo «caja», «iva», «salarios») o con el código.</p>";
-  $("count").textContent=searching?(total+(total===1?" cuenta encontrada":" cuentas encontradas")):"Toca una clase para abrirla, o escribe arriba para buscar.";
+  $("count").textContent=searching?(total+(total===1?" resultado":" resultados")):"Toca una clase para abrirla, o escribe arriba para buscar.";
 }
 
 // detalle al tocar una cuenta
@@ -525,6 +716,8 @@ function toggle(b){
   var c=DATA.filter(function(d){return d.code===b.getAttribute("data-c")})[0];
   b.classList.add("open");
   var cls=CLASES[c.cl],txt=(c.nat==="d"?"Naturaleza débito: aumenta con débitos y disminuye con créditos.":"Naturaleza crédito: aumenta con créditos y disminuye con débitos.");
+  if(c.cl==="7")txt+=" Es una cuenta de costos de producción: acumula costos que luego se trasladan al inventario.";
+  if(c.cl==="8"||c.cl==="9")txt+=" Es una cuenta de orden: no hace parte del balance ni del estado de resultados; sirve para controlar derechos y responsabilidades.";
   var d=document.createElement("span");d.className="det";d.textContent=(c.uso?c.uso+" ":"")+txt+" Clase "+c.cl+" · "+cls+".";
   var tools=document.createElement("span");tools.className="tools";
   tools.innerHTML="<span class='mini' role='button' tabindex='0' data-act='copy' data-code='"+c.code+"'>Copiar código</span><span class='mini' role='button' tabindex='0' data-act='ia' data-code='"+c.code+"'>Explícame esta cuenta</span>";
@@ -543,7 +736,7 @@ function ask(code){
 
 $("csv").addEventListener("click",function(){
   var L=["Codigo;Nombre;Nivel;Naturaleza"];
-  DATA.forEach(function(d){L.push([d.code,'"'+d.name.replace(/"/g,'""')+'"',d.len===2?"Grupo":"Cuenta",d.nat?(d.nat==="d"?"Debito":"Credito"):""].join(";"))});
+  DATA.forEach(function(d){L.push([d.code,'"'+d.name.replace(/"/g,'""')+'"',d.len===2?"Grupo":d.len===4?"Cuenta":"Subcuenta",d.nat?(d.nat==="d"?"Debito":"Credito"):""].join(";"))});
   var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+L.join("\r\n")],{type:"text/csv;charset=utf-8"}));a.download="puc-colombia.csv";document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
 });
