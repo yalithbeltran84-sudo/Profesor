@@ -21,7 +21,7 @@ h1,h2,h3,.sans{font-family:"Bricolage Grotesque",system-ui,sans-serif}
 h1{font-size:clamp(30px,5vw,44px);line-height:1.08;margin:16px 0 8px;letter-spacing:-.02em}
 .lead{color:var(--mute);margin:0 0 24px;max-width:60ch}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 0 0 4px var(--soft)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 label{display:block;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:4px}
 input,select{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif}
 .hint{font:13px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:4px 0 0}
@@ -30,7 +30,7 @@ input,select{width:100%;border:1px solid var(--line);background:var(--paper);col
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .err{color:#B3261E;font:500 15px "Bricolage Grotesque",sans-serif;margin:12px 0 0}
 @media(prefers-color-scheme:dark){.err{color:#F2A29B}}
-#res{margin-top:32px}
+#resultado{margin-top:32px}
 .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
 .sum div{border-top:3px solid var(--green);padding-top:8px}
 .sum span{display:block;font:500 14px "Bricolage Grotesque",sans-serif;color:var(--mute)}
@@ -67,7 +67,7 @@ th{background:var(--green);color:var(--on)}
 <p class="err" id="err" role="alert"></p>
 </div>
 
-<div id="res" hidden aria-live="polite">
+<div id="resultado" hidden aria-live="polite">
 <div class="sum"><div><span>Base depreciable</span><b id="s1"></b></div><div><span>Depreciación total</span><b id="s2"></b></div><div><span>Valor en libros final</span><b id="s3"></b></div></div>
 <h2>Fórmula usada</h2><div class="formula" id="form"></div>
 <h2>Tabla de depreciación</h2><div class="scroll"><table><thead><tr><th>Año</th><th>Depreciación</th><th>Dep. acumulada</th><th>Valor en libros</th></tr></thead><tbody id="tb"></tbody></table></div>
@@ -107,11 +107,14 @@ rows=[];var ac=0;d.forEach(function(x,i){ac+=x;rows.push({y:i+1,d:x,a:ac,v:C-ac}
 $("s1").textContent=f(B);$("s2").textContent=f(ac);$("s3").textContent=f(C-ac);$("form").textContent=txt;
 $("tb").innerHTML=rows.map(function(r){return "<tr><td>"+r.y+"</td><td>"+f(r.d)+"</td><td>"+f(r.a)+"</td><td>"+f(r.v)+"</td></tr>"}).join("");
 $("ano").innerHTML=rows.map(function(r){return "<option value='"+(r.y-1)+"'>Año "+r.y+"</option>"}).join("");
-asiento();$("res").hidden=false;$("res").scrollIntoView({behavior:"smooth",block:"start"})}
+asiento();$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
 function asiento(){var r=rows[+$("ano").value];if(!r)return;
 $("as").innerHTML="<tr><td>5160 Gasto por depreciación</td><td>"+f(r.d)+"</td><td></td></tr><tr><td>1592 Depreciación acumulada</td><td></td><td>"+f(r.d)+"</td></tr>"}
 $("ano").onchange=asiento;$("go").onclick=calc;
 document.querySelectorAll("input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});
+</script>
+</body>
+</html>i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});
 </script>
 </body>
 </html>
