@@ -45,6 +45,24 @@ th{background:var(--green);color:var(--on)}
 .asiento td:nth-child(2),.asiento td:nth-child(3){text-align:right}
 .asiento td:first-child{text-align:left}
 .note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:16px 0 0}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 4px}
+.actions .btn{margin-top:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:12px 18px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.ghost:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.btn:disabled{opacity:.6;cursor:wait}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font:16px/1.5 "Bricolage Grotesque",sans-serif;white-space:pre-wrap}
+#doc{display:none}
+@media print{
+body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+.wrap{display:none!important}
+#doc{display:block;padding:20px;color:#000}
+#doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+#doc .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 12px;margin:14px 0}
+#doc table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px}
+#doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+#doc th:first-child,#doc td:first-child{text-align:left}
+#doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
 @media(max-width:620px){.grid,.sum{grid-template-columns:1fr}}
 </style>
 </head>
@@ -74,21 +92,30 @@ th{background:var(--green);color:var(--on)}
 <h2>Asiento contable</h2>
 <label for="ano">Año del asiento</label><select id="ano" style="max-width:200px"></select>
 <div class="scroll" style="margin-top:12px"><table class="asiento"><thead><tr><th>Cuenta</th><th>Débito</th><th>Crédito</th></tr></thead><tbody id="as"></tbody></table></div>
+<div class="actions">
+<button class="btn" type="button" id="bIA">Explícame esta depreciación</button>
+<button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button>
+<button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+</div>
+<div id="ai" hidden></div>
 <p class="note">Usa la cuenta de gasto que corresponda al uso del activo: 5160 si es administrativo, 5260 si es de ventas o 7305 si participa en la producción. La cuenta 1592 acumula la depreciación de todos tus activos; en la práctica se detalla por tipo de activo (por ejemplo 159210 construcciones, 159220 maquinaria).</p>
 </div>
 
 <p class="note">No pide registro y tus datos no salen de tu navegador. Es una herramienta de apoyo y no reemplaza la asesoría de un contador público. Las normas NIIF (NIC 16) exigen que el método refleje cómo se consume el beneficio del activo.</p>
 </div>
 
+<div id="doc"></div>
+<script src="profesor.js"></script>
 <script>
 var $=function(i){return document.getElementById(i)};
 var fm=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
 function f(n){return fm.format(Math.round(n))}
 function num(s){s=String(s).trim().replace(/\./g,"").replace(",",".");return s===""?NaN:Number(s)}
-var rows=[];
+var rows=[],last=null;
+var MN={lr:"línea recta",sd:"saldo decreciente (doble tasa)",sdig:"suma de los dígitos de los años",up:"unidades de producción"};
 $("met").onchange=function(){$("upbox").hidden=this.value!=="up"};
 function calc(){
-var err=$("err");err.textContent="";
+var err=$("err");err.textContent="";last=null;$("resultado").hidden=true;$("ai").hidden=true;
 var C=num($("costo").value),R=num($("res").value),n=num($("vida").value),m=$("met").value;
 if(isNaN(C)||C<=0){err.textContent="Escribe el costo del activo.";return}
 if(isNaN(R)||R<0){err.textContent="El valor residual debe ser cero o más.";return}
@@ -104,7 +131,7 @@ if(u.length!==n||u.some(function(v){return isNaN(v)||v<0})){err.textContent="Esc
 var T=u.reduce(function(a,b){return a+b},0);if(T<=0){err.textContent="El total de unidades debe ser mayor que cero.";return}
 var r=B/T;u.forEach(function(v){d.push(v*r)});txt="Depreciación por unidad = (Costo − Residual) ÷ Unidades estimadas = "+f(B)+" ÷ "+T.toLocaleString("es-CO")+" = "+r.toLocaleString("es-CO",{maximumFractionDigits:4})+" por unidad. Cada año: unidades producidas × ese valor."}
 rows=[];var ac=0;d.forEach(function(x,i){ac+=x;rows.push({y:i+1,d:x,a:ac,v:C-ac})});
-$("s1").textContent=f(B);$("s2").textContent=f(ac);$("s3").textContent=f(C-ac);$("form").textContent=txt;
+last={C:C,R:R,n:n,m:m,rows:rows,ac:ac,txt:txt};$("s1").textContent=f(B);$("s2").textContent=f(ac);$("s3").textContent=f(C-ac);$("form").textContent=txt;
 $("tb").innerHTML=rows.map(function(r){return "<tr><td>"+r.y+"</td><td>"+f(r.d)+"</td><td>"+f(r.a)+"</td><td>"+f(r.v)+"</td></tr>"}).join("");
 $("ano").innerHTML=rows.map(function(r){return "<option value='"+(r.y-1)+"'>Año "+r.y+"</option>"}).join("");
 asiento();$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
@@ -112,8 +139,30 @@ function asiento(){var r=rows[+$("ano").value];if(!r)return;
 $("as").innerHTML="<tr><td>5160 Gasto por depreciación</td><td>"+f(r.d)+"</td><td></td></tr><tr><td>1592 Depreciación acumulada</td><td></td><td>"+f(r.d)+"</td></tr>"}
 $("ano").onchange=asiento;$("go").onclick=calc;
 document.querySelectorAll("input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});
+
+$("bCsv").onclick=function(){if(!last)return;
+var l=["Año;Depreciacion;Depreciacion acumulada;Valor en libros"];
+last.rows.forEach(function(r){l.push([r.y,Math.round(r.d),Math.round(r.a),Math.round(r.v)].join(";"))});
+var b=new Blob(["\uFEFF"+l.join("\r\n")],{type:"text/csv;charset=utf-8"});
+var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="depreciacion.csv";document.body.appendChild(a);a.click();
+setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)};
+$("bPdf").onclick=function(){if(!last)return;var L=last,y=rows[+$("ano").value]||L.rows[0];
+$("doc").innerHTML="<h1>Cálculo de depreciación</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+
+"<div class='meta'><div><b>Costo</b><br>"+f(L.C)+"</div><div><b>Valor residual</b><br>"+f(L.R)+"</div><div><b>Vida útil</b><br>"+L.n+" años</div><div><b>Método</b><br>"+MN[L.m]+"</div><div><b>Depreciación total</b><br>"+f(L.ac)+"</div><div><b>Valor en libros final</b><br>"+f(L.C-L.ac)+"</div></div>"+
+"<p><b>Fórmula:</b> "+L.txt+"</p>"+
+"<table><thead><tr><th>Año</th><th>Depreciación</th><th>Dep. acumulada</th><th>Valor en libros</th></tr></thead><tbody>"+
+L.rows.map(function(r){return "<tr><td>"+r.y+"</td><td>"+f(r.d)+"</td><td>"+f(r.a)+"</td><td>"+f(r.v)+"</td></tr>"}).join("")+"</tbody></table>"+
+"<h3>Asiento contable año "+y.y+"</h3><table><thead><tr><th>Cuenta</th><th>Débito</th><th>Crédito</th></tr></thead><tbody><tr><td>5160 Gasto por depreciación</td><td>"+f(y.d)+"</td><td></td></tr><tr><td>1592 Depreciación acumulada</td><td></td><td>"+f(y.d)+"</td></tr></tbody></table>"+
+"<p class='foot'>Cálculo informativo. No reemplaza la asesoría de un contador público.</p>";
+window.print()};
+$("bIA").onclick=function(){if(!last)return;var L=last,out=$("ai"),b=$("bIA");
+if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+var q="Explica en palabras sencillas esta depreciación: costo "+f(L.C)+", valor residual "+f(L.R)+", vida útil "+L.n+" años, método "+MN[L.m]+", depreciación del año 1 "+f(L.rows[0].d)+". Explica qué significa cada dato de la calculadora, cuándo conviene este método según la NIC 16 y el asiento contable.";
+b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})};
 </script>
 </body>
+</html>
 </html>i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});
 </script>
 </body>
