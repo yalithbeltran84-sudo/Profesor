@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<meta name="description" content="Calculadora de indicadores financieros: liquidez, endeudamiento y rentabilidad con interpretación de cada resultado. Gratis y sin registro.">
+<title>Indicadores financieros · Profesor</title>
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--on:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,label,button,input,select,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0 8px}
+.top a{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute);text-decoration:none}
+.top a:first-child{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green)}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.08;margin:16px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--mute);margin:0 0 24px;max-width:62ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 0 0 4px var(--soft)}
+.card h2{font-size:18px;margin:22px 0 10px}.card h2:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+label{display:block;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:4px}
+input{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font:13px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:4px 0 0}
+.btn,.ghost{border-radius:6px;padding:12px 18px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.btn{background:var(--green);color:var(--on);border:0}.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--bad);font:500 15px "Bricolage Grotesque",sans-serif;margin:12px 0 0}
+#resultado{margin-top:32px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px}
+.sum div{border-top:3px solid var(--green);padding-top:8px}
+.sum span{display:block;font:500 13.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.sum b{font:800 22px "Bricolage Grotesque",sans-serif;overflow-wrap:anywhere}
+#rep h2{font-size:20px;margin:28px 0 6px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14.5px/1.45 "Bricolage Grotesque",sans-serif;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;background:var(--soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 4px}
+.card .actions{margin-bottom:0}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font:16px/1.5 "Bricolage Grotesque",sans-serif;white-space:pre-wrap}
+.note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:16px 0 0}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+#doc{display:none}
+@media print{:root:not([data-theme="light"]),:root{--ink:#000;--mute:#444;--green:#0F3D3E;--line:#999;--amber:#B7791F;--soft:#eee;--paper:#fff;--bad:#B3261E;--ok:#1B6B3A}body{background:#fff;color:#000;font:12px/1.4 Georgia,serif}.wrap{display:none!important}#doc{display:block;padding:20px;color:#000}#doc h1{font-size:22px;text-align:center;margin:0}#doc h2,#doc h3{font-size:15px;margin:14px 0 4px}#doc td,#doc th{padding:3px 4px;border-bottom:1px solid #999;font-size:11px}}
+@media(max-width:640px){.grid,.sum{grid-template-columns:1fr}}
+.ind{border:1px solid var(--line);border-left:6px solid var(--mute);border-radius:6px;padding:10px 14px;margin:10px 0;background:var(--paper)}
+.ind.ok{border-left-color:var(--ok)}.ind.warn{border-left-color:var(--amber)}.ind.bad{border-left-color:var(--bad)}
+.ind h3{display:flex;justify-content:space-between;gap:10px;margin:0;font-size:16px}
+.ind small{display:block;color:var(--mute);font:13px "Bricolage Grotesque",sans-serif}
+.ind p{margin:6px 0 0;font-size:16px;line-height:1.45}
+.tag{font:700 12px "Bricolage Grotesque",sans-serif;padding:2px 8px;border-radius:999px;background:var(--soft);white-space:nowrap;align-self:center}
+@media print{#doc .ind{border:1px solid #999;border-left:5px solid #666;page-break-inside:avoid}}
+</style></head><body><div class="wrap">
+<div class="top"><a href="index.html">Profesor</a><a href="index.html">Volver al inicio</a></div>
+<h1>Indicadores financieros</h1>
+<p class="lead">Escribe los datos del balance y del estado de resultados. Calculo liquidez, endeudamiento y rentabilidad, y te explico qué significa cada resultado.</p>
+<form class="card" id="f" autocomplete="off" onsubmit="return false">
+<h2>Balance general</h2>
+<div class="grid">
+<div><label for="ac">Activo corriente ($)</label><input id="ac" inputmode="numeric" placeholder="Ej: 120.000.000"></div>
+<div><label for="inv">Inventarios ($)</label><input id="inv" inputmode="numeric" value="0"></div>
+<div><label for="at">Activo total ($)</label><input id="at" inputmode="numeric" placeholder="Ej: 300.000.000"></div>
+<div><label for="pc">Pasivo corriente ($)</label><input id="pc" inputmode="numeric" placeholder="Ej: 80.000.000"></div>
+<div><label for="pt">Pasivo total ($)</label><input id="pt" inputmode="numeric" placeholder="Ej: 150.000.000"><p class="hint">El patrimonio se calcula como activo total − pasivo total.</p></div>
+</div>
+<h2>Estado de resultados</h2>
+<div class="grid">
+<div><label for="v">Ventas o ingresos ($)</label><input id="v" inputmode="numeric" placeholder="Ej: 500.000.000"></div>
+<div><label for="cvv">Costo de ventas ($)</label><input id="cvv" inputmode="numeric" placeholder="Ej: 300.000.000"></div>
+<div><label for="uo">Utilidad operacional ($)</label><input id="uo" inputmode="numeric" placeholder="Ej: 60.000.000"></div>
+<div><label for="gi">Gastos por intereses ($) <small>(opcional)</small></label><input id="gi" inputmode="numeric" value="0"></div>
+<div><label for="un">Utilidad neta ($)</label><input id="un" inputmode="numeric" placeholder="Ej: 35.000.000"><p class="hint">Si hay pérdida, escríbela con signo menos: -5.000.000</p></div>
+</div>
+<div class="actions"><button class="btn" type="button" id="go">Calcular indicadores</button></div>
+<p class="err" id="err" role="alert"></p>
+</form>
+<div id="resultado" hidden aria-live="polite">
+<div class="sum"><div><span>Razón corriente</span><b id="s1"></b></div><div><span>Nivel de endeudamiento</span><b id="s2"></b></div><div><span>Margen neto</span><b id="s3"></b></div></div>
+<div id="rep"></div>
+<div class="actions"><button class="btn" type="button" id="bIA">Explícame estos resultados</button><button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button><button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button></div><div id="ai" hidden></div>
+</div>
+<p class="note">Los rangos de la lectura son referencias generales: lo que es sano cambia según el sector, el tamaño y el momento de la empresa. Compara siempre con tu propio historial y con empresas parecidas. No reemplaza la asesoría de un contador público. No pide registro y tus datos no salen de tu navegador.</p>
+</div><div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+var FILE="indicadores-financieros",TIT="Indicadores financieros";
+var $=function(i){return document.getElementById(i)};
+function num(s){s=String(s).trim().replace(/\./g,"").replace(",",".");return s===""?0:Number(s)}
+var fm=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
+function f(n){return fm.format(Math.round(n))}
+function pc(n){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:1,maximumFractionDigits:1})+"%"}
+function x2(n){return n.toLocaleString("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2})}
+var last=null,csv=[];
+function dl(){if(!last)return;var b=new Blob(["\uFEFF"+csv.map(function(r){return r.join(";")}).join("\r\n")],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=FILE+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function pr(){if(!last)return;$("doc").innerHTML="<h1>"+TIT+"</h1><p style=\"text-align:center\">Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("rep").innerHTML+"<p style=\"font-size:10px;color:#444\">Cálculo informativo. No reemplaza la asesoría de un contador público.</p>";window.print()}
+function ia(q){var out=$("ai"),b=$("bIA");if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+b.disabled=true;out.hidden=false;out.textContent="Pensando…";Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})}
+function btns(){$("bCsv").onclick=dl;$("bPdf").onclick=pr;document.querySelectorAll("#f input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});$("go").onclick=calc}
+function calcular(d){
+var pat=d.at-d.pt,I=[];
+function add(g,n,fo,txt,niv,t){I.push({g:g,n:n,fo:fo,txt:txt,niv:niv,t:t})}
+var rc=d.pc>0?d.ac/d.pc:null;
+if(rc!==null)add("Liquidez","Razón corriente","Activo corriente ÷ Pasivo corriente",x2(rc),rc<1?2:rc<1.5?1:0,rc<1?"Por cada $1 que debes a corto plazo tienes "+x2(rc)+" en activos corrientes: no alcanzas a cubrir tus deudas de corto plazo. Hay riesgo de falta de liquidez.":rc<1.5?"Cubres tus deudas de corto plazo, pero con poco margen. Vigila el flujo de caja.":rc<=2.5?"Tienes "+x2(rc)+" en activos corrientes por cada $1 de deuda de corto plazo. Es una posición cómoda.":"Tienes mucha holgura ("+x2(rc)+"). Es seguro, pero revisa si hay dinero o inventario ocioso que podría rendir más.");
+var pa=d.pc>0?(d.ac-d.inv)/d.pc:null;
+if(pa!==null)add("Liquidez","Prueba ácida","(Activo corriente − Inventarios) ÷ Pasivo corriente",x2(pa),pa<.8?2:pa<1?1:0,pa<.8?"Sin vender inventario, solo tienes "+x2(pa)+" por cada $1 de deuda corriente. Dependes de vender el inventario para pagar.":pa<1?"Estás cerca de cubrir tus deudas de corto plazo sin tocar el inventario, pero te falta un poco.":"Puedes pagar tus deudas de corto plazo sin depender de vender el inventario ("+x2(pa)+").");
+var kw=d.ac-d.pc;add("Liquidez","Capital de trabajo","Activo corriente − Pasivo corriente",f(kw),kw<0?2:0,kw<0?"Es negativo: tus deudas de corto plazo superan tus activos corrientes. Necesitas financiación o más caja.":"Después de pagar tus deudas de corto plazo te quedan "+f(kw)+" para operar.");
+var ne=d.pt/d.at;
+add("Endeudamiento","Nivel de endeudamiento","Pasivo total ÷ Activo total",pc(ne),ne>.6?2:ne>.4?1:0,"De cada $100 que tiene la empresa, $"+Math.round(ne*100)+" son de los acreedores y $"+Math.round((1-ne)*100)+" de los dueños. "+(ne>.6?"Es un nivel alto: dependes mucho de terceros y el riesgo financiero sube.":ne>.4?"Es un nivel moderado.":"Es un nivel bajo: tienes poca deuda y bastante respaldo propio."));
+if(pat<=0)add("Endeudamiento","Apalancamiento","Pasivo total ÷ Patrimonio","No aplica",2,"El patrimonio es cero o negativo: las deudas superan lo que tiene la empresa. Es una señal de alerta.");
+else{var ap=d.pt/pat;add("Endeudamiento","Apalancamiento","Pasivo total ÷ Patrimonio",x2(ap),ap>2?2:ap>1?1:0,"Por cada $1 de los dueños hay $"+x2(ap)+" de deuda. "+(ap>2?"Es muy alto: la empresa está financiada sobre todo con deuda.":ap>1?"Debes más de lo que han puesto los dueños.":ap<1?"Los dueños financian más que los acreedores.":"Dueños y acreedores financian en partes iguales."))}
+if(d.gi>0){var cb=d.uo/d.gi;add("Endeudamiento","Cobertura de intereses","Utilidad operacional ÷ Gastos por intereses",x2(cb)+" veces",cb<1.5?2:cb<3?1:0,cb<1?"La utilidad operacional no alcanza para pagar los intereses.":cb<1.5?"Apenas alcanzas a pagar los intereses: riesgo alto.":cb<3?"Pagas los intereses, pero con margen ajustado.":"Pagas los intereses "+x2(cb)+" veces. Tienes buena capacidad para atender la deuda.")}
+function mar(n,fo,u,tx){var m=u/d.v;add("Rentabilidad",n,fo,pc(m),m<0?2:m<.05?1:0,m<0?"Es negativo: hay pérdida en este nivel.":tx.replace("#",function(){return "$"+Math.round(m*100)}))}
+mar("Margen bruto","(Ventas − Costo de ventas) ÷ Ventas",d.v-d.cvv,"De cada $100 vendidos quedan # para cubrir gastos y dejar utilidad, después del costo de ventas.");
+mar("Margen operacional","Utilidad operacional ÷ Ventas",d.uo,"De cada $100 vendidos quedan # después de costos y gastos de operación.");
+mar("Margen neto","Utilidad neta ÷ Ventas",d.un,"De cada $100 vendidos quedan # de utilidad final.");
+var ro=d.un/d.at;add("Rentabilidad","Rentabilidad del activo (ROA)","Utilidad neta ÷ Activo total",pc(ro),ro<0?2:ro<.03?1:0,ro<0?"Los activos están generando pérdida.":"Por cada $100 invertidos en activos, la empresa genera $"+(Math.round(ro*1000)/10).toLocaleString("es-CO")+" de utilidad."+(ro<.03?" Es bajo: los activos rinden poco.":""));
+if(pat>0){var re=d.un/pat;add("Rentabilidad","Rentabilidad del patrimonio (ROE)","Utilidad neta ÷ Patrimonio",pc(re),re<0?2:re<.08?1:0,re<0?"Los dueños están perdiendo valor este periodo.":"Por cada $100 que han puesto los dueños, la empresa genera $"+(Math.round(re*1000)/10).toLocaleString("es-CO")+" de utilidad."+(re<.08?" Es bajo frente a lo que podrías ganar en una inversión sin riesgo.":""))}
+return I}
+function calc(){
+var err=$("err");err.textContent="";last=null;$("resultado").hidden=true;$("ai").hidden=true;
+var ids=["ac","inv","at","pc","pt","v","cvv","uo","gi","un"],d={};
+ids.forEach(function(i){d[i]=num($(i).value)});
+if(ids.some(function(i){return isNaN(d[i])})){err.textContent="Revisa los números: hay valores con letras.";return}
+if(!(d.at>0)||!(d.v>0)){err.textContent="Escribe al menos el activo total y las ventas.";return}
+if(d.ac>d.at){err.textContent="El activo corriente no puede ser mayor que el activo total.";return}
+if(d.pc>d.pt){err.textContent="El pasivo corriente no puede ser mayor que el pasivo total.";return}
+if(d.inv>d.ac){err.textContent="Los inventarios no pueden ser mayores que el activo corriente.";return}
+var I=calcular(d);last={d:d,I:I};csv=[["Grupo","Indicador","Valor","Formula"]];
+var T=["Bien","Atención","Alerta"],h="",g="";
+I.forEach(function(x){if(x.g!==g){g=x.g;h+="<h2>"+g+"</h2>"}
+csv.push([x.g,x.n,x.txt,x.fo]);
+h+="<div class=\"ind "+["ok","warn","bad"][x.niv]+"\"><h3><span>"+x.n+": "+x.txt+"</span><span class=\"tag\">"+T[x.niv]+"</span></h3><small>"+x.fo+"</small><p>"+x.t+"</p></div>"});
+function v(n){var o=I.filter(function(x){return x.n===n})[0];return o?o.txt:"—"}
+$("s1").textContent=v("Razón corriente");$("s2").textContent=v("Nivel de endeudamiento");$("s3").textContent=v("Margen neto");
+$("rep").innerHTML=h;$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
+btns();
+$("bIA").onclick=function(){if(!last)return;var I=last.I;function v(n){var o=I.filter(function(x){return x.n===n})[0];return o?o.txt:"n/a"}
+ia("Interpreta estos indicadores de una empresa en Colombia: razón corriente "+v("Razón corriente")+", prueba ácida "+v("Prueba ácida")+", endeudamiento "+v("Nivel de endeudamiento")+", apalancamiento "+v("Apalancamiento")+", margen neto "+v("Margen neto")+", ROA "+v("Rentabilidad del activo (ROA)")+", ROE "+v("Rentabilidad del patrimonio (ROE)")+". Explica cada uno, si es bueno o malo y qué mejorar.")};
+</script></body></html>
