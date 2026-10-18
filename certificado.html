@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certificado · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#E9E4DC;font-family:"Nunito Sans",Arial,sans-serif;color:#2F3B3D;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.barra{max-width:1123px;margin:0 auto;padding:14px 12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.barra a,.barra button{font:700 14px "Nunito Sans",Arial,sans-serif;border:2px solid #0F3D3E;background:#0F3D3E;color:#fff;padding:9px 16px;border-radius:6px;cursor:pointer;text-decoration:none}
+.barra button.alt{background:transparent;color:#0F3D3E}
+.estado{font:700 14px "Nunito Sans",Arial,sans-serif;margin-left:auto}
+.estado.ok{color:#2E7D32}.estado.mal{color:#C00000}
+#escala{margin:0 auto}
+#caja{max-width:420px;margin:30px auto;padding:20px;background:#fff;border-radius:8px;text-align:center}
+#caja input{width:100%;padding:10px;border:1px solid #bbb;border-radius:6px;margin:10px 0;font:14px "Nunito Sans",Arial,sans-serif}
+/* ---------- Certificado ---------- */
+.cert{--ac:#C8664F;--tit:#7A2E3A;--ro:#B5495B;--oro:#D9A66B;--bg:#FBF1E6;--tx:#5A3A33;--tx2:#7B5A52;
+width:1123px;height:794px;padding:28px;background:var(--bg);color:var(--tx);transform-origin:top left}
+.cert.h{--ac:#2F6F73;--tit:#16424A;--ro:#2F6F73;--oro:#C9A24B;--bg:#F2EFE4;--tx:#2F3B3D;--tx2:#55646A}
+.m1{width:100%;height:100%;border:3px solid var(--ac);padding:8px}
+.m2{width:100%;height:100%;border:1px solid var(--oro);display:flex;flex-direction:column;align-items:center;padding:34px 72px 30px}
+.plat{font-size:14px;letter-spacing:6px;font-weight:700;color:var(--ro);text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.plat img{height:30px;width:30px;border-radius:6px}
+.orn{display:flex;align-items:center;gap:14px;margin-top:12px}
+.orn i{display:block;width:90px;height:1px;background:var(--oro)}.orn b{display:block;width:9px;height:9px;background:var(--ac);transform:rotate(45deg)}
+.cert h1{margin:20px 0 0;font:700 58px "Playfair Display",serif;letter-spacing:8px;color:var(--tit);text-transform:uppercase}
+.sub{font-size:16px;letter-spacing:5px;font-weight:600;color:var(--ac);text-transform:uppercase;margin-top:6px}
+.otorga{font-size:17px;margin-top:28px}
+.nombre{font:italic 500 52px "Playfair Display",serif;color:var(--tit);margin-top:8px;line-height:1.15;text-align:center;max-width:900px}
+.linea{width:520px;height:1px;background:var(--oro);margin-top:10px}
+.curso{font-size:17px;margin-top:20px;text-align:center;line-height:1.6;max-width:760px}.curso b{color:var(--tit)}
+.pie{width:100%;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between}
+.qrb{display:flex;align-items:center;gap:14px;width:290px}
+#qr{width:96px;height:96px;flex:none;background:#fff}#qr svg{width:100%;height:100%;display:block}
+.qrb div.t{font-size:12px;line-height:1.5}
+.firma{display:flex;flex-direction:column;align-items:center;width:300px}.firma .esp{height:40px}.firma .ln{width:240px;height:1px;background:var(--tx)}
+.firma b{font-size:13px;margin-top:6px}.firma span{font-size:12px;margin-top:2px}
+.datos{width:290px;text-align:right;font-size:13px;line-height:1.7}
+.aviso{font-size:11px;margin-top:18px;text-align:center;color:var(--tx2)}
+@page{size:A4 landscape;margin:0}
+@media print{body{background:none}.no-print{display:none!important}.cert{transform:none!important}#escala{width:auto!important;height:auto!important;margin:0!important}}
+</style>
+</head>
+<body>
+<div class="barra no-print">
+<a href="index.html">Volver al inicio</a>
+<button type="button" id="bPdf" hidden>Descargar PDF</button>
+<button type="button" class="alt" id="cM" hidden>Color terracota</button>
+<button type="button" class="alt" id="cH" hidden>Color azul verdoso</button>
+<span class="estado" id="estado">Verificando certificado...</span>
+</div>
+
+<div id="caja" class="no-print" hidden>
+<b>Verificar un certificado</b>
+<p style="font-size:14px">Pega aquí el código completo del certificado, o abre el enlace o el código QR que aparece en él.</p>
+<input id="tk" placeholder="Código del certificado" aria-label="Código del certificado">
+<button type="button" id="bV" style="font:700 14px Arial;background:#0F3D3E;color:#fff;border:0;padding:9px 16px;border-radius:6px;cursor:pointer">Verificar</button>
+</div>
+
+<div id="escala" hidden>
+<div class="cert" id="cert"><div class="m1"><div class="m2">
+<div class="plat"><img src="logo-profesor.png" alt="" onerror="this.style.display='none'">Profesor</div>
+<div class="orn"><i></i><b></b><i></i></div>
+<h1>Certificado</h1><div class="sub">de participación</div>
+<div class="otorga">Se otorga con reconocimiento a</div>
+<div class="nombre" id="nombre"></div><div class="linea"></div>
+<div class="curso">por haber completado y aprobado el curso <b id="curso"></b>, con una intensidad de <b id="horas"></b> horas.</div>
+<div class="pie">
+<div class="qrb"><div id="qr"></div><div class="t">Verifica este certificado escaneando el código QR o ingresando en <b id="url"></b></div></div>
+<div class="firma"><div class="esp"></div><div class="ln"></div><b>Naudyth Yalith Beltrán Díaz</b><span>Fundadora de la plataforma</span></div>
+<div class="datos"><div><b>Fecha:</b> <span id="fecha"></span></div><div><b>Código:</b> <span id="id"></span></div></div>
+</div>
+<div class="aviso">Certificado de participación emitido por Profesor. No corresponde a una certificación oficial ni a un título académico.</div>
+</div></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+var $=function(i){return document.getElementById(i)},cert=$("cert"),esc=$("escala");
+var token=new URLSearchParams(location.search).get("c")||"";
+function ajustar(){var w=Math.min(1,(document.documentElement.clientWidth-24)/1123);cert.style.transform="scale("+w+")";esc.style.width=(1123*w)+"px";esc.style.height=(794*w)+"px"}
+window.addEventListener("resize",ajustar);
+function estado(t,c){var e=$("estado");e.textContent=t;e.className="estado "+(c||"")}
+function qr(url){var el=$("qr");try{if(typeof qrcode==="undefined")throw 0;var q=qrcode(0,"L");q.addData(url);q.make();var n=q.getModuleCount(),m=4,d="";
+for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(q.isDark(r,c))d+="M"+(c+m)+" "+(r+m)+"h1v1h-1z";
+el.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(n+2*m)+' '+(n+2*m)+'" shape-rendering="crispEdges"><path d="'+d+'" fill="#000"/></svg>'}catch(e){el.style.display="none"}}
+function mostrar(d){$("nombre").textContent=d.nombre;$("curso").textContent=d.curso;$("horas").textContent=d.horas;$("id").textContent=d.id;
+$("fecha").textContent=new Date(d.fecha+"T12:00:00").toLocaleDateString("es-CO",{day:"numeric",month:"long",year:"numeric"});
+var u=location.origin+location.pathname+"?c="+encodeURIComponent(token);$("url").textContent=location.host+"/certificado.html";qr(u);
+esc.hidden=false;ajustar();["bPdf","cM","cH"].forEach(function(i){$(i).hidden=false});estado("Certificado verificado","ok");document.title="Certificado de "+d.nombre+" · Profesor"}
+function verificar(t){token=t;fetch("/api/verificar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:t})}).then(function(r){return r.json()}).then(function(d){
+if(d.ok)mostrar(d);else{esc.hidden=true;$("caja").hidden=false;estado("Este certificado no es válido","mal")}}).catch(function(){estado("No pude conectarme. Intenta de nuevo.","mal")})}
+$("bPdf").onclick=function(){window.print()};
+$("cM").onclick=function(){cert.classList.remove("h")};$("cH").onclick=function(){cert.classList.add("h")};
+$("bV").onclick=function(){var v=$("tk").value.trim();var m=v.match(/[?&]c=([^&\s]+)/);if(m)v=decodeURIComponent(m[1]);if(v)verificar(v)};
+if(token)verificar(token);else{$("caja").hidden=false;estado("Pega el código para verificar")}
+</script>
+</body>
+</html>
