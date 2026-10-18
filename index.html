@@ -208,4 +208,27 @@ if(d.ok){chat.msgs.push({role:"user",text:q});chat.msgs.push({role:"model",text:
 estado();log.scrollTop=log.scrollHeight}).then(function(){busy=false})}
 function lista(){hl.innerHTML="";var c=Profesor.chats();if(!c.length){var e=document.createElement("li");e.innerHTML='<span class="empty">Aún no tienes conversaciones guardadas.</span>';hl.appendChild(e);return}
 c.forEach(function(x){var li=document.createElement("li");if(x.id===chat.id)li.className="on";var o=document.createElement("button");o.type="button";o.className="open";var t=document.createElement("span");t.textContent=x.titulo;var f=document.createElement("small");f.textContent=new Date(x.t).toLocaleDateString("es-CO",{day:"numeric",month:"short"})+" · "+(Math.floor(x.msgs.length/2)===1?"1 pregunta":Math.floor(x.msgs.length/2)+" preguntas");o.appendChild(t);o.appendChild(f);
-o.onclick=function(){chat=JSON.parse(JSON.stringify(x));pintar();hist.hidden=t
+o.onclick=function(){chat=JSON.parse(JSON.stringify(x));pintar();hist.hidden=true};
+var d=document.createElement("button");d.type="button";d.className="del";d.textContent="Borrar";d.setAttribute("aria-label","Borrar conversación "+x.titulo);d.onclick=function(){Profesor.borrarChat(x.id);if(x.id===chat.id){chat=Profesor.nuevoChat();pintar()}lista()};
+li.appendChild(o);li.appendChild(d);hl.appendChild(li)})}
+document.getElementById("bHist").onclick=function(){lista();hist.hidden=false};
+document.getElementById("bClose").onclick=function(){hist.hidden=true};
+document.getElementById("bNew").onclick=function(){chat=Profesor.nuevoChat();pintar();hist.hidden=true};
+Q.forEach(function(q){var b=document.createElement("button");b.type="button";b.textContent=q;b.onclick=function(){ask(q)};chips.appendChild(b)});
+var PRECIOS={estudiante:"$10.000",profesional:"$30.000",master:"$60.000"};
+var LLAVE="@PLATA3232015094",CORREO="contacto.profesor.ia@gmail.com";
+document.querySelectorAll(".plan .pick").forEach(function(b){b.onclick=function(){var id=b.parentNode.getAttribute("data-plan");var m=document.getElementById("planmsg");
+if(id==="gratis"){if(id===Profesor.plan())return;Profesor.setPlan(id);estado();m.textContent="Plan Gratis activado: tienes 5 preguntas al día en el asistente.";return}
+var p=Profesor.PLANS[id];m.innerHTML="<b>Plan "+p.nombre+" · "+PRECIOS[id]+" al mes.</b> Para activarlo: 1) Transfiere "+PRECIOS[id]+" por Bre-B a la llave <b>"+LLAVE+"</b>. 2) Envía el comprobante con tu nombre y el plan a <a href=\"mailto:"+CORREO+"?subject=Pago%20plan%20"+encodeURIComponent(p.nombre)+"\">"+CORREO+"</a>. 3) Cuando verifiquemos el pago te enviamos un código de activación: escríbelo en el cuadro de abajo y tu plan queda activo.";
+m.scrollIntoView({behavior:"smooth",block:"nearest"})}});
+document.querySelectorAll(".buy").forEach(function(b){b.onclick=function(){document.getElementById("buymsg").innerHTML="Para comprar: transfiere el valor por Bre-B a la llave <b>"+LLAVE+"</b> y envía el comprobante con el nombre de la plantilla a <a href=\"mailto:"+CORREO+"\">"+CORREO+"</a>. Te la enviamos cuando verifiquemos el pago."}});
+document.getElementById("f").onsubmit=function(e){e.preventDefault();var i=document.getElementById("q");if(i.value.trim()){ask(i.value.trim());i.value=""}};
+function activar(){var c=document.getElementById("cod").value.trim();var m=document.getElementById("planmsg");if(!c)return;m.textContent="Verificando código...";
+Profesor.activarCodigo(c).then(function(d){estado();if(d.ok){var n=Profesor.PLANS[d.plan].nombre;m.textContent="Plan "+n+" activado: ahora tienes "+Profesor.PLANS[d.plan].limite+" preguntas al día.";document.getElementById("cod").value=""}else{m.textContent=d.error?"No pude conectarme. Intenta de nuevo.":"Código no válido o vencido. Revisa que esté bien escrito."}})}
+document.getElementById("activar").onclick=activar;
+document.getElementById("cod").onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();activar()}};
+document.getElementById("probar").onclick=function(){setTimeout(function(){document.getElementById("q").focus()},400)};
+pintar();estado();
+</script>
+</body>
+</html>
