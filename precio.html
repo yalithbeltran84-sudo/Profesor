@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<meta name="description" content="Calculadora de precio de venta, margen y recargo: la diferencia entre margen sobre ventas y recargo sobre costo para pequeños negocios.">
+<title>Precio de venta y margen · Profesor</title>
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--on:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,label,button,input,select,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0 8px}
+.top a{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute);text-decoration:none}
+.top a:first-child{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green)}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.08;margin:16px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--mute);margin:0 0 24px;max-width:62ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 0 0 4px var(--soft)}
+.card h2{font-size:18px;margin:22px 0 10px}.card h2:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+label{display:block;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:4px}
+input{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font:13px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:4px 0 0}
+.btn,.ghost{border-radius:6px;padding:12px 18px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.btn{background:var(--green);color:var(--on);border:0}.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--bad);font:500 15px "Bricolage Grotesque",sans-serif;margin:12px 0 0}
+#resultado{margin-top:32px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px}
+.sum div{border-top:3px solid var(--green);padding-top:8px}
+.sum span{display:block;font:500 13.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.sum b{font:800 22px "Bricolage Grotesque",sans-serif;overflow-wrap:anywhere}
+#rep h2{font-size:20px;margin:28px 0 6px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14.5px/1.45 "Bricolage Grotesque",sans-serif;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;background:var(--soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 4px}
+.card .actions{margin-bottom:0}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font:16px/1.5 "Bricolage Grotesque",sans-serif;white-space:pre-wrap}
+.note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:16px 0 0}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+#doc{display:none}
+@media print{:root:not([data-theme="light"]),:root{--ink:#000;--mute:#444;--green:#0F3D3E;--line:#999;--amber:#B7791F;--soft:#eee;--paper:#fff;--bad:#B3261E;--ok:#1B6B3A}body{background:#fff;color:#000;font:12px/1.4 Georgia,serif}.wrap{display:none!important}#doc{display:block;padding:20px;color:#000}#doc h1{font-size:22px;text-align:center;margin:0}#doc h2,#doc h3{font-size:15px;margin:14px 0 4px}#doc td,#doc th{padding:3px 4px;border-bottom:1px solid #999;font-size:11px}}
+@media(max-width:640px){.grid,.sum{grid-template-columns:1fr}}
+
+select{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lead a,.note a,.hint a{color:var(--green)}
+.scroll{overflow-x:auto}.scroll table{min-width:640px}
+.mv{display:grid;grid-template-columns:150px 1fr 100px 150px auto;gap:8px;margin:8px 0}
+.mv .ghost{padding:8px 12px}
+.full{grid-column:1/-1}
+@media(max-width:640px){.mv{grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+<div class="top"><a href="index.html">Profesor</a><a href="index.html">Volver al inicio</a></div>
+<h1>Precio de venta, margen y recargo</h1>
+<p class="lead">Calcula a cuánto vender un producto y cuánto ganas realmente. Muchos negocios confunden el <b>margen</b> (ganancia sobre el precio) con el <b>recargo</b> (ganancia sobre el costo), y por eso ganan menos de lo que creen.</p>
+<form class="card" id="f" autocomplete="off" onsubmit="return false">
+<h2>Tu producto</h2>
+<div class="grid">
+<div><label for="c">Costo por unidad ($)</label><input id="c" inputmode="numeric" placeholder="Ej: 12.000"><p class="hint">Lo que te cuesta comprar o producir una unidad.</p></div>
+<div><label for="modo">¿Qué datos tienes?</label><select id="modo"><option value="margen">Quiero ganar un margen sobre el precio</option><option value="recargo">Le sumo un recargo al costo</option><option value="precio">Ya tengo el precio de venta</option></select></div>
+<div><label for="v" id="lv">Margen deseado (%)</label><input id="v" inputmode="decimal" placeholder="Ej: 30"></div>
+<div><label for="iva">IVA del producto</label><select id="iva"><option value="0.19">19%</option><option value="0.05">5%</option><option value="0">Sin IVA (excluido o exento)</option></select></div>
+<div><label for="u">Unidades que vendes al mes <small>(opcional)</small></label><input id="u" inputmode="numeric" value="0"></div>
+</div>
+<div class="actions"><button class="btn" type="button" id="go">Calcular precio</button></div>
+<p class="err" id="err" role="alert"></p>
+</form>
+<div id="resultado" hidden aria-live="polite">
+<div class="sum"><div><span>Precio de venta (sin IVA)</span><b id="s1"></b></div><div><span>Margen sobre ventas</span><b id="s2"></b></div><div><span>Recargo sobre costo</span><b id="s3"></b></div></div>
+<div id="rep"></div>
+<div class="actions"><button class="btn" type="button" id="bIA">Explícame estos resultados</button><button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button><button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button></div><div id="ai" hidden></div>
+</div>
+<p class="note">Margen = (precio − costo) ÷ precio. Recargo = (precio − costo) ÷ costo. El margen siempre es menor que el recargo y nunca llega a 100%. Los cálculos no incluyen tus gastos fijos: para saber cuánto necesitas vender usa el punto de equilibrio. Es una herramienta de apoyo y no reemplaza la asesoría de un contador público. No pide registro y tus datos no salen de tu navegador.</p>
+</div><div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+var FILE="precio-margen",TIT="Precio de venta, margen y recargo";
+var $=function(i){return document.getElementById(i)};
+function num(s){s=String(s).trim().replace(/\./g,"").replace(",",".");return s===""?0:Number(s)}
+var fm=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
+function f(n){return fm.format(Math.round(n))}
+function pc(n){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:1,maximumFractionDigits:1})+"%"}
+function x2(n){return n.toLocaleString("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2})}
+var last=null,csv=[];
+function dl(){if(!last)return;var b=new Blob(["\uFEFF"+csv.map(function(r){return r.join(";")}).join("\r\n")],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=FILE+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function pr(){if(!last)return;$("doc").innerHTML="<h1>"+TIT+"</h1><p style=\"text-align:center\">Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("rep").innerHTML+"<p style=\"font-size:10px;color:#444\">Cálculo informativo. No reemplaza la asesoría de un contador público.</p>";window.print()}
+function ia(q){var out=$("ai"),b=$("bIA");if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+b.disabled=true;out.hidden=false;out.textContent="Pensando…";Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})}
+function btns(){$("bCsv").onclick=dl;$("bPdf").onclick=pr;document.querySelectorAll("#f input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});$("go").onclick=calc}
+var LB={margen:"Margen deseado (%)",recargo:"Recargo sobre el costo (%)",precio:"Precio de venta sin IVA ($)"};
+$("modo").onchange=function(){$("lv").textContent=LB[this.value]};
+function pp(n){return (n*100).toLocaleString("es-CO",{maximumFractionDigits:2})+"%"}
+function calc(){
+var err=$("err");err.textContent="";last=null;$("resultado").hidden=true;$("ai").hidden=true;
+var C=num($("c").value),md=$("modo").value,v=num($("v").value),iv=+$("iva").value,u=num($("u").value),P;
+if(!(C>0)){err.textContent="Escribe el costo por unidad.";return}
+if(isNaN(v)||!(v>0)){err.textContent="Escribe el valor de "+LB[md].toLowerCase()+".";return}
+if(isNaN(u)||u<0){err.textContent="Revisa las unidades.";return}
+if(md==="margen"){if(v>=100){err.textContent="El margen no puede ser 100% o más: nunca se llega al 100% de margen.";return}P=C/(1-v/100)}
+else if(md==="recargo")P=C*(1+v/100);else P=v;
+var g=P-C,m=g/P,r=g/C,iva=P*iv,pf=P+iva;
+last={C:C,P:P,g:g,m:m,r:r,pf:pf};
+$("s1").textContent=f(P);$("s2").textContent=pp(m);$("s3").textContent=pp(r);
+var rows=[["Costo por unidad",f(C)],["Precio de venta (sin IVA)",f(P)],["Ganancia por unidad",f(g)],["Margen sobre ventas",pp(m)],["Recargo sobre costo",pp(r)],["IVA ("+pp(iv)+")",f(iva)],["Precio al público (con IVA)",f(pf)]];
+if(u>0)rows.push(["Ganancia bruta con "+u.toLocaleString("es-CO")+" unidades al mes",f(g*u)],["Ventas del mes (sin IVA)",f(P*u)]);
+csv=[["Concepto","Valor"]].concat(rows);
+var al=[];
+if(g<0)al.push("Estás vendiendo por debajo del costo: pierdes "+f(-g)+" por unidad.");
+if(md==="margen")al.push("Un margen de "+pp(v/100)+" equivale a un recargo de "+pp(r)+" sobre el costo.");
+if(md==="recargo")al.push("Con un recargo de "+pp(v/100)+" tu margen real es "+pp(m)+", no "+pp(v/100)+". Si querías ganar "+pp(v/100)+" del precio, necesitas un recargo de "+pp((v/100)/(1-v/100))+".");
+if(md==="precio")al.push("A ese precio, de cada $100 que vendes te quedan $"+Math.round(m*100)+" sobre el costo de la mercancía.");
+var eq=[10,20,25,30,40,50,75,100].map(function(x){return "<tr><td>"+x+"%</td><td>"+pp(x/100/(1+x/100))+"</td></tr>"}).join("");
+$("rep").innerHTML="<h2>Resultados</h2><table><tbody>"+rows.map(function(x,i){return "<tr"+(i===1||i===6?" class=\"tot\"":"")+"><td>"+x[0]+"</td><td>"+x[1]+"</td></tr>"}).join("")+"</tbody></table>"+al.map(function(t){return "<div class=\"alert\">"+t+"</div>"}).join("")+"<h2>Margen y recargo no son lo mismo</h2><table><thead><tr><th>Recargo sobre el costo</th><th>Margen real sobre el precio</th></tr></thead><tbody>"+eq+"</tbody></table><p class=\"hint\">Margen = (precio − costo) ÷ precio. Recargo = (precio − costo) ÷ costo.</p>";
+$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
+btns();
+$("bIA").onclick=function(){if(!last)return;var L=last;ia("Explica en palabras sencillas este precio para un pequeño negocio en Colombia: costo "+f(L.C)+", precio de venta "+f(L.P)+", ganancia "+f(L.g)+", margen "+pp(L.m)+", recargo "+pp(L.r)+". Explica la diferencia entre margen y recargo, y qué debo tener en cuenta además del costo.")};
+</script></body></html>

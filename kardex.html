@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<meta name="description" content="Kardex de inventarios con promedio ponderado y PEPS (NIC 2): entradas, salidas, saldo, costo de ventas e inventario final.">
+<title>Kardex de inventarios · Profesor</title>
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--on:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,label,button,input,select,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0 8px}
+.top a{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute);text-decoration:none}
+.top a:first-child{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green)}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.08;margin:16px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--mute);margin:0 0 24px;max-width:62ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 0 0 4px var(--soft)}
+.card h2{font-size:18px;margin:22px 0 10px}.card h2:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+label{display:block;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:4px}
+input{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font:13px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:4px 0 0}
+.btn,.ghost{border-radius:6px;padding:12px 18px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.btn{background:var(--green);color:var(--on);border:0}.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--bad);font:500 15px "Bricolage Grotesque",sans-serif;margin:12px 0 0}
+#resultado{margin-top:32px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px}
+.sum div{border-top:3px solid var(--green);padding-top:8px}
+.sum span{display:block;font:500 13.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.sum b{font:800 22px "Bricolage Grotesque",sans-serif;overflow-wrap:anywhere}
+#rep h2{font-size:20px;margin:28px 0 6px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14.5px/1.45 "Bricolage Grotesque",sans-serif;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;background:var(--soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 4px}
+.card .actions{margin-bottom:0}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font:16px/1.5 "Bricolage Grotesque",sans-serif;white-space:pre-wrap}
+.note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:16px 0 0}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+#doc{display:none}
+@media print{:root:not([data-theme="light"]),:root{--ink:#000;--mute:#444;--green:#0F3D3E;--line:#999;--amber:#B7791F;--soft:#eee;--paper:#fff;--bad:#B3261E;--ok:#1B6B3A}body{background:#fff;color:#000;font:12px/1.4 Georgia,serif}.wrap{display:none!important}#doc{display:block;padding:20px;color:#000}#doc h1{font-size:22px;text-align:center;margin:0}#doc h2,#doc h3{font-size:15px;margin:14px 0 4px}#doc td,#doc th{padding:3px 4px;border-bottom:1px solid #999;font-size:11px}}
+@media(max-width:640px){.grid,.sum{grid-template-columns:1fr}}
+
+select{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lead a,.note a,.hint a{color:var(--green)}
+.scroll{overflow-x:auto}.scroll table{min-width:640px}
+.mv{display:grid;grid-template-columns:150px 1fr 100px 150px auto;gap:8px;margin:8px 0}
+.mv .ghost{padding:8px 12px}
+.full{grid-column:1/-1}
+@media(max-width:640px){.mv{grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+<div class="top"><a href="index.html">Profesor</a><a href="index.html">Volver al inicio</a></div>
+<h1>Kardex de inventarios</h1>
+<p class="lead">Registra tus entradas y salidas de un producto y obtén el kardex con <b>promedio ponderado</b> o <b>PEPS</b> (primeras en entrar, primeras en salir), comparando el costo de ventas y el inventario final de cada método. Más detalle en el <a href="articulos.html">artículo de inventarios (NIC 2)</a>.</p>
+<form class="card" id="f" autocomplete="off" onsubmit="return false">
+<h2>Método de valoración</h2>
+<div class="grid"><div><label for="met">Ver el kardex con</label><select id="met"><option value="pp">Promedio ponderado</option><option value="peps">PEPS (FIFO)</option></select></div></div>
+<h2>Movimientos del producto (en orden de fecha)</h2>
+<div id="movs"></div>
+<div class="actions"><button class="ghost" type="button" id="add">Agregar movimiento</button><button class="ghost" type="button" id="clr">Limpiar todo</button></div>
+<p class="hint">Saldo inicial y compras llevan el costo unitario. En las ventas escribe el precio de venta por unidad (opcional) para calcular la utilidad bruta: el costo lo calcula el método.</p>
+<div class="actions"><button class="btn" type="button" id="go">Generar kardex</button></div>
+<p class="err" id="err" role="alert"></p>
+</form>
+<div id="resultado" hidden aria-live="polite">
+<div class="sum"><div><span>Costo de ventas</span><b id="s1"></b></div><div><span>Inventario final</span><b id="s2"></b></div><div><span>Utilidad bruta</span><b id="s3"></b></div></div>
+<div id="rep"></div>
+<div class="actions"><button class="btn" type="button" id="bIA">Explícame estos resultados</button><button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button><button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button></div><div id="ai" hidden></div>
+</div>
+<p class="note">La NIC 2 permite el costo promedio ponderado y el PEPS; no permite el UEPS (LIFO). Los códigos del PUC (6135, 1435) son los más usados en comercio: confírmalos con tu plan de cuentas. Es una herramienta de apoyo y no reemplaza la asesoría de un contador público. No pide registro y tus datos no salen de tu navegador.</p>
+</div><div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+var FILE="kardex",TIT="Kardex de inventarios";
+var $=function(i){return document.getElementById(i)};
+function num(s){s=String(s).trim().replace(/\./g,"").replace(",",".");return s===""?0:Number(s)}
+var fm=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
+function f(n){return fm.format(Math.round(n))}
+function pc(n){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:1,maximumFractionDigits:1})+"%"}
+function x2(n){return n.toLocaleString("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2})}
+var last=null,csv=[];
+function dl(){if(!last)return;var b=new Blob(["\uFEFF"+csv.map(function(r){return r.join(";")}).join("\r\n")],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=FILE+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function pr(){if(!last)return;$("doc").innerHTML="<h1>"+TIT+"</h1><p style=\"text-align:center\">Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("rep").innerHTML+"<p style=\"font-size:10px;color:#444\">Cálculo informativo. No reemplaza la asesoría de un contador público.</p>";window.print()}
+function ia(q){var out=$("ai"),b=$("bIA");if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+b.disabled=true;out.hidden=false;out.textContent="Pensando…";Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})}
+function btns(){$("bCsv").onclick=dl;$("bPdf").onclick=pr;document.querySelectorAll("#f input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});$("go").onclick=calc}
+var TL={inicial:"Saldo inicial",compra:"Compra",venta:"Venta"};
+function qn(n){return n.toLocaleString("es-CO",{maximumFractionDigits:2})}
+function addRow(t,d,q,u){var r=document.createElement("div");r.className="mv";
+r.innerHTML="<select class=\"t\" aria-label=\"Tipo\"><option value=\"inicial\">Saldo inicial</option><option value=\"compra\">Compra</option><option value=\"venta\">Venta</option></select><input class=\"d\" aria-label=\"Fecha o detalle\" placeholder=\"Fecha o detalle\"><input class=\"q\" inputmode=\"decimal\" aria-label=\"Cantidad\" placeholder=\"Cantidad\"><input class=\"u\" inputmode=\"numeric\" aria-label=\"Valor unitario\" placeholder=\"Costo unitario\"><button type=\"button\" class=\"ghost x\">Quitar</button>";
+var s=r.querySelector(".t");s.value=t||"compra";
+function ph(){r.querySelector(".u").placeholder=s.value==="venta"?"Precio de venta (opcional)":"Costo unitario"}
+s.onchange=ph;ph();r.querySelector(".d").value=d||"";r.querySelector(".q").value=q||"";r.querySelector(".u").value=u||"";
+r.querySelector(".x").onclick=function(){r.remove()};$("movs").appendChild(r)}
+$("add").onclick=function(){addRow("compra")};
+$("clr").onclick=function(){$("movs").innerHTML="";addRow("inicial");$("resultado").hidden=true};
+addRow("inicial","Inventario inicial","100","5.000");addRow("compra","Compra 1","50","5.500");addRow("venta","Venta 1","120","9.000");
+function motor(M,met){var lotes=[],qty=0,val=0,cv=0,ing=0,rows=[];
+for(var k=0;k<M.length;k++){var m=M[k];
+if(m.t!=="venta"){lotes.push({q:m.q,c:m.u});qty+=m.q;val+=m.q*m.u;rows.push({m:m,e:[m.q,m.u,m.q*m.u],s:null,q:qty,v:val})}
+else{if(m.q>qty+1e-9)return{err:"En el movimiento "+(k+1)+" vendes "+qn(m.q)+" unidades pero solo hay "+qn(qty)+" en inventario."};
+var costo=0;
+if(met==="pp"){costo=val/qty*m.q}
+else{var need=m.q;while(need>1e-9){var l=lotes[0],tk=Math.min(l.q,need);costo+=tk*l.c;l.q-=tk;need-=tk;if(l.q<=1e-9)lotes.shift()}}
+val-=costo;qty-=m.q;if(qty<1e-9){qty=0;val=0}cv+=costo;ing+=m.q*m.u;rows.push({m:m,e:null,s:[m.q,costo/m.q,costo],q:qty,v:val})}}
+return{rows:rows,cv:cv,inv:val,qty:qty,ing:ing}}
+function calc(){
+var err=$("err");err.textContent="";last=null;$("resultado").hidden=true;$("ai").hidden=true;
+var M=[];var els=document.querySelectorAll("#movs .mv");
+if(!els.length){err.textContent="Agrega al menos un movimiento.";return}
+for(var k=0;k<els.length;k++){var e=els[k],t=e.querySelector(".t").value,q=num(e.querySelector(".q").value),u=num(e.querySelector(".u").value);
+if(isNaN(q)||!(q>0)){err.textContent="Escribe la cantidad en el movimiento "+(k+1)+".";return}
+if(isNaN(u)||u<0||(t!=="venta"&&!(u>0))){err.textContent=t==="venta"?"Revisa el precio de venta en el movimiento "+(k+1)+".":"Escribe el costo unitario en el movimiento "+(k+1)+".";return}
+M.push({t:t,d:e.querySelector(".d").value.trim(),q:q,u:u})}
+if(M[0].t==="venta"){err.textContent="El primer movimiento debe ser un saldo inicial o una compra.";return}
+var A=motor(M,"pp"),B=motor(M,"peps");if(A.err||B.err){err.textContent=A.err||B.err;return}
+var met=$("met").value,R=met==="pp"?A:B,nm=met==="pp"?"Promedio ponderado":"PEPS";
+last={met:nm,R:R,A:A,B:B};
+$("s1").textContent=f(R.cv);$("s2").textContent=f(R.inv);$("s3").textContent=R.ing>0?f(R.ing-R.cv):"—";
+csv=[["Detalle","Tipo","Entrada cant","Entrada v/u","Entrada total","Salida cant","Salida v/u","Salida total","Saldo cant","Saldo total"]];
+var tb=R.rows.map(function(r){var m=r.m,E=r.e,S=r.s;
+csv.push([m.d,TL[m.t],E?E[0]:"",E?Math.round(E[1]):"",E?Math.round(E[2]):"",S?S[0]:"",S?Math.round(S[1]):"",S?Math.round(S[2]):"",r.q,Math.round(r.v)]);
+return "<tr><td>"+(m.d?m.d+" · ":"")+TL[m.t]+"</td><td>"+(E?qn(E[0]):"")+"</td><td>"+(E?f(E[1]):"")+"</td><td>"+(E?f(E[2]):"")+"</td><td>"+(S?qn(S[0]):"")+"</td><td>"+(S?f(S[1]):"")+"</td><td>"+(S?f(S[2]):"")+"</td><td>"+qn(r.q)+"</td><td>"+(r.q>0?f(r.v/r.q):"")+"</td><td>"+f(r.v)+"</td></tr>"}).join("");
+var cmp="<tr><td>Costo de ventas</td><td>"+f(A.cv)+"</td><td>"+f(B.cv)+"</td></tr><tr><td>Inventario final</td><td>"+f(A.inv)+"</td><td>"+f(B.inv)+"</td></tr><tr><td>Unidades en inventario</td><td>"+qn(A.qty)+"</td><td>"+qn(B.qty)+"</td></tr>"+(A.ing>0?"<tr class=\"tot\"><td>Utilidad bruta</td><td>"+f(A.ing-A.cv)+"</td><td>"+f(B.ing-B.cv)+"</td></tr>":"");
+var dif=Math.abs(A.cv-B.cv),nota=dif<1?"En este caso los dos métodos dan el mismo resultado.":"La diferencia en el costo de ventas es de "+f(dif)+". "+(B.cv<A.cv?"Con PEPS el costo de ventas es menor y el inventario final queda valorado a precios más recientes.":"Con PEPS el costo de ventas es mayor porque las unidades más antiguas costaron más.");
+var as=R.cv>0?"<h2>Asiento del costo de ventas</h2><table><thead><tr><th>Cuenta</th><th>Débito</th><th>Crédito</th></tr></thead><tbody><tr><td>6135 Costo de ventas (comercio)</td><td>"+f(R.cv)+"</td><td></td></tr><tr><td>1435 Mercancías no fabricadas por la empresa</td><td></td><td>"+f(R.cv)+"</td></tr></tbody></table>":"";
+$("rep").innerHTML="<h2>Kardex · "+nm+"</h2><div class=\"scroll\"><table><thead><tr><th>Detalle</th><th>Ent. cant.</th><th>Ent. v/u</th><th>Ent. total</th><th>Sal. cant.</th><th>Sal. v/u</th><th>Sal. total</th><th>Saldo cant.</th><th>Saldo v/u</th><th>Saldo total</th></tr></thead><tbody>"+tb+"</tbody></table></div><h2>Comparación de métodos</h2><table><thead><tr><th></th><th>Promedio ponderado</th><th>PEPS</th></tr></thead><tbody>"+cmp+"</tbody></table><div class=\"alert\">"+nota+"</div>"+as;
+$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
+btns();
+$("bIA").onclick=function(){if(!last)return;var L=last;ia("Explica en palabras sencillas este kardex en Colombia. Costo de ventas: promedio ponderado "+f(L.A.cv)+" y PEPS "+f(L.B.cv)+". Inventario final: "+f(L.A.inv)+" y "+f(L.B.inv)+". Explica la diferencia entre ambos métodos según la NIC 2 y cuál conviene a un pequeño negocio.")};
+</script></body></html>

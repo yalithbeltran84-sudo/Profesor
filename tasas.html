@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<meta name="description" content="Conversor de tasas de interés: efectiva anual, nominal, mensual, anticipada y vencida, con la fórmula de cada conversión.">
+<title>Conversor de tasas · Profesor</title>
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--on:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,label,button,input,select,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0 8px}
+.top a{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute);text-decoration:none}
+.top a:first-child{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green)}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.08;margin:16px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--mute);margin:0 0 24px;max-width:62ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 0 0 4px var(--soft)}
+.card h2{font-size:18px;margin:22px 0 10px}.card h2:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+label{display:block;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:4px}
+input{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font:13px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:4px 0 0}
+.btn,.ghost{border-radius:6px;padding:12px 18px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.btn{background:var(--green);color:var(--on);border:0}.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--bad);font:500 15px "Bricolage Grotesque",sans-serif;margin:12px 0 0}
+#resultado{margin-top:32px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px}
+.sum div{border-top:3px solid var(--green);padding-top:8px}
+.sum span{display:block;font:500 13.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.sum b{font:800 22px "Bricolage Grotesque",sans-serif;overflow-wrap:anywhere}
+#rep h2{font-size:20px;margin:28px 0 6px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14.5px/1.45 "Bricolage Grotesque",sans-serif;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;background:var(--soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 4px}
+.card .actions{margin-bottom:0}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font:16px/1.5 "Bricolage Grotesque",sans-serif;white-space:pre-wrap}
+.note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:16px 0 0}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+#doc{display:none}
+@media print{:root:not([data-theme="light"]),:root{--ink:#000;--mute:#444;--green:#0F3D3E;--line:#999;--amber:#B7791F;--soft:#eee;--paper:#fff;--bad:#B3261E;--ok:#1B6B3A}body{background:#fff;color:#000;font:12px/1.4 Georgia,serif}.wrap{display:none!important}#doc{display:block;padding:20px;color:#000}#doc h1{font-size:22px;text-align:center;margin:0}#doc h2,#doc h3{font-size:15px;margin:14px 0 4px}#doc td,#doc th{padding:3px 4px;border-bottom:1px solid #999;font-size:11px}}
+@media(max-width:640px){.grid,.sum{grid-template-columns:1fr}}
+
+select{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lead a,.note a,.hint a{color:var(--green)}
+.scroll{overflow-x:auto}.scroll table{min-width:640px}
+.mv{display:grid;grid-template-columns:150px 1fr 100px 150px auto;gap:8px;margin:8px 0}
+.mv .ghost{padding:8px 12px}
+.full{grid-column:1/-1}
+@media(max-width:640px){.mv{grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+<div class="top"><a href="index.html">Profesor</a><a href="index.html">Volver al inicio</a></div>
+<h1>Conversor de tasas de interés</h1>
+<p class="lead">Convierte una tasa efectiva anual (EA), nominal, mensual, trimestral o anticipada a todas las demás. Para comparar créditos, inversiones o la tasa de usura, todas deben estar en la misma base. Más detalle en el <a href="articulos.html">artículo sobre tasas de interés y usura</a>.</p>
+<form class="card" id="f" autocomplete="off" onsubmit="return false">
+<h2>Tu tasa</h2>
+<div class="grid">
+<div><label for="tasa">Tasa (%)</label><input id="tasa" inputmode="decimal" placeholder="Ej: 2"></div>
+<div><label for="tipo">¿Qué tipo de tasa es?</label><select id="tipo"><option value="mv">Mensual vencida (MV)</option><option value="ea">Efectiva anual (EA)</option><option value="nmv">Nominal anual mes vencido (NMV)</option><option value="ntv">Nominal anual trimestre vencido (NTV)</option><option value="nsv">Nominal anual semestre vencido (NSV)</option><option value="tv">Trimestral vencida (TV)</option><option value="sv">Semestral vencida (SV)</option><option value="ma">Mensual anticipada (MA)</option><option value="nma">Nominal anual mes anticipado (NMA)</option></select>
+<p class="hint">Vencida: los intereses se pagan al final del periodo. Anticipada: al comienzo.</p></div></div>
+<div class="actions"><button class="btn" type="button" id="go">Convertir</button></div>
+<p class="err" id="err" role="alert"></p>
+</form>
+<div id="resultado" hidden aria-live="polite">
+<div class="sum"><div><span>Efectiva anual (EA)</span><b id="s1"></b></div><div><span>Mensual vencida (MV)</span><b id="s2"></b></div><div><span>Nominal anual mes vencido</span><b id="s3"></b></div></div>
+<div id="rep"></div>
+<div class="actions"><button class="btn" type="button" id="bIA">Explícame estos resultados</button><button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button><button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button></div><div id="ai" hidden></div>
+</div>
+<p class="note">Con la convención colombiana, la tasa efectiva anual es la que permite comparar tasas distintas entre sí. Es una herramienta de apoyo y no reemplaza la asesoría de un contador público. No pide registro y tus datos no salen de tu navegador.</p>
+</div><div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+var FILE="conversor-tasas",TIT="Conversor de tasas de interés";
+var $=function(i){return document.getElementById(i)};
+function num(s){s=String(s).trim().replace(/\./g,"").replace(",",".");return s===""?0:Number(s)}
+var fm=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
+function f(n){return fm.format(Math.round(n))}
+function pc(n){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:1,maximumFractionDigits:1})+"%"}
+function x2(n){return n.toLocaleString("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2})}
+var last=null,csv=[];
+function dl(){if(!last)return;var b=new Blob(["\uFEFF"+csv.map(function(r){return r.join(";")}).join("\r\n")],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=FILE+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function pr(){if(!last)return;$("doc").innerHTML="<h1>"+TIT+"</h1><p style=\"text-align:center\">Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("rep").innerHTML+"<p style=\"font-size:10px;color:#444\">Cálculo informativo. No reemplaza la asesoría de un contador público.</p>";window.print()}
+function ia(q){var out=$("ai"),b=$("bIA");if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+b.disabled=true;out.hidden=false;out.textContent="Pensando…";Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})}
+function btns(){$("bCsv").onclick=dl;$("bPdf").onclick=pr;document.querySelectorAll("#f input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});$("go").onclick=calc}
+function p4(n){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:4,maximumFractionDigits:4})+"%"}
+var M={nmv:12,ntv:4,nsv:2,mv:12,tv:4,sv:2},TN={ea:"efectiva anual",nmv:"nominal anual mes vencido",ntv:"nominal anual trimestre vencido",nsv:"nominal anual semestre vencido",mv:"mensual vencida",tv:"trimestral vencida",sv:"semestral vencida",ma:"mensual anticipada",nma:"nominal anual mes anticipado"};
+function aEA(t,r){if(t==="ea")return r;
+if(t==="nmv"||t==="ntv"||t==="nsv")return Math.pow(1+r/M[t],M[t])-1;
+if(t==="mv"||t==="tv"||t==="sv")return Math.pow(1+r,M[t])-1;
+var ia=t==="ma"?r:r/12;if(ia>=1)return NaN;return Math.pow(1/(1-ia),12)-1}
+function calc(){
+var err=$("err");err.textContent="";last=null;$("resultado").hidden=true;$("ai").hidden=true;
+var t=$("tipo").value,r=num($("tasa").value)/100;
+if(isNaN(r)||!(r>0)||r>=10){err.textContent="Escribe una tasa mayor que 0 y menor que 1.000%.";return}
+var ea=aEA(t,r);if(!isFinite(ea)||!(ea>0)){err.textContent="Una tasa anticipada debe ser menor que 100%.";return}
+var mv=Math.pow(1+ea,1/12)-1,tv=Math.pow(1+ea,1/4)-1,sv=Math.pow(1+ea,1/2)-1,ma=mv/(1+mv),dia=Math.pow(1+ea,1/365)-1;
+var rows=[["Efectiva anual (EA)",ea,"EA = (1 + i)^n − 1"],["Mensual vencida (MV)",mv,"MV = (1 + EA)^(1/12) − 1"],["Trimestral vencida (TV)",tv,"TV = (1 + EA)^(1/4) − 1"],["Semestral vencida (SV)",sv,"SV = (1 + EA)^(1/2) − 1"],["Nominal anual mes vencido (NMV)",mv*12,"NMV = MV × 12"],["Nominal anual trimestre vencido (NTV)",tv*4,"NTV = TV × 4"],["Nominal anual semestre vencido (NSV)",sv*2,"NSV = SV × 2"],["Mensual anticipada (MA)",ma,"MA = MV ÷ (1 + MV)"],["Nominal anual mes anticipado (NMA)",ma*12,"NMA = MA × 12"],["Diaria efectiva (365 días)",dia,"(1 + EA)^(1/365) − 1"]];
+var p1;
+if(t==="ea")p1="Tu tasa ya es efectiva anual: no hay que convertirla primero.";
+else if(M[t]&&t.charAt(0)==="n")p1="Dividimos la nominal entre "+M[t]+" para hallar la tasa de cada periodo ("+p4(r/M[t])+") y la llevamos a EA: (1 + "+p4(r/M[t])+")^"+M[t]+" − 1 = "+p4(ea)+".";
+else if(M[t])p1="Llevamos la tasa de cada periodo a EA: (1 + "+p4(r)+")^"+M[t]+" − 1 = "+p4(ea)+".";
+else{var ia=t==="ma"?r:r/12;p1="La tasa anticipada se pasa a vencida con i = ia ÷ (1 − ia) = "+p4(ia/(1-ia))+" y luego a EA: (1 + i)^12 − 1 = "+p4(ea)+"."}
+csv=[["Tasa","Valor","Formula"]].concat(rows.map(function(x){return [x[0],p4(x[1]),x[2]]}));
+last={t:t,r:r,ea:ea,mv:mv};
+$("s1").textContent=p4(ea);$("s2").textContent=p4(mv);$("s3").textContent=p4(mv*12);
+$("rep").innerHTML="<h2>Cómo se hizo</h2><div class=\"alert\"><b>Paso 1.</b> "+p1+"</div><div class=\"alert\"><b>Paso 2.</b> De la EA pasamos a cada tasa con las fórmulas de la tabla.</div><h2>Tasas equivalentes</h2><div class=\"scroll\"><table><thead><tr><th>Tasa</th><th>Valor</th><th>Fórmula</th></tr></thead><tbody>"+rows.map(function(x,i){return "<tr"+(i===0?" class=\"tot\"":"")+"><td>"+x[0]+"</td><td>"+p4(x[1])+"</td><td>"+x[2]+"</td></tr>"}).join("")+"</tbody></table></div><p class=\"hint\">Todas estas tasas son la misma tasa expresada de formas distintas. Para comparar con la tasa de usura (que se publica en EA), usa siempre la EA.</p>";
+$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
+btns();
+$("bIA").onclick=function(){if(!last)return;var L=last;ia("Explica en palabras sencillas esta conversión de tasas en Colombia: "+p4(L.r)+" "+TN[L.t]+" equivale a "+p4(L.ea)+" EA y "+p4(L.mv)+" mensual vencida. Explica la diferencia entre tasa efectiva, nominal, vencida y anticipada, y cuándo usar cada una.")};
+</script></body></html>

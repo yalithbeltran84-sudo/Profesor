@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<meta name="description" content="Calculadora de interés simple y compuesto: valor futuro, valor presente, tasa y tiempo, con tabla periodo a periodo.">
+<title>Interés simple y compuesto · Profesor</title>
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--on:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--on:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,label,button,input,select,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0 8px}
+.top a{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute);text-decoration:none}
+.top a:first-child{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green)}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.08;margin:16px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--mute);margin:0 0 24px;max-width:62ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 0 0 4px var(--soft)}
+.card h2{font-size:18px;margin:22px 0 10px}.card h2:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+label{display:block;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:4px}
+input{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hint{font:13px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:4px 0 0}
+.btn,.ghost{border-radius:6px;padding:12px 18px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.btn{background:var(--green);color:var(--on);border:0}.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--bad);font:500 15px "Bricolage Grotesque",sans-serif;margin:12px 0 0}
+#resultado{margin-top:32px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px}
+.sum div{border-top:3px solid var(--green);padding-top:8px}
+.sum span{display:block;font:500 13.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.sum b{font:800 22px "Bricolage Grotesque",sans-serif;overflow-wrap:anywhere}
+#rep h2{font-size:20px;margin:28px 0 6px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14.5px/1.45 "Bricolage Grotesque",sans-serif;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;background:var(--soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 4px}
+.card .actions{margin-bottom:0}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font:16px/1.5 "Bricolage Grotesque",sans-serif;white-space:pre-wrap}
+.note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:16px 0 0}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+#doc{display:none}
+@media print{:root:not([data-theme="light"]),:root{--ink:#000;--mute:#444;--green:#0F3D3E;--line:#999;--amber:#B7791F;--soft:#eee;--paper:#fff;--bad:#B3261E;--ok:#1B6B3A}body{background:#fff;color:#000;font:12px/1.4 Georgia,serif}.wrap{display:none!important}#doc{display:block;padding:20px;color:#000}#doc h1{font-size:22px;text-align:center;margin:0}#doc h2,#doc h3{font-size:15px;margin:14px 0 4px}#doc td,#doc th{padding:3px 4px;border-bottom:1px solid #999;font-size:11px}}
+@media(max-width:640px){.grid,.sum{grid-template-columns:1fr}}
+
+select{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;border-radius:6px;font:16px "Bricolage Grotesque",sans-serif;min-height:44px}
+select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lead a,.note a,.hint a{color:var(--green)}
+.scroll{overflow-x:auto}.scroll table{min-width:640px}
+.mv{display:grid;grid-template-columns:150px 1fr 100px 150px auto;gap:8px;margin:8px 0}
+.mv .ghost{padding:8px 12px}
+.full{grid-column:1/-1}
+@media(max-width:640px){.mv{grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+<div class="top"><a href="index.html">Profesor</a><a href="index.html">Volver al inicio</a></div>
+<h1>Interés simple y compuesto</h1>
+<p class="lead">Calcula el valor futuro, el valor presente, la tasa o el tiempo, con interés simple o compuesto, y mira cómo crece el dinero periodo a periodo. Si necesitas cambiar la tasa de base, usa el <a href="tasas.html">conversor de tasas</a>.</p>
+<form class="card" id="f" autocomplete="off" onsubmit="return false">
+<h2>Tipo de cálculo</h2>
+<div class="grid">
+<div><label for="modo">Tipo de interés</label><select id="modo"><option value="comp">Compuesto</option><option value="simple">Simple</option></select></div>
+<div><label for="que">¿Qué quieres calcular?</label><select id="que"><option value="vf">Valor futuro</option><option value="vp">Valor presente</option><option value="i">Tasa de interés</option><option value="n">Tiempo (número de periodos)</option></select></div>
+</div>
+<h2>Datos</h2>
+<div class="grid">
+<div id="w_vp"><label for="vp">Valor presente ($)</label><input id="vp" inputmode="numeric" placeholder="Ej: 5.000.000"><p class="hint">Lo que tienes o inviertes hoy.</p></div>
+<div id="w_vf" hidden><label for="vf">Valor futuro ($)</label><input id="vf" inputmode="numeric" placeholder="Ej: 6.500.000"><p class="hint">Lo que tendrás al final.</p></div>
+<div id="w_i"><label for="tasa">Tasa de interés por periodo (%)</label><input id="tasa" inputmode="decimal" placeholder="Ej: 1,5"></div>
+<div id="w_n"><label for="nn">Número de periodos</label><input id="nn" inputmode="decimal" placeholder="Ej: 24"></div>
+<div><label for="per">Cada periodo es un</label><select id="per"><option value="mes">Mes</option><option value="año">Año</option><option value="trimestre">Trimestre</option><option value="día">Día</option></select><p class="hint">La tasa y los periodos deben estar en la misma unidad: si la tasa es mensual, cuenta meses.</p></div>
+</div>
+<div class="actions"><button class="btn" type="button" id="go">Calcular</button></div>
+<p class="err" id="err" role="alert"></p>
+</form>
+<div id="resultado" hidden aria-live="polite">
+<div class="sum"><div><span>Resultado</span><b id="s1"></b></div><div><span>Intereses generados</span><b id="s2"></b></div><div><span>Mismo caso con el otro interés</span><b id="s3"></b></div></div>
+<div id="rep"></div>
+<div class="actions"><button class="btn" type="button" id="bIA">Explícame estos resultados</button><button class="ghost" type="button" id="bCsv">Descargar Excel (CSV)</button><button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button></div><div id="ai" hidden></div>
+</div>
+<p class="note">Interés simple: los intereses se calculan siempre sobre el capital inicial. Interés compuesto: los intereses se suman al capital y generan nuevos intereses. Es una herramienta de apoyo y no reemplaza la asesoría de un contador público. No pide registro y tus datos no salen de tu navegador.</p>
+</div><div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+var FILE="interes-simple-compuesto",TIT="Interés simple y compuesto";
+var $=function(i){return document.getElementById(i)};
+function num(s){s=String(s).trim().replace(/\./g,"").replace(",",".");return s===""?0:Number(s)}
+var fm=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
+function f(n){return fm.format(Math.round(n))}
+function pc(n){return (n*100).toLocaleString("es-CO",{minimumFractionDigits:1,maximumFractionDigits:1})+"%"}
+function x2(n){return n.toLocaleString("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2})}
+var last=null,csv=[];
+function dl(){if(!last)return;var b=new Blob(["\uFEFF"+csv.map(function(r){return r.join(";")}).join("\r\n")],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=FILE+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function pr(){if(!last)return;$("doc").innerHTML="<h1>"+TIT+"</h1><p style=\"text-align:center\">Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("rep").innerHTML+"<p style=\"font-size:10px;color:#444\">Cálculo informativo. No reemplaza la asesoría de un contador público.</p>";window.print()}
+function ia(q){var out=$("ai"),b=$("bIA");if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+b.disabled=true;out.hidden=false;out.textContent="Pensando…";Profesor.preguntar(q.slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})}
+function btns(){$("bCsv").onclick=dl;$("bPdf").onclick=pr;document.querySelectorAll("#f input").forEach(function(i){i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calc()}})});$("go").onclick=calc}
+function vis(){var q=$("que").value;["vp","vf","i","n"].forEach(function(k){$("w_"+k).hidden=(q===k)})}
+$("que").onchange=vis;vis();
+var PL={"mes":"meses","año":"años","trimestre":"trimestres","día":"días"};
+function pct(n){return (n*100).toLocaleString("es-CO",{maximumFractionDigits:4})+"%"}
+function nt(n){return n.toLocaleString("es-CO",{maximumFractionDigits:4})}
+function calc(){
+var err=$("err");err.textContent="";last=null;$("resultado").hidden=true;$("ai").hidden=true;
+var m=$("modo").value,q=$("que").value,per=$("per").value,P=num($("vp").value),F=num($("vf").value),i=num($("tasa").value)/100,n=num($("nn").value);
+if(q!=="vp"&&!(P>0)&&q!=="vf"){}
+if(q!=="vf"&&q!=="vp"&&!(P>0)||q==="vf"&&!(P>0)){err.textContent="Escribe el valor presente.";return}
+if((q==="vp"||q==="i"||q==="n")&&!(F>0)){err.textContent="Escribe el valor futuro.";return}
+if(q!=="i"&&!(i>0)){err.textContent="Escribe la tasa de interés (mayor que 0).";return}
+if(q!=="n"&&!(n>0)){err.textContent="Escribe el número de periodos (mayor que 0).";return}
+if((q==="i"||q==="n")&&F<=P){err.textContent="El valor futuro debe ser mayor que el valor presente.";return}
+var s=m==="simple",fo;
+if(q==="vf"){F=s?P*(1+i*n):P*Math.pow(1+i,n);fo=s?"VF = VP × (1 + i × n) = "+f(P)+" × (1 + "+pct(i)+" × "+nt(n)+")":"VF = VP × (1 + i)^n = "+f(P)+" × (1 + "+pct(i)+")^"+nt(n)}
+if(q==="vp"){P=s?F/(1+i*n):F/Math.pow(1+i,n);fo=s?"VP = VF ÷ (1 + i × n) = "+f(F)+" ÷ (1 + "+pct(i)+" × "+nt(n)+")":"VP = VF ÷ (1 + i)^n = "+f(F)+" ÷ (1 + "+pct(i)+")^"+nt(n)}
+if(q==="i"){i=s?(F/P-1)/n:Math.pow(F/P,1/n)-1;fo=s?"i = (VF ÷ VP − 1) ÷ n = ("+f(F)+" ÷ "+f(P)+" − 1) ÷ "+nt(n):"i = (VF ÷ VP)^(1/n) − 1 = ("+f(F)+" ÷ "+f(P)+")^(1/"+nt(n)+") − 1"}
+if(q==="n"){n=s?(F/P-1)/i:Math.log(F/P)/Math.log(1+i);fo=s?"n = (VF ÷ VP − 1) ÷ i = ("+f(F)+" ÷ "+f(P)+" − 1) ÷ "+pct(i):"n = ln(VF ÷ VP) ÷ ln(1 + i) = ln("+f(F)+" ÷ "+f(P)+") ÷ ln(1 + "+pct(i)+")"}
+var Fo=s?P*Math.pow(1+i,n):P*(1+i*n),gan=F-P;
+last={m:m,q:q,P:P,F:F,i:i,n:n,per:per,gan:gan};
+$("s1").textContent=q==="i"?pct(i)+" por "+per:q==="n"?nt(n)+" "+PL[per]:f(q==="vf"?F:P);
+$("s2").textContent=f(gan);$("s3").textContent=f(Fo);
+var rows=[["Valor presente",f(P)],["Valor futuro",f(F)],["Tasa por "+per,pct(i)],["Número de periodos",nt(n)],["Intereses generados",f(gan)],["Valor futuro con interés "+(s?"compuesto":"simple"),f(Fo)]];
+csv=[["Concepto","Valor"]].concat(rows);
+var h="<h2>Fórmula</h2><div class=\"alert\">"+fo+"</div><h2>Resumen</h2><table><tbody>"+rows.map(function(r,i2){return "<tr"+(i2===4?" class=\"tot\"":"")+"><td>"+r[0]+"</td><td>"+r[1]+"</td></tr>"}).join("")+"</tbody></table>";
+h+="<div class=\"alert\">Con interés "+(s?"compuesto":"simple")+" el mismo capital llegaría a "+f(Fo)+" ("+(Fo>F?"+":"")+f(Fo-F)+" frente a lo calculado).</div>";
+if(n<=600){var rr="",prev=P,K=Math.ceil(n-1e-9);csv.push(["","" ],["Periodo","Saldo","Interes del periodo"]);
+for(var k=1;k<=K;k++){var kk=Math.min(k,n),sd=s?P*(1+i*kk):P*Math.pow(1+i,kk);rr+="<tr><td>"+per.charAt(0).toUpperCase()+per.slice(1)+" "+k+"</td><td>"+f(prev)+"</td><td>"+f(sd-prev)+"</td><td>"+f(sd)+"</td></tr>";csv.push([per+" "+k,Math.round(sd),Math.round(sd-prev)]);prev=sd}
+h+="<h2>Cómo crece el dinero</h2><div class=\"scroll\"><table><thead><tr><th>Periodo</th><th>Capital al inicio</th><th>Interés</th><th>Saldo al final</th></tr></thead><tbody>"+rr+"</tbody></table></div>"}
+$("rep").innerHTML=h;$("resultado").hidden=false;$("resultado").scrollIntoView({behavior:"smooth",block:"start"})}
+btns();
+$("bIA").onclick=function(){if(!last)return;var L=last;ia("Explica este cálculo de interés "+(L.m==="simple"?"simple":"compuesto")+": valor presente "+f(L.P)+", valor futuro "+f(L.F)+", tasa "+pct(L.i)+" por "+L.per+", "+nt(L.n)+" periodos, intereses "+f(L.gan)+". Explica la diferencia entre interés simple y compuesto, qué son valor presente y valor futuro, y un ejemplo.")};
+</script></body></html>
