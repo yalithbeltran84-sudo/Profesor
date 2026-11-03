@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Haz el análisis vertical y horizontal de tu balance general y estado de resultados: porcentajes, variaciones en pesos y en porcentaje, y las cuentas que más cambiaron.">
+<title>Análisis vertical y horizontal · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 6px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 10px;font-size:15.5px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lines{display:grid;gap:12px;margin:14px 0}
+.line{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.line label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--mute)}
+.line .full{grid-column:1/-1}
+.line .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:44px}
+.line .chk input{width:20px;min-height:20px;height:20px}
+.line .top{grid-column:1/-1;display:flex;gap:10px;align-items:end}
+.line .top label{flex:1}
+.del{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:44px;padding:0 12px;font:600 13px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.del:hover{color:var(--bad);border-color:var(--bad)}
+.tag{display:inline-block;font:700 11.5px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:6px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+.adds{display:flex;gap:10px;flex-wrap:wrap}
+.opt{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.opt label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;min-height:32px}
+.opt input[type=checkbox]{width:20px;min-height:20px;height:20px;margin-top:3px}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+h3{font-size:17px;margin:20px 0 6px}
+.scroll{overflow-x:auto}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book th,.book td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:14.5px;text-align:right;white-space:nowrap}
+.book th:first-child,.book td:first-child{text-align:left;white-space:normal}
+.book th{font-size:12.5px;color:var(--mute)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-weight:800;font-size:16px}
+table.asi td.c{text-align:left;color:var(--mute);font-size:13px}
+table.asi td:first-child{font-weight:700}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.line{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+
+.sec3{margin-top:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+.panel h3{font-size:18px;margin:22px 0 10px}
+.panel h3:first-of-type{margin-top:0}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row2{margin-top:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);color:var(--ink);padding:10px 6px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:44px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--onbtn)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);min-height:32px}
+.chk input{width:20px;min-height:20px;height:20px;margin-top:3px}
+.book tr.sec td{font:800 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding-top:14px;border-bottom:2px solid var(--line)}
+.book td.v{font-weight:700}
+.book .f{display:block;font:400 12.5px/1.35 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+.gl{stroke:var(--line);stroke-width:1}.bc{fill:var(--green)}
+.hit{fill:transparent;cursor:pointer}.hit:hover{fill:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);border-radius:6px;padding:8px 10px;font:500 12.5px/1.45 "Bricolage Grotesque",sans-serif;z-index:3;white-space:nowrap}
+.legend{font:500 13.5px "Bricolage Grotesque",sans-serif;margin:0 0 6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:var(--green);vertical-align:-1px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+
+.btn.sm,.ghost.sm{min-height:36px;padding:6px 12px;font-size:13.5px}
+.dyn{display:grid;gap:8px;margin:8px 0}
+.dr{display:grid;grid-template-columns:1fr 130px 40px;gap:8px;align-items:center}
+.dr input{min-height:40px}
+.dr .x{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:40px;cursor:pointer;font-size:16px}
+.dr .x:hover{color:var(--bad);border-color:var(--bad)}
+.bad{color:var(--bad)}.okc{color:var(--ok)}
+.book th.l,.book td.l{text-align:left;white-space:normal}
+.mx{border-collapse:collapse;font-size:13.5px}
+.mx td,.mx th{padding:4px;border-bottom:1px solid var(--line);text-align:right}
+.mx td:first-child,.mx th:first-child{text-align:left;min-width:140px}
+.mx input{min-height:36px;padding:4px 6px;font-size:14px;min-width:84px}
+.wide .grid{grid-template-columns:minmax(0,1fr)}
+.sticky td:first-child,.sticky th:first-child{position:sticky;left:0;background:var(--paper);z-index:1}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 12px;padding:10px 12px}
+legend{font:700 14px "Bricolage Grotesque",sans-serif;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="wrap wide">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html#calculadoras">Volver a las calculadoras</a></header>
+<h1>Análisis vertical y horizontal</h1>
+<p class="lead">Escribe las cuentas de dos años (o dos periodos) y obtén el análisis vertical (cuánto pesa cada cuenta) y el horizontal (cuánto cambió). Funciona con el balance general y con el estado de resultados.</p>
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+<div class="seg" role="group" aria-label="Estado financiero"><button type="button" id="sB" aria-pressed="true">Balance general</button><button type="button" id="sE" aria-pressed="false">Estado de resultados</button></div>
+<div class="row2" style="margin-top:14px">
+<label class="fld">Primer periodo<input id="y1" type="text" value="2024" maxlength="14"></label>
+<label class="fld">Segundo periodo<input id="y2" type="text" value="2025" maxlength="14"></label>
+</div>
+<div id="ed"></div>
+<p class="hint">Escribe los valores en pesos. En el balance, el análisis vertical usa el total del activo; en el estado de resultados usa los ingresos. Los pasivos, el patrimonio, los costos y los gastos van como valores positivos.</p>
+</form>
+<section class="result" aria-live="polite">
+<div class="big"><span id="bl">Total del activo</span><strong id="big">—</strong></div>
+<div class="kpis">
+<div class="kpi"><span id="k1l">Cambio del activo</span><b id="k1">—</b></div>
+<div class="kpi"><span id="k2l">Cambio</span><b id="k2">—</b></div>
+<div class="kpi"><span id="k3l">Cambio</span><b id="k3">—</b></div></div>
+<div class="alerts" id="alerts"></div>
+<h3 id="tt">Balance general</h3>
+<div class="scroll"><table class="book sticky" id="t1"></table></div>
+<div class="actions">
+<button class="btn" type="button" id="bIA">Explícame este resultado</button>
+<button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+</div>
+<div id="ai" hidden></div>
+<p class="src">Análisis vertical: cada cuenta dividida entre una base (total del activo o ingresos). Análisis horizontal: variación absoluta = periodo 2 − periodo 1; variación relativa = variación absoluta / periodo 1. Referencia: análisis de estados financieros. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+
+var $=function(i){return document.getElementById(i)};
+function num(v){v=String(v&&v.value!=null?v.value:v==null?"":v).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function nf(n,d){return n.toLocaleString("es-CO",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
+function pc(n,d){return nf(n*100,d==null?2:d)+" %"}
+var R=Math.round;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function L(n,f,v,c){return "<tr"+(c?" class='"+c+"'":"")+"><td>"+n+(f?"<span class='f'>"+f+"</span>":"")+"</td><td class='v'>"+v+"</td></tr>"}
+function S(t){return "<tr class='sec'><td colspan='2'>"+t+"</td></tr>"}
+function ALERT(list){var e=$("alerts");if(e)e.innerHTML=list.map(function(a){return "<div class='alert"+(a[1]?" good":"")+"'>"+a[0]+"</div>"}).join("")}
+function money(ids){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("blur",function(){var v=num(e);e.value=v?R(v).toLocaleString("es-CO"):"0"});e.addEventListener("focus",function(){e.select()})})}
+function onAll(ids,fn){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("input",fn);e.addEventListener("change",fn)})}
+var AIQ=function(){return ""},DOC=function(){return ""},OK=false;
+$("bPdf").addEventListener("click",function(){if(!OK)return;$("doc").innerHTML=DOC()+"<p class='foot'>Estimación informativa generada con Profesor. Confirma las cifras con la norma vigente. No reemplaza la asesoría de un contador público.</p>";window.print()});
+$("bIA").addEventListener("click",function(){var out=$("ai"),b=$("bIA");if(!OK)return;
+ if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+ b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+ Profesor.preguntar(AIQ().slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})});
+
+
+var mode="B";
+var G={B:[
+ {k:"ac",t:"Activo corriente",r:[["Efectivo y equivalentes",50e6,70e6],["Cuentas por cobrar",80e6,110e6],["Inventarios",120e6,150e6]]},
+ {k:"an",t:"Activo no corriente",r:[["Propiedad, planta y equipo",300e6,280e6]]},
+ {k:"pc",t:"Pasivo corriente",r:[["Proveedores",90e6,100e6],["Obligaciones financieras a corto plazo",40e6,30e6]]},
+ {k:"pn",t:"Pasivo no corriente",r:[["Obligaciones financieras a largo plazo",100e6,80e6]]},
+ {k:"pa",t:"Patrimonio",r:[["Capital social",200e6,200e6],["Utilidades acumuladas",120e6,200e6]]}],
+E:[
+ {k:"in",t:"Ingresos operacionales",r:[["Ventas",1000e6,1200e6]]},
+ {k:"co",t:"Costo de ventas",r:[["Costo de ventas",600e6,700e6]]},
+ {k:"ga",t:"Gastos de administración y ventas",r:[["Gastos de administración",150e6,170e6],["Gastos de ventas",100e6,120e6]]},
+ {k:"oi",t:"Otros ingresos",r:[["Otros ingresos",10e6,15e6]]},
+ {k:"og",t:"Otros gastos",r:[["Gastos financieros",30e6,25e6]]},
+ {k:"im",t:"Impuesto de renta",r:[["Impuesto de renta",45e6,70e6]]}]};
+function rend(){var h="";G[mode].forEach(function(g,gi){h+="<fieldset><legend>"+g.t+"</legend><div class='dyn'>";
+ g.r.forEach(function(r,ri){h+="<div class='dr3'><input type='text' data-g='"+gi+"' data-r='"+ri+"' data-c='0' value='"+esc(r[0])+"' aria-label='Nombre de la cuenta'><input type='text' inputmode='numeric' data-g='"+gi+"' data-r='"+ri+"' data-c='1' value='"+R(r[1]).toLocaleString("es-CO")+"' aria-label='Valor primer periodo'><input type='text' inputmode='numeric' data-g='"+gi+"' data-r='"+ri+"' data-c='2' value='"+R(r[2]).toLocaleString("es-CO")+"' aria-label='Valor segundo periodo'><button type='button' class='x' data-x='"+gi+"' data-r='"+ri+"' aria-label='Quitar cuenta'>×</button></div>"});
+ h+="</div><button type='button' class='ghost sm' data-add='"+gi+"'>Agregar cuenta</button></fieldset>"});
+ $("ed").innerHTML=h}
+$("ed").addEventListener("input",function(e){var t=e.target,g=t.getAttribute("data-g");if(g===null)return;var r=G[mode][+g].r[+t.getAttribute("data-r")],c=+t.getAttribute("data-c");r[c]=c===0?t.value:num(t);calc()});
+$("ed").addEventListener("focusin",function(e){if(e.target.tagName==="INPUT")e.target.select()});
+$("ed").addEventListener("focusout",function(e){var t=e.target,c=t.getAttribute("data-c");if(c&&c!=="0")t.value=R(num(t)).toLocaleString("es-CO")});
+$("ed").addEventListener("click",function(e){var x=e.target.getAttribute("data-x"),a=e.target.getAttribute("data-add");
+ if(x!==null){var g=G[mode][+x];if(g.r.length>1||true){g.r.splice(+e.target.getAttribute("data-r"),1);rend();calc()}}
+ else if(a!==null){G[mode][+a].r.push(["Nueva cuenta",0,0]);rend();calc()}});
+function setMode(m){mode=m;$("sB").setAttribute("aria-pressed",m==="B");$("sE").setAttribute("aria-pressed",m==="E");rend();calc()}
+$("sB").onclick=function(){setMode("B")};$("sE").onclick=function(){setMode("E")};
+function sum(g,c){return g.r.reduce(function(s,r){return s+(+r[c]||0)},0)}
+var css=document.createElement("style");css.textContent="#ed{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}#ed fieldset{margin:0}.dr3{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 36px;gap:6px}.dr3 input{min-height:40px;padding:6px 8px;font-size:14px}.dr3 .x{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;cursor:pointer}.dr3 .x:hover{color:var(--bad);border-color:var(--bad)}@media(max-width:520px){.dr3{grid-template-columns:1fr 1fr 36px}.dr3 input:first-child{grid-column:1/-1}}";document.head.appendChild(css);
+function calc(){
+ var y1=$("y1").value||"Periodo 1",y2=$("y2").value||"Periodo 2",rows=[],al=[];
+ function line(n,a,b,cls){rows.push({n:n,a:a,b:b,cls:cls||""})}
+ var g=G[mode],base1,base2,lines=[];
+ if(mode==="B"){
+  var tot={};g.forEach(function(x){tot[x.k]=[sum(x,1),sum(x,2)]});
+  var act=[tot.ac[0]+tot.an[0],tot.ac[1]+tot.an[1]],pas=[tot.pc[0]+tot.pn[0],tot.pc[1]+tot.pn[1]],pat=tot.pa,pp=[pas[0]+pat[0],pas[1]+pat[1]];
+  g.forEach(function(x,gi){line(x.t,null,null,"sec");x.r.forEach(function(r){line(r[0],+r[1]||0,+r[2]||0)});
+   line("Total "+x.t.toLowerCase(),tot[x.k][0],tot[x.k][1],"sub");
+   if(x.k==="an")line("TOTAL ACTIVO",act[0],act[1],"fin");
+   if(x.k==="pn")line("TOTAL PASIVO",pas[0],pas[1],"fin");
+   if(x.k==="pa")line("TOTAL PASIVO Y PATRIMONIO",pp[0],pp[1],"fin")});
+  base1=act[0];base2=act[1];$("bl").textContent="Total del activo ("+y2+")";$("big").textContent=fmt(act[1]);
+  $("k1l").textContent="Cambio del activo";$("k1").textContent=act[0]?pc((act[1]-act[0])/act[0],1):"—";
+  $("k2l").textContent="Cambio del pasivo";$("k2").textContent=pas[0]?pc((pas[1]-pas[0])/pas[0],1):"—";
+  $("k3l").textContent="Cambio del patrimonio";$("k3").textContent=pat[0]?pc((pat[1]-pat[0])/pat[0],1):"—";
+  if(Math.abs(act[0]-pp[0])>1||Math.abs(act[1]-pp[1])>1)al.push(["El balance no cuadra: el activo no es igual al pasivo más el patrimonio ("+y1+": diferencia de "+fmt(act[0]-pp[0])+"; "+y2+": diferencia de "+fmt(act[1]-pp[1])+")."]);
+  else al.push(["El balance cuadra en los dos periodos.",1]);
+  $("tt").textContent="Balance general";
+ }else{
+  var T={};g.forEach(function(x){T[x.k]=[sum(x,1),sum(x,2)]});
+  function d(a,b){return [a[0]-b[0],a[1]-b[1]]}
+  var ub=d(T.in,T.co),uo=d(ub,T.ga),uai=[uo[0]+T.oi[0]-T.og[0],uo[1]+T.oi[1]-T.og[1]],un=d(uai,T.im);
+  g.forEach(function(x){line(x.t,null,null,"sec");x.r.forEach(function(r){line(r[0],+r[1]||0,+r[2]||0)});
+   if(x.r.length>1)line("Total "+x.t.toLowerCase(),T[x.k][0],T[x.k][1],"sub");
+   if(x.k==="co")line("UTILIDAD BRUTA",ub[0],ub[1],"fin");
+   if(x.k==="ga")line("UTILIDAD OPERACIONAL",uo[0],uo[1],"fin");
+   if(x.k==="og")line("UTILIDAD ANTES DE IMPUESTOS",uai[0],uai[1],"fin");
+   if(x.k==="im")line("UTILIDAD NETA",un[0],un[1],"fin")});
+  base1=T.in[0];base2=T.in[1];$("bl").textContent="Utilidad neta ("+y2+")";$("big").textContent=fmt(un[1]);
+  $("k1l").textContent="Cambio de los ingresos";$("k1").textContent=T.in[0]?pc((T.in[1]-T.in[0])/T.in[0],1):"—";
+  $("k2l").textContent="Margen bruto "+y2;$("k2").textContent=T.in[1]?pc(ub[1]/T.in[1],1):"—";
+  $("k3l").textContent="Margen neto "+y2;$("k3").textContent=T.in[1]?pc(un[1]/T.in[1],1):"—";
+  $("tt").textContent="Estado de resultados";
+  if(T.in[0]&&T.in[1]){var gi=(T.in[1]-T.in[0])/T.in[0],gc=T.co[0]?(T.co[1]-T.co[0])/T.co[0]:0;if(gc>gi)al.push(["El costo de ventas creció más ("+pc(gc,1)+") que los ingresos ("+pc(gi,1)+"): el margen bruto se está apretando."]);else al.push(["Los ingresos crecieron "+pc(gi,1)+" y el costo de ventas "+pc(gc,1)+": el margen bruto no se deteriora.",1])}
+ }
+ var h="<thead><tr><th>Cuenta</th><th>"+esc(y1)+"</th><th>Vertical</th><th>"+esc(y2)+"</th><th>Vertical</th><th>Variación $</th><th>Variación %</th></tr></thead><tbody>",cand=[];
+ rows.forEach(function(r){if(r.cls==="sec"){h+="<tr class='sec'><td colspan='7'>"+esc(r.n)+"</td></tr>";return}
+  var da=r.b-r.a,dp=r.a?da/Math.abs(r.a):null;
+  h+="<tr"+(r.cls?" class='"+r.cls+"'":"")+"><td>"+esc(r.n)+"</td><td>"+fmt(r.a)+"</td><td>"+(base1?pc(r.a/base1,1):"—")+"</td><td>"+fmt(r.b)+"</td><td>"+(base2?pc(r.b/base2,1):"—")+"</td><td>"+fmt(da)+"</td><td>"+(dp==null?(r.b?"Nuevo":"—"):pc(dp,1))+"</td></tr>";
+  if(!r.cls&&dp!=null&&base1&&Math.abs(r.a/base1)>=.02)cand.push([r.n,dp,da])});
+ $("t1").innerHTML=h+"</tbody>";
+ cand.sort(function(a,b){return Math.abs(b[1])-Math.abs(a[1])});
+ cand.slice(0,3).forEach(function(c){al.push(["«"+esc(c[0])+"» "+(c[1]>=0?"subió ":"bajó ")+pc(Math.abs(c[1]),1)+" ("+fmt(c[2])+")."])});
+ ALERT(al);OK=true;
+ AIQ=function(){return "Explica en palabras sencillas este análisis "+(mode==="B"?"del balance general":"del estado de resultados")+" entre "+y1+" y "+y2+". Cambios más grandes: "+cand.slice(0,3).map(function(c){return c[0]+" "+pc(c[1],0)}).join(", ")+". Cuéntame qué es el análisis vertical y el horizontal."};
+ DOC=function(){return "<h1>Análisis vertical y horizontal · "+$("tt").textContent+"</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("t1").outerHTML};
+}
+onAll(["y1","y2"],calc);rend();calc();
+
+})();
+</script>
+</body>
+</html>
