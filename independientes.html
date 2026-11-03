@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calcula el aporte mensual de salud, pensión, ARL y fondo de solidaridad de un trabajador independiente con el IBC del 40 %.">
+<title>Seguridad social de independientes · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 6px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 10px;font-size:15.5px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lines{display:grid;gap:12px;margin:14px 0}
+.line{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.line label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--mute)}
+.line .full{grid-column:1/-1}
+.line .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:44px}
+.line .chk input{width:20px;min-height:20px;height:20px}
+.line .top{grid-column:1/-1;display:flex;gap:10px;align-items:end}
+.line .top label{flex:1}
+.del{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:44px;padding:0 12px;font:600 13px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.del:hover{color:var(--bad);border-color:var(--bad)}
+.tag{display:inline-block;font:700 11.5px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:6px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+.adds{display:flex;gap:10px;flex-wrap:wrap}
+.opt{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.opt label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;min-height:32px}
+.opt input[type=checkbox]{width:20px;min-height:20px;height:20px;margin-top:3px}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+h3{font-size:17px;margin:20px 0 6px}
+.scroll{overflow-x:auto}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book th,.book td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:14.5px;text-align:right;white-space:nowrap}
+.book th:first-child,.book td:first-child{text-align:left;white-space:normal}
+.book th{font-size:12.5px;color:var(--mute)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-weight:800;font-size:16px}
+table.asi td.c{text-align:left;color:var(--mute);font-size:13px}
+table.asi td:first-child{font-weight:700}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.line{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+
+.sec3{margin-top:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+.panel h3{font-size:18px;margin:22px 0 10px}
+.panel h3:first-of-type{margin-top:0}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row2{margin-top:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);color:var(--ink);padding:10px 6px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:44px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--onbtn)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);min-height:32px}
+.chk input{width:20px;min-height:20px;height:20px;margin-top:3px}
+.book tr.sec td{font:800 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding-top:14px;border-bottom:2px solid var(--line)}
+.book td.v{font-weight:700}
+.book .f{display:block;font:400 12.5px/1.35 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+.gl{stroke:var(--line);stroke-width:1}.bc{fill:var(--green)}
+.hit{fill:transparent;cursor:pointer}.hit:hover{fill:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);border-radius:6px;padding:8px 10px;font:500 12.5px/1.45 "Bricolage Grotesque",sans-serif;z-index:3;white-space:nowrap}
+.legend{font:500 13.5px "Bricolage Grotesque",sans-serif;margin:0 0 6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:var(--green);vertical-align:-1px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+
+.btn.sm,.ghost.sm{min-height:36px;padding:6px 12px;font-size:13.5px}
+.dyn{display:grid;gap:8px;margin:8px 0}
+.dr{display:grid;grid-template-columns:1fr 130px 40px;gap:8px;align-items:center}
+.dr input{min-height:40px}
+.dr .x{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:40px;cursor:pointer;font-size:16px}
+.dr .x:hover{color:var(--bad);border-color:var(--bad)}
+.bad{color:var(--bad)}.okc{color:var(--ok)}
+.book th.l,.book td.l{text-align:left;white-space:normal}
+.mx{border-collapse:collapse;font-size:13.5px}
+.mx td,.mx th{padding:4px;border-bottom:1px solid var(--line);text-align:right}
+.mx td:first-child,.mx th:first-child{text-align:left;min-width:140px}
+.mx input{min-height:36px;padding:4px 6px;font-size:14px;min-width:84px}
+.wide .grid{grid-template-columns:minmax(0,1fr)}
+.sticky td:first-child,.sticky th:first-child{position:sticky;left:0;background:var(--paper);z-index:1}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 12px;padding:10px 12px}
+legend{font:700 14px "Bricolage Grotesque",sans-serif;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html#calculadoras">Volver a las calculadoras</a></header>
+<h1>Seguridad social de independientes</h1>
+<p class="lead">Calcula cuánto debes pagar cada mes en la PILA si eres independiente: el ingreso base de cotización (IBC), salud, pensión, ARL y el fondo de solidaridad pensional, con el salario mínimo de 2026.</p>
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+<h3>Tu actividad</h3>
+<div class="row2">
+<label class="fld full">Tipo de independiente
+<select id="tipo"><option value="psp">Contratista por prestación de servicios</option><option value="cp">Cuenta propia o con costos (negocio, honorarios con gastos)</option></select></label>
+<label class="fld full">Ingreso mensual ($)<input id="ing" type="text" inputmode="numeric" value="5.000.000"><span class="hint" id="hIng">Valor mensualizado del contrato, sin IVA.</span></label>
+<label class="fld full" id="wCos" hidden>Costos y gastos del mes ($)<input id="cos" type="text" inputmode="numeric" value="0"><span class="hint">Costos reales que puedas soportar. Si no los soportas, la UGPP presume costos por actividad.</span></label>
+<label class="fld full">Clase de riesgo (ARL)
+<select id="arl"><option value="0.00522">I · 0,522 %</option><option value="0.01044">II · 1,044 %</option><option value="0.02436">III · 2,436 %</option><option value="0.0435">IV · 4,350 %</option><option value="0.0696">V · 6,960 %</option></select></label>
+<label class="chk full"><input type="checkbox" id="pArl" checked><span>Yo pago la ARL <span class="hint" style="display:block">En contratos con riesgo I, II o III la paga el contratista. En riesgo IV o V la paga el contratante.</span></span></label>
+</div>
+<details><summary>Valores del año (los puedes cambiar)</summary>
+<div class="row2"><label class="fld">Salario mínimo ($)<input id="smmlv" type="number" min="1" value="1750905"></label>
+<label class="fld">Porcentaje de IBC (%)<input id="pibc" type="number" min="1" max="100" value="40"></label></div>
+<p class="hint">El IBC es el 40 % del ingreso, nunca menos de 1 salario mínimo ni más de 25. Salud 12,5 % y pensión 16 % sobre el IBC. Los aportes se redondean hacia arriba a la centena, como en la PILA.</p></details>
+</form>
+<section class="result" aria-live="polite">
+<div class="big"><span>Aporte mensual total a la PILA</span><strong id="tot">—</strong></div>
+<div class="kpis">
+<div class="kpi"><span>IBC (base de cotización)</span><b id="k1">—</b></div>
+<div class="kpi"><span>Aporte / ingreso</span><b id="k2">—</b></div>
+<div class="kpi"><span>Aporte al año</span><b id="k3">—</b></div></div>
+<div class="alerts" id="alerts"></div>
+<h3>Cálculo paso a paso</h3>
+<div class="scroll"><table class="book" id="t1"></table></div>
+<div class="actions">
+<button class="btn" type="button" id="bIA">Explícame este resultado</button>
+<button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+</div>
+<div id="ai" hidden></div>
+<p class="src">Fuentes: Ley 100 de 1993, Ley 1955 de 2019 (art. 244) y Resolución 532 de 2024 de la UGPP. Aportes de salud 12,5 % y pensión 16 %. Salario mínimo 2026 de $1.750.905. Consulta la <a href="https://www.ugpp.gov.co" target="_blank" rel="noopener">UGPP</a> para tu caso. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+
+var $=function(i){return document.getElementById(i)};
+function num(v){v=String(v&&v.value!=null?v.value:v==null?"":v).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function nf(n,d){return n.toLocaleString("es-CO",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
+function pc(n,d){return nf(n*100,d==null?2:d)+" %"}
+var R=Math.round;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function L(n,f,v,c){return "<tr"+(c?" class='"+c+"'":"")+"><td>"+n+(f?"<span class='f'>"+f+"</span>":"")+"</td><td class='v'>"+v+"</td></tr>"}
+function S(t){return "<tr class='sec'><td colspan='2'>"+t+"</td></tr>"}
+function ALERT(list){var e=$("alerts");if(e)e.innerHTML=list.map(function(a){return "<div class='alert"+(a[1]?" good":"")+"'>"+a[0]+"</div>"}).join("")}
+function money(ids){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("blur",function(){var v=num(e);e.value=v?R(v).toLocaleString("es-CO"):"0"});e.addEventListener("focus",function(){e.select()})})}
+function onAll(ids,fn){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("input",fn);e.addEventListener("change",fn)})}
+var AIQ=function(){return ""},DOC=function(){return ""},OK=false;
+$("bPdf").addEventListener("click",function(){if(!OK)return;$("doc").innerHTML=DOC()+"<p class='foot'>Estimación informativa generada con Profesor. Confirma las cifras con la norma vigente. No reemplaza la asesoría de un contador público.</p>";window.print()});
+$("bIA").addEventListener("click",function(){var out=$("ai"),b=$("bIA");if(!OK)return;
+ if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+ b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+ Profesor.preguntar(AIQ().slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})});
+
+
+function up100(x){return Math.ceil(x/100-1e-9)*100}
+function fsp(r){if(r<4)return 0;if(r<16)return .01;if(r<17)return .012;if(r<18)return .014;if(r<19)return .016;if(r<20)return .018;return .02}
+function calc(){
+ var tipo=$("tipo").value,sm=num($("smmlv"))||1750905,ing=num($("ing")),cos=tipo==="cp"?num($("cos")):0,p=(num($("pibc"))||40)/100;
+ $("wCos").hidden=tipo!=="cp";$("hIng").textContent=tipo==="psp"?"Valor mensualizado del contrato, sin IVA.":"Ingresos del mes por tu actividad, sin IVA.";
+ var neto=Math.max(0,ing-cos),ibc0=neto*p,ibc=Math.min(Math.max(ibc0,sm),25*sm),
+ salud=up100(ibc*.125),pen=up100(ibc*.16),f=fsp(ibc/sm),fs=up100(ibc*f),arl=$("pArl").checked?up100(ibc*(+$("arl").value)):0,tot=salud+pen+fs+arl;
+ $("tot").textContent=fmt(tot);$("k1").textContent=fmt(ibc);$("k2").textContent=ing>0?pc(tot/ing,1):"—";$("k3").textContent=fmt(tot*12);
+ var al=[];
+ if(ibc0<sm)al.push(["El 40 % de tu ingreso ("+fmt(ibc0)+") es menor que un salario mínimo, así que cotizas sobre "+fmt(sm)+"."]);
+ if(ibc0>25*sm)al.push(["Tu IBC supera el tope de 25 salarios mínimos; cotizas sobre "+fmt(25*sm)+"."]);
+ if(tipo==="cp"&&cos===0)al.push(["Sin costos soportados, la UGPP puede aplicar costos presuntos por tu actividad económica. Guarda tus soportes."]);
+ if(f>0)al.push(["Como tu IBC es de "+nf(ibc/sm,1)+" salarios mínimos, pagas fondo de solidaridad pensional del "+pc(f,1)+"."]);
+ al.push(["Pagar sobre un IBC menor al que corresponde puede generar sanciones de la UGPP. Si tienes más de una fuente de ingreso, el tope de 25 salarios aplica a la suma.",1]);
+ ALERT(al);
+ var t="<tbody>"+L("Ingreso del mes","",fmt(ing));if(cos)t+=L("Costos y gastos","",fmt(-cos));
+ t+=L("IBC sin límites",pc(p,0)+" de "+fmt(neto),fmt(ibc0))+L("IBC de cotización","Entre 1 y 25 salarios mínimos",fmt(ibc),"sub")+
+ S("Aportes del mes")+L("Salud","12,5 % del IBC",fmt(salud))+L("Pensión","16 % del IBC",fmt(pen));
+ if(fs)t+=L("Fondo de solidaridad pensional",pc(f,1)+" del IBC",fmt(fs));
+ if(arl)t+=L("ARL","Riesgo "+$("arl").selectedOptions[0].text,fmt(arl));
+ t+=L("Total mensual","",fmt(tot),"fin")+"</tbody>";
+ $("t1").innerHTML=t;OK=true;
+ AIQ=function(){return "Explica en palabras sencillas cómo un independiente en Colombia calcula su seguridad social: ingreso "+fmt(ing)+", IBC "+fmt(ibc)+", salud "+fmt(salud)+", pensión "+fmt(pen)+", total "+fmt(tot)+". Cuéntame qué es el IBC del 40 %."};
+ DOC=function(){return "<h1>Seguridad social de independientes</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("t1").outerHTML};
+}
+onAll(["tipo","ing","cos","arl","pArl","smmlv","pibc"],calc);money(["ing","cos"]);calc();
+
+})();
+</script>
+</body>
+</html>

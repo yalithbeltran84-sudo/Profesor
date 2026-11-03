@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Arma el estado de costo de producción y de ventas: materia prima, mano de obra, costos indirectos, inventarios, costo unitario y utilidad bruta.">
+<title>Costo de producción · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 6px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 10px;font-size:15.5px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lines{display:grid;gap:12px;margin:14px 0}
+.line{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.line label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--mute)}
+.line .full{grid-column:1/-1}
+.line .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:44px}
+.line .chk input{width:20px;min-height:20px;height:20px}
+.line .top{grid-column:1/-1;display:flex;gap:10px;align-items:end}
+.line .top label{flex:1}
+.del{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:44px;padding:0 12px;font:600 13px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.del:hover{color:var(--bad);border-color:var(--bad)}
+.tag{display:inline-block;font:700 11.5px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:6px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+.adds{display:flex;gap:10px;flex-wrap:wrap}
+.opt{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.opt label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;min-height:32px}
+.opt input[type=checkbox]{width:20px;min-height:20px;height:20px;margin-top:3px}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+h3{font-size:17px;margin:20px 0 6px}
+.scroll{overflow-x:auto}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book th,.book td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:14.5px;text-align:right;white-space:nowrap}
+.book th:first-child,.book td:first-child{text-align:left;white-space:normal}
+.book th{font-size:12.5px;color:var(--mute)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-weight:800;font-size:16px}
+table.asi td.c{text-align:left;color:var(--mute);font-size:13px}
+table.asi td:first-child{font-weight:700}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.line{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+
+.sec3{margin-top:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+.panel h3{font-size:18px;margin:22px 0 10px}
+.panel h3:first-of-type{margin-top:0}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row2{margin-top:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);color:var(--ink);padding:10px 6px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:44px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--onbtn)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);min-height:32px}
+.chk input{width:20px;min-height:20px;height:20px;margin-top:3px}
+.book tr.sec td{font:800 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding-top:14px;border-bottom:2px solid var(--line)}
+.book td.v{font-weight:700}
+.book .f{display:block;font:400 12.5px/1.35 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+.gl{stroke:var(--line);stroke-width:1}.bc{fill:var(--green)}
+.hit{fill:transparent;cursor:pointer}.hit:hover{fill:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);border-radius:6px;padding:8px 10px;font:500 12.5px/1.45 "Bricolage Grotesque",sans-serif;z-index:3;white-space:nowrap}
+.legend{font:500 13.5px "Bricolage Grotesque",sans-serif;margin:0 0 6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:var(--green);vertical-align:-1px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+
+.btn.sm,.ghost.sm{min-height:36px;padding:6px 12px;font-size:13.5px}
+.dyn{display:grid;gap:8px;margin:8px 0}
+.dr{display:grid;grid-template-columns:1fr 130px 40px;gap:8px;align-items:center}
+.dr input{min-height:40px}
+.dr .x{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:40px;cursor:pointer;font-size:16px}
+.dr .x:hover{color:var(--bad);border-color:var(--bad)}
+.bad{color:var(--bad)}.okc{color:var(--ok)}
+.book th.l,.book td.l{text-align:left;white-space:normal}
+.mx{border-collapse:collapse;font-size:13.5px}
+.mx td,.mx th{padding:4px;border-bottom:1px solid var(--line);text-align:right}
+.mx td:first-child,.mx th:first-child{text-align:left;min-width:140px}
+.mx input{min-height:36px;padding:4px 6px;font-size:14px;min-width:84px}
+.wide .grid{grid-template-columns:minmax(0,1fr)}
+.sticky td:first-child,.sticky th:first-child{position:sticky;left:0;background:var(--paper);z-index:1}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 12px;padding:10px 12px}
+legend{font:700 14px "Bricolage Grotesque",sans-serif;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html#calculadoras">Volver a las calculadoras</a></header>
+<h1>Costo de producción y de ventas</h1>
+<p class="lead">Escribe los valores del periodo y obtén el estado de costo de producción y de ventas: materia prima usada, costo primo, costo de conversión, costo de los productos terminados, costo unitario y costo de ventas, con el asiento de cada paso.</p>
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+<h3>Materia prima</h3>
+<div class="row2">
+<label class="fld">Inventario inicial de materia prima<input id="mi" type="text" inputmode="numeric" value="5.000.000"></label>
+<label class="fld">Compras del periodo<input id="mc" type="text" inputmode="numeric" value="30.000.000"></label>
+<label class="fld">Fletes y otros costos de compra<input id="mf" type="text" inputmode="numeric" value="1.000.000"></label>
+<label class="fld">Devoluciones y descuentos en compras<input id="md" type="text" inputmode="numeric" value="500.000"></label>
+<label class="fld full">Inventario final de materia prima<input id="mx" type="text" inputmode="numeric" value="6.500.000"></label>
+</div>
+<h3>Mano de obra directa</h3>
+<div class="row2"><label class="fld full">Mano de obra directa del periodo<input id="mod" type="text" inputmode="numeric" value="18.000.000"></label></div>
+<h3>Costos indirectos de fabricación</h3>
+<div class="row2">
+<label class="fld">Mano de obra indirecta<input id="c1" type="text" inputmode="numeric" value="4.000.000"></label>
+<label class="fld">Materiales indirectos<input id="c2" type="text" inputmode="numeric" value="2.000.000"></label>
+<label class="fld">Depreciación de la planta<input id="c3" type="text" inputmode="numeric" value="1.500.000"></label>
+<label class="fld">Servicios públicos de la planta<input id="c4" type="text" inputmode="numeric" value="1.200.000"></label>
+<label class="fld full">Otros costos indirectos<input id="c5" type="text" inputmode="numeric" value="800.000"></label>
+</div>
+<h3>Inventarios y producción</h3>
+<div class="row2">
+<label class="fld">Inventario inicial de productos en proceso<input id="pi" type="text" inputmode="numeric" value="3.000.000"></label>
+<label class="fld">Inventario final de productos en proceso<input id="px" type="text" inputmode="numeric" value="2.500.000"></label>
+<label class="fld">Inventario inicial de productos terminados<input id="ti" type="text" inputmode="numeric" value="6.000.000"></label>
+<label class="fld">Inventario final de productos terminados<input id="tx" type="text" inputmode="numeric" value="7.000.000"></label>
+<label class="fld full">Unidades terminadas en el periodo<input id="un" type="text" inputmode="numeric" value="1.000"></label>
+</div>
+<h3>Para llegar a la utilidad (opcional)</h3>
+<div class="row2">
+<label class="fld">Ventas del periodo<input id="vt" type="text" inputmode="numeric" value="110.000.000"></label>
+<label class="fld">Gastos de administración y ventas<input id="gs" type="text" inputmode="numeric" value="15.000.000"></label>
+</div>
+</form>
+<section class="result" aria-live="polite">
+<div class="big"><span>Costo de los productos terminados</span><strong id="big">—</strong></div>
+<div class="kpis">
+<div class="kpi"><span>Costo unitario</span><b id="k1">—</b></div>
+<div class="kpi"><span>Costo de ventas</span><b id="k2">—</b></div>
+<div class="kpi"><span>Utilidad bruta</span><b id="k3">—</b></div></div>
+<div class="alerts" id="alerts"></div>
+<h3>Estado de costo de producción y de ventas</h3>
+<div class="scroll"><table class="book" id="t1"></table></div>
+<h3>Asientos del ciclo de producción</h3>
+<div class="scroll"><table class="book asi" id="t2"></table></div>
+<p class="hint">Cuentas del PUC. Búscalas en el <a href="puc.html" target="_blank" rel="noopener" style="color:var(--green)">buscador del PUC</a>. Los costos de producción van en la clase 7.</p>
+<div class="actions">
+<button class="btn" type="button" id="bIA">Explícame este resultado</button>
+<button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+</div>
+<div id="ai" hidden></div>
+<p class="src">Conceptos: costo primo = materia prima usada + mano de obra directa; costo de conversión = mano de obra directa + costos indirectos. Referencia: PUC (Decreto 2650 de 1993), clases 1, 6 y 7, y la NIC 2 (inventarios). No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+
+var $=function(i){return document.getElementById(i)};
+function num(v){v=String(v&&v.value!=null?v.value:v==null?"":v).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function nf(n,d){return n.toLocaleString("es-CO",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
+function pc(n,d){return nf(n*100,d==null?2:d)+" %"}
+var R=Math.round;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function L(n,f,v,c){return "<tr"+(c?" class='"+c+"'":"")+"><td>"+n+(f?"<span class='f'>"+f+"</span>":"")+"</td><td class='v'>"+v+"</td></tr>"}
+function S(t){return "<tr class='sec'><td colspan='2'>"+t+"</td></tr>"}
+function ALERT(list){var e=$("alerts");if(e)e.innerHTML=list.map(function(a){return "<div class='alert"+(a[1]?" good":"")+"'>"+a[0]+"</div>"}).join("")}
+function money(ids){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("blur",function(){var v=num(e);e.value=v?R(v).toLocaleString("es-CO"):"0"});e.addEventListener("focus",function(){e.select()})})}
+function onAll(ids,fn){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("input",fn);e.addEventListener("change",fn)})}
+var AIQ=function(){return ""},DOC=function(){return ""},OK=false;
+$("bPdf").addEventListener("click",function(){if(!OK)return;$("doc").innerHTML=DOC()+"<p class='foot'>Estimación informativa generada con Profesor. Confirma las cifras con la norma vigente. No reemplaza la asesoría de un contador público.</p>";window.print()});
+$("bIA").addEventListener("click",function(){var out=$("ai"),b=$("bIA");if(!OK)return;
+ if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+ b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+ Profesor.preguntar(AIQ().slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})});
+
+
+var ids=["mi","mc","mf","md","mx","mod","c1","c2","c3","c4","c5","pi","px","ti","tx","un","vt","gs"];
+function calc(){
+ var v={};ids.forEach(function(i){v[i]=num($(i))});
+ var cn=v.mc+v.mf-v.md,disp=v.mi+cn,mp=disp-v.mx,cif=v.c1+v.c2+v.c3+v.c4+v.c5,primo=mp+v.mod,conv=v.mod+cif,man=mp+v.mod+cif,
+ enProc=man+v.pi,term=enProc-v.px,disT=term+v.ti,cv=disT-v.tx,cu=v.un>0?term/v.un:0,ub=v.vt-cv,uo=ub-v.gs;
+ $("big").textContent=fmt(term);$("k1").textContent=v.un>0?fmt(cu):"—";$("k2").textContent=fmt(cv);$("k3").textContent=v.vt?fmt(ub):"—";
+ var al=[];
+ if(v.mx>disp)al.push(["El inventario final de materia prima es mayor que la materia prima disponible. Revisa los valores."]);
+ if(v.px>enProc)al.push(["El inventario final de productos en proceso es mayor que los costos en proceso. Revisa los valores."]);
+ if(v.tx>disT)al.push(["El inventario final de productos terminados es mayor que los disponibles para la venta. Revisa los valores."]);
+ if(v.un===0)al.push(["Escribe las unidades terminadas para ver el costo unitario."]);
+ if(!al.length)al.push(["Los inventarios son coherentes. Costo primo: "+fmt(primo)+". Costo de conversión: "+fmt(conv)+".",1]);
+ ALERT(al);
+ var t="<tbody>"+S("Materia prima")+L("Inventario inicial de materia prima","",fmt(v.mi))+L("Compras netas","Compras + fletes − devoluciones y descuentos",fmt(cn))+L("Materia prima disponible","",fmt(disp),"sub")+L("Inventario final de materia prima","",fmt(-v.mx))+L("Materia prima usada","",fmt(mp),"sub")+
+ S("Costos del periodo")+L("Mano de obra directa","",fmt(v.mod))+L("Costos indirectos de fabricación","Mano de obra indirecta, materiales, depreciación, servicios y otros",fmt(cif))+L("Costo primo","Materia prima usada + mano de obra directa",fmt(primo))+L("Costo de conversión","Mano de obra directa + indirectos",fmt(conv))+L("Costos de manufactura del periodo","",fmt(man),"sub")+
+ S("Productos en proceso")+L("Inventario inicial de productos en proceso","",fmt(v.pi))+L("Inventario final de productos en proceso","",fmt(-v.px))+L("Costo de los productos terminados","",fmt(term),"sub")+L("Costo unitario",nf(v.un,0)+" unidades",v.un>0?fmt(cu):"—")+
+ S("Costo de ventas")+L("Inventario inicial de productos terminados","",fmt(v.ti))+L("Productos disponibles para la venta","",fmt(disT),"sub")+L("Inventario final de productos terminados","",fmt(-v.tx))+L("Costo de ventas","",fmt(cv),"fin");
+ if(v.vt)t+=S("Utilidad")+L("Ventas","",fmt(v.vt))+L("Utilidad bruta","Ventas − costo de ventas",fmt(ub),"sub")+(v.gs?L("Gastos de administración y ventas","",fmt(-v.gs))+L("Utilidad operacional","",fmt(uo),"sub"):"");
+ $("t1").innerHTML=t+"</tbody>";
+ var a="<thead><tr><th>Cuenta</th><th>Débito</th><th>Crédito</th></tr></thead><tbody>";
+ function A(n,c,d,cr){if(!d&&!cr)return;a+="<tr><td>"+n+"<span class='f'>"+c+"</span></td><td>"+(d?fmt(d):"")+"</td><td>"+(cr?fmt(cr):"")+"</td></tr>"}
+ a+="<tr><td colspan='3' style='font-weight:800;color:var(--green)'>1. Consumo de materia prima</td></tr>";A("71 Materia prima","Materia prima usada",mp,0);A("1405 Materias primas","",0,mp);
+ a+="<tr><td colspan='3' style='font-weight:800;color:var(--green)'>2. Causación de mano de obra y costos indirectos</td></tr>";A("72 Mano de obra directa","",v.mod,0);A("73 Costos indirectos","",cif,0);A("Cuentas por pagar y depreciación acumulada","Salarios, servicios y depreciación del periodo",0,v.mod+cif);
+ a+="<tr><td colspan='3' style='font-weight:800;color:var(--green)'>3. Traslado a productos en proceso</td></tr>";A("1410 Productos en proceso","",man,0);A("71, 72 y 73 Costos de producción","",0,man);
+ a+="<tr><td colspan='3' style='font-weight:800;color:var(--green)'>4. Productos terminados</td></tr>";A("1430 Productos terminados","Costo de lo terminado",term-0,0);A("1410 Productos en proceso","",0,term);
+ a+="<tr><td colspan='3' style='font-weight:800;color:var(--green)'>5. Venta</td></tr>";A("6120 Industrias manufactureras","Costo de ventas",cv,0);A("1430 Productos terminados","",0,cv);
+ $("t2").innerHTML=a+"</tbody>";OK=true;
+ AIQ=function(){return "Explica en palabras sencillas este estado de costo de producción: materia prima usada "+fmt(mp)+", mano de obra directa "+fmt(v.mod)+", costos indirectos "+fmt(cif)+", costo de productos terminados "+fmt(term)+", costo de ventas "+fmt(cv)+". Cuéntame qué es el costo primo y el costo de conversión."};
+ DOC=function(){return "<h1>Estado de costo de producción y de ventas</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("t1").outerHTML};
+}
+onAll(ids,calc);money(ids);calc();
+
+})();
+</script>
+</body>
+</html>

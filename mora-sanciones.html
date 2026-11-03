@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calcula los intereses de mora de la DIAN y las sanciones por extemporaneidad, corrección e inexactitud, con la sanción mínima y las reducciones.">
+<title>Intereses de mora y sanciones · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 6px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 10px;font-size:15.5px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lines{display:grid;gap:12px;margin:14px 0}
+.line{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.line label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--mute)}
+.line .full{grid-column:1/-1}
+.line .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:44px}
+.line .chk input{width:20px;min-height:20px;height:20px}
+.line .top{grid-column:1/-1;display:flex;gap:10px;align-items:end}
+.line .top label{flex:1}
+.del{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:44px;padding:0 12px;font:600 13px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.del:hover{color:var(--bad);border-color:var(--bad)}
+.tag{display:inline-block;font:700 11.5px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:6px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+.adds{display:flex;gap:10px;flex-wrap:wrap}
+.opt{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.opt label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;min-height:32px}
+.opt input[type=checkbox]{width:20px;min-height:20px;height:20px;margin-top:3px}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+h3{font-size:17px;margin:20px 0 6px}
+.scroll{overflow-x:auto}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book th,.book td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:14.5px;text-align:right;white-space:nowrap}
+.book th:first-child,.book td:first-child{text-align:left;white-space:normal}
+.book th{font-size:12.5px;color:var(--mute)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-weight:800;font-size:16px}
+table.asi td.c{text-align:left;color:var(--mute);font-size:13px}
+table.asi td:first-child{font-weight:700}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.line{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+
+.sec3{margin-top:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+.panel h3{font-size:18px;margin:22px 0 10px}
+.panel h3:first-of-type{margin-top:0}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row2{margin-top:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);color:var(--ink);padding:10px 6px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:44px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--onbtn)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);min-height:32px}
+.chk input{width:20px;min-height:20px;height:20px;margin-top:3px}
+.book tr.sec td{font:800 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding-top:14px;border-bottom:2px solid var(--line)}
+.book td.v{font-weight:700}
+.book .f{display:block;font:400 12.5px/1.35 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+.gl{stroke:var(--line);stroke-width:1}.bc{fill:var(--green)}
+.hit{fill:transparent;cursor:pointer}.hit:hover{fill:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);border-radius:6px;padding:8px 10px;font:500 12.5px/1.45 "Bricolage Grotesque",sans-serif;z-index:3;white-space:nowrap}
+.legend{font:500 13.5px "Bricolage Grotesque",sans-serif;margin:0 0 6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:var(--green);vertical-align:-1px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+
+.btn.sm,.ghost.sm{min-height:36px;padding:6px 12px;font-size:13.5px}
+.dyn{display:grid;gap:8px;margin:8px 0}
+.dr{display:grid;grid-template-columns:1fr 130px 40px;gap:8px;align-items:center}
+.dr input{min-height:40px}
+.dr .x{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:40px;cursor:pointer;font-size:16px}
+.dr .x:hover{color:var(--bad);border-color:var(--bad)}
+.bad{color:var(--bad)}.okc{color:var(--ok)}
+.book th.l,.book td.l{text-align:left;white-space:normal}
+.mx{border-collapse:collapse;font-size:13.5px}
+.mx td,.mx th{padding:4px;border-bottom:1px solid var(--line);text-align:right}
+.mx td:first-child,.mx th:first-child{text-align:left;min-width:140px}
+.mx input{min-height:36px;padding:4px 6px;font-size:14px;min-width:84px}
+.wide .grid{grid-template-columns:minmax(0,1fr)}
+.sticky td:first-child,.sticky th:first-child{position:sticky;left:0;background:var(--paper);z-index:1}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 12px;padding:10px 12px}
+legend{font:700 14px "Bricolage Grotesque",sans-serif;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html#calculadoras">Volver a las calculadoras</a></header>
+<h1>Intereses de mora y sanciones tributarias</h1>
+<p class="lead">Para cuando pagas o presentas una declaración tarde o la corriges. Calcula los intereses de mora, la sanción por extemporaneidad, por corrección o por inexactitud, la reducción del artículo 640 y la sanción mínima, y deja el asiento listo.</p>
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+<h3>Qué pasó</h3>
+<div class="row2">
+<label class="fld full">Situación
+<select id="tipo"><option value="ext">Presenté la declaración después de la fecha límite (extemporánea)</option><option value="corr">Corregí una declaración y ahora debo pagar más</option><option value="inex">La DIAN encontró inexactitud en mi declaración</option><option value="mora">Solo pagué tarde (sin sanción, solo intereses)</option></select></label>
+<label class="fld full" id="wSaldo"><span id="lSaldo">Impuesto a cargo de la declaración ($)</span><input id="saldo" type="text" inputmode="numeric" value="10.000.000"></label>
+<label class="fld">Fecha límite de pago<input id="fv" type="date" value="2026-04-20"></label>
+<label class="fld">Fecha en que pagas o presentas<input id="fp" type="date" value="2026-07-15"></label>
+</div>
+<h3>Detalles de la sanción</h3>
+<div class="row2">
+<label class="chk full" id="wSin"><input type="checkbox" id="sin"><span>La declaración no tiene impuesto a cargo <span class="hint" style="display:block">La sanción se calcula sobre los ingresos brutos o el patrimonio.</span></span></label>
+<label class="fld" id="wIng" hidden>Ingresos brutos del periodo ($)<input id="ing" type="text" inputmode="numeric" value="0"></label>
+<label class="fld" id="wPat" hidden>Patrimonio líquido del año anterior ($)<input id="pat" type="text" inputmode="numeric" value="0"></label>
+<label class="chk full" id="wReq" hidden><input type="checkbox" id="req"><span>Ya me notificaron un requerimiento especial o pliego de cargos <span class="hint" style="display:block">En ese caso la sanción de corrección sube del 10 % al 20 %.</span></span></label>
+<label class="fld full" id="wRed">Reducción de la sanción (artículo 640)
+<select id="red"><option value="0">Sin reducción</option><option value="0.5">Reducida al 50 % (no tuve la misma infracción en los 2 años anteriores)</option><option value="0.25">Reducida al 25 % del valor (no tuve la misma infracción en el último año)</option></select></label>
+</div>
+<details open><summary>Valores que debes confirmar</summary>
+<div class="row2"><label class="fld">Tasa de interés moratorio (% efectivo anual)<input id="tasa" type="number" min="0" step="0.01" value="26.59"></label>
+<label class="fld">UVT ($)<input id="uvt" type="number" min="1" value="52374"></label></div>
+<p class="hint">La tasa de mora es la tasa de usura vigente menos 2 puntos (artículo 635 del Estatuto Tributario). Cambia cada trimestre y la certifica la Superintendencia Financiera: aquí uso 28,59 % de usura. Si el atraso cruza varios trimestres, la DIAN aplica la tasa de cada periodo; para el cálculo exacto usa el liquidador de la DIAN.</p></details>
+</form>
+<section class="result" aria-live="polite">
+<div class="big"><span>Total a pagar (impuesto + intereses + sanción)</span><strong id="tot">—</strong></div>
+<div class="kpis">
+<div class="kpi"><span>Intereses de mora</span><b id="k1">—</b></div>
+<div class="kpi"><span>Sanción final</span><b id="k2">—</b></div>
+<div class="kpi"><span>Días de atraso</span><b id="k3">—</b></div></div>
+<div class="alerts" id="alerts"></div>
+<h3>Cálculo paso a paso</h3>
+<div class="scroll"><table class="book" id="t1"></table></div>
+<h3>Asiento contable del pago</h3>
+<div class="scroll"><table class="book asi" id="t2"></table></div>
+<div class="actions">
+<button class="btn" type="button" id="bIA">Explícame este resultado</button>
+<button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+</div>
+<div id="ai" hidden></div>
+<p class="src">Fuentes: Estatuto Tributario, artículos 634, 635 (intereses), 639 (sanción mínima), 640 (reducciones), 641 (extemporaneidad), 644 (corrección) y 647 (inexactitud). Los intereses se calculan como saldo × ((1 + tasa)^(días/365) − 1). Revisa los artículos en el <a href="https://normograma.dian.gov.co" target="_blank" rel="noopener">normograma de la DIAN</a>. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+
+var $=function(i){return document.getElementById(i)};
+function num(v){v=String(v&&v.value!=null?v.value:v==null?"":v).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function nf(n,d){return n.toLocaleString("es-CO",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
+function pc(n,d){return nf(n*100,d==null?2:d)+" %"}
+var R=Math.round;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function L(n,f,v,c){return "<tr"+(c?" class='"+c+"'":"")+"><td>"+n+(f?"<span class='f'>"+f+"</span>":"")+"</td><td class='v'>"+v+"</td></tr>"}
+function S(t){return "<tr class='sec'><td colspan='2'>"+t+"</td></tr>"}
+function ALERT(list){var e=$("alerts");if(e)e.innerHTML=list.map(function(a){return "<div class='alert"+(a[1]?" good":"")+"'>"+a[0]+"</div>"}).join("")}
+function money(ids){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("blur",function(){var v=num(e);e.value=v?R(v).toLocaleString("es-CO"):"0"});e.addEventListener("focus",function(){e.select()})})}
+function onAll(ids,fn){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("input",fn);e.addEventListener("change",fn)})}
+var AIQ=function(){return ""},DOC=function(){return ""},OK=false;
+$("bPdf").addEventListener("click",function(){if(!OK)return;$("doc").innerHTML=DOC()+"<p class='foot'>Estimación informativa generada con Profesor. Confirma las cifras con la norma vigente. No reemplaza la asesoría de un contador público.</p>";window.print()});
+$("bIA").addEventListener("click",function(){var out=$("ai"),b=$("bIA");if(!OK)return;
+ if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+ b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+ Profesor.preguntar(AIQ().slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})});
+
+
+function d(id){var v=$(id).value;return v?new Date(v+"T12:00:00"):null}
+function meses(a,b){var m=(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth());if(b.getDate()>a.getDate())m++;return Math.max(m,1)}
+function vis(){var t=$("tipo").value;
+ $("lSaldo").textContent=t==="ext"||t==="mora"?"Impuesto a cargo de la declaración ($)":"Mayor valor a pagar (o menor saldo a favor) ($)";
+ $("wSin").hidden=t!=="ext";var sin=$("sin").checked&&t==="ext";$("wIng").hidden=!sin;$("wPat").hidden=!sin;$("wSaldo").hidden=sin;
+ $("wReq").hidden=t!=="corr";$("wRed").hidden=t==="mora"||t==="inex"}
+function calc(){
+ vis();var t=$("tipo").value,sin=$("sin").checked&&t==="ext",uvt=num($("uvt"))||52374,saldo=sin?0:num($("saldo")),a=d("fv"),b=d("fp");
+ var tasa=num({value:$("tasa").value.replace(".",",")})/100,al=[];
+ if(!a||!b){return}
+ var dias=Math.round((b-a)/86400000);if(dias<0)dias=0;
+ var inter=dias>0&&saldo>0?R(saldo*(Math.pow(1+tasa,dias/365)-1)):0,san=0,sanBruta=0,motivo="",calcTxt="",red=+$("red").value||0;
+ var minima=10*uvt;
+ if(t==="ext"){
+   if(dias===0)al.push(["Con esas fechas no hay atraso: no hay sanción por extemporaneidad."]);
+   else{var m=meses(a,b);
+     if(!sin){sanBruta=Math.min(saldo*.05*m,saldo);calcTxt="5 % × "+m+" mes(es) o fracción × impuesto, con tope del 100 % del impuesto"}
+     else{var ing=num($("ing")),pat=num($("pat"));
+       if(ing>0){sanBruta=Math.min(ing*.005*m,ing*.05);calcTxt="0,5 % × "+m+" mes(es) × ingresos brutos, con tope del 5 % de los ingresos"}
+       else if(pat>0){sanBruta=Math.min(pat*.01*m,pat*.10);calcTxt="1 % × "+m+" mes(es) × patrimonio líquido, con tope del 10 %"}
+       else{al.push(["Escribe los ingresos brutos o el patrimonio líquido del año anterior para calcular la sanción."])}}
+     sanBruta=R(sanBruta);motivo="Sanción por extemporaneidad (art. 641)"}
+ }else if(t==="corr"){var p=$("req").checked?.2:.1;sanBruta=R(saldo*p);motivo="Sanción por corrección (art. 644)";calcTxt=(p*100)+" % × mayor valor a pagar"}
+ else if(t==="inex"){sanBruta=R(saldo);motivo="Sanción por inexactitud (art. 647)";calcTxt="100 % de la diferencia entre lo declarado y lo correcto";al.push(["La sanción por inexactitud tiene reducciones propias (artículos 709 y 713) cuando aceptas los hechos. Esta calculadora muestra la sanción completa del 100 %."])}
+ var conRed=sanBruta;if(red&&t!=="inex"&&t!=="mora")conRed=R(sanBruta*(red===.25?.25:.5));
+ san=sanBruta>0?Math.max(conRed,minima):0;
+ if(t!=="mora"&&sanBruta>0&&conRed<minima)al.push(["La sanción calculada ("+fmt(conRed)+") es menor que la sanción mínima de 10 UVT ("+fmt(minima)+"). Se paga la mínima (art. 639)."]);
+ if(t==="mora")al.push(["Si solo pagaste tarde una declaración que sí presentaste a tiempo, no hay sanción, solo intereses de mora."]);
+ var total=saldo+inter+san;
+ $("tot").textContent=fmt(total);$("k1").textContent=fmt(inter);$("k2").textContent=fmt(san);$("k3").textContent=dias+" días";
+ ALERT(al);
+ var tb="<tbody>"+L(sin?"Declaración sin impuesto a cargo":(t==="ext"||t==="mora"?"Impuesto a cargo":"Mayor valor a pagar"),"",fmt(saldo))+L("Días de atraso","Desde "+$("fv").value+" hasta "+$("fp").value,dias+" días");
+ tb+=L("Intereses de mora","Saldo × ((1 + "+pc(tasa,2)+")^("+dias+"/365) − 1)",fmt(inter));
+ if(t!=="mora"){tb+=L(motivo||"Sanción","",fmt(sanBruta));tb+=L("Base del cálculo",calcTxt,"");
+  if(conRed!==sanBruta)tb+=L("Sanción reducida","Reducción del artículo 640",fmt(conRed));
+  tb+=L("Sanción mínima","10 UVT × "+fmt(uvt),fmt(minima));tb+=L("Sanción que se paga","La mayor entre la calculada y la mínima",fmt(san),"sub")}
+ tb+=L("Total a pagar","Impuesto + intereses + sanción",fmt(total),"fin")+"</tbody>";
+ $("t1").innerHTML=tb;
+ var x="<thead><tr><th>Cuenta</th><th>Débito</th><th>Crédito</th></tr></thead><tbody>";
+ function A(n,c,dd,cr){if(!dd&&!cr)return;x+="<tr><td>"+n+"<span class='f'>"+c+"</span></td><td>"+(dd?fmt(dd):"")+"</td><td>"+(cr?fmt(cr):"")+"</td></tr>"}
+ A("2404 Impuesto de renta y complementarios por pagar","Impuesto o mayor valor que se paga (si ya estaba causado)",saldo,0);
+ A("530520 Intereses","Gasto no deducible",inter,0);A("531520 Multas, sanciones y litigios","Gasto no deducible",san,0);A("1110 Bancos","Total pagado",0,total);
+ $("t2").innerHTML=x+"</tbody>";
+ OK=true;
+ AIQ=function(){return "Explica en palabras sencillas estos intereses y sanción de la DIAN en Colombia: saldo "+fmt(saldo)+", "+dias+" días de atraso, intereses "+fmt(inter)+", sanción "+fmt(san)+" ("+(motivo||"solo mora")+"). Cuéntame qué es la sanción mínima y cómo se reduce."};
+ DOC=function(){return "<h1>Intereses de mora y sanciones</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("t1").outerHTML+"<p><b>Asiento contable</b></p>"+$("t2").outerHTML};
+}
+onAll(["tipo","saldo","fv","fp","sin","ing","pat","req","red","tasa","uvt"],calc);money(["saldo","ing","pat"]);calc();
+
+})();
+</script>
+</body>
+</html>

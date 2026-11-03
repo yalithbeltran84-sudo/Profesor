@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Evalúa un proyecto con el valor presente neto, la TIR, el periodo de recuperación y el índice de rentabilidad, y calcula valor presente de un valor futuro o una anualidad.">
+<title>VPN, TIR y valor presente · Profesor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--onbtn:#F1F5F2;--bad:#B3261E;--ok:#1B6B3A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}}
+:root[data-theme="dark"]{--bg:#0D1815;--ink:#E6EFEA;--mute:#9DB2A9;--line:#27403A;--green:#7FC8B5;--paper:#14241F;--soft:#1A2F29;--onbtn:#0D1815;--bad:#F2B8B5;--ok:#8FD6A5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Georgia,serif}
+h1,h2,h3,button,input,select,label,table{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;color:var(--green);text-decoration:none}
+.back{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
+.back:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;padding-bottom:48px}
+.panel,.result{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 6px}
+.hint{font-size:13px;color:var(--mute);margin:4px 0 0}
+input,select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 10px;font-size:15.5px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lines{display:grid;gap:12px;margin:14px 0}
+.line{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.line label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--mute)}
+.line .full{grid-column:1/-1}
+.line .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:44px}
+.line .chk input{width:20px;min-height:20px;height:20px}
+.line .top{grid-column:1/-1;display:flex;gap:10px;align-items:end}
+.line .top label{flex:1}
+.del{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:44px;padding:0 12px;font:600 13px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.del:hover{color:var(--bad);border-color:var(--bad)}
+.tag{display:inline-block;font:700 11.5px "Bricolage Grotesque",sans-serif;border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:6px}
+.btn,.ghost{border-radius:6px;padding:11px 16px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;min-height:44px}
+.btn{background:var(--green);color:var(--onbtn);border:0}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.6;cursor:wait}
+.adds{display:flex;gap:10px;flex-wrap:wrap}
+.opt{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.opt label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;min-height:32px}
+.opt input[type=checkbox]{width:20px;min-height:20px;height:20px;margin-top:3px}
+.big{display:flex;flex-direction:column;gap:2px}
+.big span{font:500 15px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.big strong{font:800 clamp(38px,6vw,54px)/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px}
+.kpi span{display:block;font:500 12.5px "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.kpi b{display:block;font:700 17px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.alerts{display:grid;gap:8px;margin:0 0 14px}
+.alert{background:var(--soft);border-left:4px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;font:500 14px/1.45 "Bricolage Grotesque",sans-serif}
+.alert.good{border-left-color:var(--ok)}
+h3{font-size:17px;margin:20px 0 6px}
+.scroll{overflow-x:auto}
+table.book{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.book th,.book td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:14.5px;text-align:right;white-space:nowrap}
+.book th:first-child,.book td:first-child{text-align:left;white-space:normal}
+.book th{font-size:12.5px;color:var(--mute)}
+.book tr.sub td{font-weight:700;background:var(--soft)}
+.book tr.fin td{border-top:2px solid var(--ink);border-bottom:4px double var(--ink);font-weight:800;font-size:16px}
+table.asi td.c{text-align:left;color:var(--mute);font-size:13px}
+table.asi td:first-child{font-weight:700}
+#ai{margin-top:12px;background:var(--soft);border-radius:6px;padding:12px 14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.src{font-size:14px;color:var(--mute);margin:14px 0 0}
+.src a{color:var(--green)}
+#doc{display:none}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.line{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff;color:#000;font:12.5px/1.45 Georgia,serif}
+ .wrap{display:none!important}
+ #doc{display:block;padding:20px;color:#000}
+ #doc h1{font-size:22px;text-align:center;margin:0 0 4px}
+ #doc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+ #doc th,#doc td{padding:4px;border-bottom:1px solid #999;text-align:right}
+ #doc th:first-child,#doc td:first-child{text-align:left}
+ #doc tr.fin td{border-top:2px solid #000;border-bottom:4px double #000;font-weight:700}
+ #doc .foot{margin-top:18px;font-size:10.5px;color:#444}
+}
+
+.sec3{margin-top:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mute)}
+.fld.full{grid-column:1/-1}
+.panel h3{font-size:18px;margin:22px 0 10px}
+.panel h3:first-of-type{margin-top:0}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:700 15px "Bricolage Grotesque",sans-serif;min-height:32px}
+details .row2{margin-top:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);color:var(--ink);padding:10px 6px;font:600 13.5px "Bricolage Grotesque",sans-serif;min-height:44px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--onbtn)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);min-height:32px}
+.chk input{width:20px;min-height:20px;height:20px;margin-top:3px}
+.book tr.sec td{font:800 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding-top:14px;border-bottom:2px solid var(--line)}
+.book td.v{font-weight:700}
+.book .f{display:block;font:400 12.5px/1.35 "Bricolage Grotesque",sans-serif;color:var(--mute)}
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 11px "Bricolage Grotesque",sans-serif;fill:var(--mute)}
+.gl{stroke:var(--line);stroke-width:1}.bc{fill:var(--green)}
+.hit{fill:transparent;cursor:pointer}.hit:hover{fill:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);border-radius:6px;padding:8px 10px;font:500 12.5px/1.45 "Bricolage Grotesque",sans-serif;z-index:3;white-space:nowrap}
+.legend{font:500 13.5px "Bricolage Grotesque",sans-serif;margin:0 0 6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:var(--green);vertical-align:-1px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+
+.btn.sm,.ghost.sm{min-height:36px;padding:6px 12px;font-size:13.5px}
+.dyn{display:grid;gap:8px;margin:8px 0}
+.dr{display:grid;grid-template-columns:1fr 130px 40px;gap:8px;align-items:center}
+.dr input{min-height:40px}
+.dr .x{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:6px;min-height:40px;cursor:pointer;font-size:16px}
+.dr .x:hover{color:var(--bad);border-color:var(--bad)}
+.bad{color:var(--bad)}.okc{color:var(--ok)}
+.book th.l,.book td.l{text-align:left;white-space:normal}
+.mx{border-collapse:collapse;font-size:13.5px}
+.mx td,.mx th{padding:4px;border-bottom:1px solid var(--line);text-align:right}
+.mx td:first-child,.mx th:first-child{text-align:left;min-width:140px}
+.mx input{min-height:36px;padding:4px 6px;font-size:14px;min-width:84px}
+.wide .grid{grid-template-columns:minmax(0,1fr)}
+.sticky td:first-child,.sticky th:first-child{position:sticky;left:0;background:var(--paper);z-index:1}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 12px;padding:10px 12px}
+legend{font:700 14px "Bricolage Grotesque",sans-serif;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="index.html">Profesor</a><a class="back" href="index.html#calculadoras">Volver a las calculadoras</a></header>
+<h1>VPN, TIR y valor presente</h1>
+<p class="lead">Mete la inversión y los flujos de caja de tu proyecto y mira el valor presente neto (VPN), la tasa interna de retorno (TIR), en cuánto tiempo recuperas lo invertido y si conviene hacerlo. Más abajo hay un cálculo rápido de valor presente.</p>
+<div class="grid">
+<form class="panel" id="f" autocomplete="off" onsubmit="return false">
+<h3>El proyecto</h3>
+<div class="row2">
+<label class="fld full">Inversión inicial ($)<input id="inv" type="text" inputmode="numeric" value="1.000.000"></label>
+<label class="fld">Tasa de descuento (%)<input id="tasa" type="number" min="0" step="0.1" value="10"></label>
+<label class="fld">Esa tasa es
+<select id="tmod"><option value="p">Por periodo</option><option value="ea">Efectiva anual</option></select></label>
+<label class="fld full">Cada periodo es un(a)
+<select id="per"><option value="1">Año</option><option value="2">Semestre</option><option value="4">Trimestre</option><option value="12">Mes</option></select></label>
+</div>
+<h3>Flujos de caja de cada periodo ($)</h3>
+<div class="dyn" id="fl"></div>
+<div class="adds"><button class="ghost sm" type="button" id="add">Agregar periodo</button></div>
+<p class="hint">Escribe los flujos netos (entradas menos salidas). Un flujo negativo va con signo menos. Si al final recuperas un valor de salvamento, súmalo al último periodo.</p>
+<h3 style="margin-top:28px">Valor presente rápido</h3>
+<div class="row2">
+<label class="fld full">Qué quieres traer a valor presente
+<select id="qm"><option value="u">Un valor futuro único</option><option value="a">Una cuota fija cada periodo (anualidad)</option><option value="p">Una cuota fija para siempre (perpetuidad)</option></select></label>
+<label class="fld"><span id="qL">Valor futuro ($)</span><input id="qv" type="text" inputmode="numeric" value="5.000.000"></label>
+<label class="fld">Tasa por periodo (%)<input id="qt" type="number" min="0" step="0.1" value="1"></label>
+<label class="fld" id="qnw">Número de periodos<input id="qn" type="number" min="1" step="1" value="12"></label>
+</div>
+<p class="note" style="margin:10px 0 0"><b id="qr"></b></p>
+</form>
+<section class="result" aria-live="polite">
+<div class="big"><span>Valor presente neto (VPN)</span><strong id="vpn">—</strong></div>
+<div class="kpis">
+<div class="kpi"><span>TIR por periodo</span><b id="k1">—</b></div>
+<div class="kpi"><span>TIR efectiva anual</span><b id="k2">—</b></div>
+<div class="kpi"><span>Índice de rentabilidad</span><b id="k3">—</b></div></div>
+<div class="alerts" id="alerts"></div>
+<h3>VP acumulado por periodo</h3>
+<p class="legend"><i></i>Cuando la barra pasa de negativa a positiva, ya recuperaste la inversión.</p>
+<div class="chartbox" id="chart"></div>
+<h3>Tabla de flujos</h3>
+<div class="scroll"><table class="book" id="t1"></table></div>
+<h3>Resumen de indicadores</h3>
+<div class="scroll"><table class="book" id="t2"></table></div>
+<div class="actions">
+<button class="btn" type="button" id="bIA">Explícame este resultado</button>
+<button class="ghost" type="button" id="bPdf">Imprimir o guardar PDF</button>
+</div>
+<div id="ai" hidden></div>
+<p class="src">Fórmulas: VPN = −inversión + Σ flujo/(1+i)^t; la TIR es la tasa que hace el VPN igual a cero; recuperación con flujos acumulados; índice de rentabilidad = VP de los flujos / inversión. No reemplaza la asesoría de un contador público.</p>
+</section>
+</div>
+</div>
+<div id="doc"></div>
+<script src="profesor.js"></script>
+<script>
+(function(){
+"use strict";
+
+var $=function(i){return document.getElementById(i)};
+function num(v){v=String(v&&v.value!=null?v.value:v==null?"":v).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return parseFloat(v)||0}
+function fmt(n){return (n<0?"-":"")+"$"+Math.round(Math.abs(n)).toLocaleString("es-CO")}
+function nf(n,d){return n.toLocaleString("es-CO",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
+function pc(n,d){return nf(n*100,d==null?2:d)+" %"}
+var R=Math.round;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function L(n,f,v,c){return "<tr"+(c?" class='"+c+"'":"")+"><td>"+n+(f?"<span class='f'>"+f+"</span>":"")+"</td><td class='v'>"+v+"</td></tr>"}
+function S(t){return "<tr class='sec'><td colspan='2'>"+t+"</td></tr>"}
+function ALERT(list){var e=$("alerts");if(e)e.innerHTML=list.map(function(a){return "<div class='alert"+(a[1]?" good":"")+"'>"+a[0]+"</div>"}).join("")}
+function money(ids){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("blur",function(){var v=num(e);e.value=v?R(v).toLocaleString("es-CO"):"0"});e.addEventListener("focus",function(){e.select()})})}
+function onAll(ids,fn){ids.forEach(function(id){var e=$(id);if(!e)return;e.addEventListener("input",fn);e.addEventListener("change",fn)})}
+var AIQ=function(){return ""},DOC=function(){return ""},OK=false;
+$("bPdf").addEventListener("click",function(){if(!OK)return;$("doc").innerHTML=DOC()+"<p class='foot'>Estimación informativa generada con Profesor. Confirma las cifras con la norma vigente. No reemplaza la asesoría de un contador público.</p>";window.print()});
+$("bIA").addEventListener("click",function(){var out=$("ai"),b=$("bIA");if(!OK)return;
+ if(!window.Profesor){out.hidden=false;out.textContent="La IA no está disponible en esta página ahora mismo.";return}
+ b.disabled=true;out.hidden=false;out.textContent="Pensando…";
+ Profesor.preguntar(AIQ().slice(0,490),[]).then(function(d){out.textContent=d.answer||"No pude responder ahora.";b.disabled=false})});
+
+
+var F=[300000,400000,500000,600000,700000];
+function rend(){var h="";F.forEach(function(v,i){h+="<div class='dr'><span>Periodo "+(i+1)+"</span><input type='text' inputmode='numeric' data-i='"+i+"' value='"+R(v).toLocaleString("es-CO")+"' aria-label='Flujo del periodo "+(i+1)+"'><button type='button' class='x' data-x='"+i+"' aria-label='Quitar periodo "+(i+1)+"'>×</button></div>"});$("fl").innerHTML=h}
+$("fl").addEventListener("input",function(e){var i=e.target.getAttribute("data-i");if(i!==null){F[+i]=num(e.target);calc()}});
+$("fl").addEventListener("focusin",function(e){if(e.target.select)e.target.select()});
+$("fl").addEventListener("focusout",function(e){var i=e.target.getAttribute("data-i");if(i!==null)e.target.value=R(F[+i]).toLocaleString("es-CO")});
+$("fl").addEventListener("click",function(e){var x=e.target.getAttribute("data-x");if(x!==null&&F.length>1){F.splice(+x,1);rend();calc()}});
+$("add").addEventListener("click",function(){F.push(F[F.length-1]||0);rend();calc()});
+function npv(r,cf){var s=0;for(var t=0;t<cf.length;t++)s+=cf[t]/Math.pow(1+r,t);return s}
+function tir(cf){var prev=npv(-.99,cf),a=-.99,step=.01;for(var r=-.98;r<=10;r+=step){var v=npv(r,cf);if(isNaN(v))continue;if(prev===0)return a;if(prev*v<0){var lo=a,hi=r;for(var k=0;k<100;k++){var m=(lo+hi)/2;if(npv(lo,cf)*npv(m,cf)<=0)hi=m;else lo=m}return (lo+hi)/2}prev=v;a=r}return null}
+function calc(){
+ var inv=num($("inv")),m=+$("per").value,tn=num({value:$("tasa").value.replace(".",",")})/100,i=$("tmod").value==="ea"?Math.pow(1+tn,1/m)-1:tn;
+ var cf=[-inv].concat(F),n=F.length,nom=["año","semestre","trimestre","mes"][[1,2,4,12].indexOf(m)];
+ var vp=[],ac=[],acs=[],s=0,sp=0;
+ cf.forEach(function(v,t){var p=v/Math.pow(1+i,t);s+=p;sp+=v;vp.push(p);ac.push(s);acs.push(sp)});
+ var vpn=s,r=tir(cf),vpF=vpn+inv,ir=inv>0?vpF/inv:0;
+ function back(arr){for(var t=1;t<arr.length;t++){if(arr[t]>=0&&arr[t-1]<0){var f=cf[t]/(arr===ac?Math.pow(1+i,t):1);return (t-1)+(-arr[t-1])/f}}return null}
+ var pb=back(acs),pbd=back(ac);
+ var pos=cf.filter(function(v){return v>0}),neg=cf.filter(function(v){return v<0}),cambios=0;for(var k=1;k<cf.length;k++){if(cf[k]*cf[k-1]<0)cambios++}
+ var tirm=null;if(inv>0){var fv=0;for(var t=1;t<cf.length;t++)if(cf[t]>0)fv+=cf[t]*Math.pow(1+i,n-t);if(fv>0)tirm=Math.pow(fv/inv,1/n)-1}
+ $("vpn").textContent=fmt(vpn);
+ $("k1").textContent=r==null?"No hay":pc(r,2);$("k2").textContent=r==null?"—":pc(Math.pow(1+r,m)-1,2);$("k3").textContent=inv>0?nf(ir,2)+" veces":"—";
+ var al=[];
+ al.push(vpn>0?["El VPN es positivo: con esa tasa, el proyecto crea valor y conviene aceptarlo.",1]:vpn<0?["El VPN es negativo: con esa tasa, el proyecto destruye valor y conviene rechazarlo."]:["El VPN es cero: el proyecto rinde justo la tasa que exiges."]);
+ if(r==null)al.push(["La TIR no existe porque los flujos no cambian de signo."]);
+ else if(r>i)al.push(["La TIR ("+pc(r,2)+" por "+nom+") es mayor que tu tasa de descuento ("+pc(i,2)+"): rinde más de lo que exiges.",1]);else al.push(["La TIR ("+pc(r,2)+" por "+nom+") es menor que tu tasa de descuento ("+pc(i,2)+")."]);
+ if(cambios>1)al.push(["Los flujos cambian de signo más de una vez. En ese caso puede haber varias TIR y es mejor decidir con el VPN."]);
+ if(pb==null&&inv>0)al.push(["Con estos flujos no recuperas la inversión dentro de los periodos escritos."]);
+ ALERT(al);
+ // gráfico
+ var W=600,H=240,pl=56,pr=10,pt=14,pb2=30,mn=Math.min.apply(null,ac.concat([0])),mx=Math.max.apply(null,ac.concat([0])),rg=(mx-mn)||1;
+ function Y(v){return pt+(mx-v)/rg*(H-pt-pb2)}var bw=(W-pl-pr)/ac.length,sv="<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='VP acumulado por periodo'>";
+ for(var g=0;g<=4;g++){var gv=mn+rg*g/4,gy=Y(gv);sv+="<line class='gl' x1='"+pl+"' x2='"+(W-pr)+"' y1='"+gy+"' y2='"+gy+"'/><text x='"+(pl-6)+"' y='"+(gy+4)+"' text-anchor='end'>"+nf(gv/1000,0)+" mil</text>"}
+ ac.forEach(function(v,t){var y0=Y(0),y1=Y(v),x=pl+t*bw+bw*.15;sv+="<rect x='"+x+"' y='"+Math.min(y0,y1)+"' width='"+(bw*.7)+"' height='"+Math.max(1,Math.abs(y1-y0))+"' fill='"+(v>=0?"var(--green)":"var(--bad)")+"'><title>Periodo "+t+": "+fmt(v)+"</title></rect><text x='"+(x+bw*.35)+"' y='"+(H-10)+"' text-anchor='middle'>"+t+"</text>"});
+ $("chart").innerHTML=sv+"<line x1='"+pl+"' x2='"+(W-pr)+"' y1='"+Y(0)+"' y2='"+Y(0)+"' stroke='var(--ink)' stroke-width='1.2'/></svg>";
+ var t1="<thead><tr><th>Periodo</th><th>Flujo</th><th>Factor</th><th>Valor presente</th><th>VP acumulado</th></tr></thead><tbody>";
+ cf.forEach(function(v,t){t1+="<tr><td>"+t+"</td><td>"+fmt(v)+"</td><td>"+nf(1/Math.pow(1+i,t),4)+"</td><td>"+fmt(vp[t])+"</td><td>"+fmt(ac[t])+"</td></tr>"});
+ $("t1").innerHTML=t1+"</tbody>";
+ var t2="<tbody>"+L("Tasa de descuento por "+nom,"",pc(i,3))+L("VPN","Suma de los valores presentes",fmt(vpn),"sub")+L("TIR","Tasa que hace el VPN cero",r==null?"No existe":pc(r,2)+" por "+nom)+L("TIR efectiva anual","",r==null?"—":pc(Math.pow(1+r,m)-1,2))+
+  L("TIR modificada","Reinvirtiendo a la tasa de descuento",tirm==null?"—":pc(tirm,2)+" por "+nom)+L("Índice de rentabilidad","VP de los flujos / inversión",inv>0?nf(ir,3):"—")+
+  L("Recuperación simple","",pb==null?"No se recupera":nf(pb,2)+" "+nom+"s")+L("Recuperación descontada","",pbd==null?"No se recupera":nf(pbd,2)+" "+nom+"s")+"</tbody>";
+ $("t2").innerHTML=t2;OK=true;
+ AIQ=function(){return "Explica en palabras sencillas esta evaluación de proyecto: inversión "+fmt(inv)+", "+n+" periodos, tasa de descuento "+pc(i,2)+", VPN "+fmt(vpn)+", TIR "+(r==null?"no existe":pc(r,2))+". Cuéntame qué significan el VPN y la TIR y si conviene el proyecto."};
+ DOC=function(){return "<h1>Evaluación de proyecto: VPN y TIR</h1><p style='text-align:center'>Profesor · "+new Date().toLocaleDateString("es-CO")+"</p>"+$("t2").outerHTML+"<p></p>"+$("t1").outerHTML};
+ quick();
+}
+function quick(){
+ var q=$("qm").value,v=num($("qv")),i=num({value:$("qt").value.replace(".",",")})/100,n=Math.max(1,Math.round(num($("qn")))),r="";
+ $("qL").textContent=q==="u"?"Valor futuro ($)":"Cuota por periodo ($)";$("qnw").hidden=q==="p";
+ if(q==="u")r="Valor presente = "+fmt(v/Math.pow(1+i,n));
+ else if(q==="a")r="Valor presente = "+fmt(i>0?v*(1-Math.pow(1+i,-n))/i:v*n);
+ else r=i>0?"Valor presente = "+fmt(v/i):"Con tasa cero la perpetuidad no tiene valor presente.";
+ $("qr").textContent=r}
+onAll(["inv","tasa","tmod","per"],calc);onAll(["qm","qv","qt","qn"],quick);money(["inv","qv"]);rend();calc();
+
+})();
+</script>
+</body>
+</html>
