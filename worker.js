@@ -139,11 +139,135 @@ async function chat(request, env) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// CURSOS: acceso por código, quiz corregido en el servidor y certificado firmado.
+// Secretos en Cloudflare: CODIGOS_CURSO ("CODIGO=excel-basico|excel-intermedio,OTRO=todos")
+// y CERT_SECRET (una frase larga y secreta que firma los certificados).
+// Los códigos del plan Master (secreto CODIGOS) también abren todos los cursos.
+// ---------------------------------------------------------------------------
+const CURSOS = {
+  "excel-basico": {
+    titulo: "Excel Básico para contabilidad",
+    horas: 8,
+    minimo: 0.7,
+    // Índice de la respuesta correcta de cada pregunta (la página no la conoce)
+    clave: [1, 0, 2, 2, 2, 2, 1, 1, 3, 1]
+  }
+};
+
+function accesoCurso(codigo, curso, env) {
+  const c = String(codigo || "").trim().toUpperCase();
+  if (c.length < 6 || !CURSOS[curso]) return false;
+  if (planDeCodigo(c, env) === "master") return true;
+  for (const par of String(env.CODIGOS_CURSO || "").split(",")) {
+    const i = par.indexOf("=");
+    if (i < 1) continue;
+    if (par.slice(0, i).trim().toUpperCase() !== c) continue;
+    const lista = par.slice(i + 1).trim().toLowerCase().split("|");
+    if (lista.includes("todos") || lista.includes(curso)) return true;
+  }
+  return false;
+}
+
+const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const deB64u = (s) => { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return atob(s); };
+async function firmar(texto, env) {
+  const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.CERT_SECRET), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return b64u(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(texto)));
+}
+const utf8aB64u = (obj) => b64u(new TextEncoder().encode(JSON.stringify(obj)));
+const b64uaObj = (s) => JSON.parse(new TextDecoder().decode(Uint8Array.from(deB64u(s), (ch) => ch.charCodeAt(0))));
+
+async function curso(request, env) {
+  if (request.method !== "POST") return responder(405, { ok: false });
+  let b = {};
+  try { b = await request.json(); } catch (e) { return responder(400, { ok: false }); }
+  const id = String(b.curso || "");
+  const def = CURSOS[id];
+  if (!def) return responder(200, { ok: false, error: "curso" });
+  if (!accesoCurso(b.codigo, id, env)) return responder(200, { ok: false, error: "codigo" });
+  if (b.accion === "validar") return responder(200, { ok: true });
+  if (b.accion !== "quiz") return responder(400, { ok: false });
+
+  const nombre = String(b.nombre || "").trim().replace(/\s+/g, " ");
+  if (nombre.length < 3 || nombre.length > 60 || !/^[\p{L}][\p{L}\s.'-]*$/u.test(nombre)) return responder(200, { ok: false, error: "nombre" });
+  const r = b.respuestas;
+  if (!Array.isArray(r) || r.length !== def.clave.length) return responder(200, { ok: false, error: "respuestas" });
+  let puntaje = 0;
+  def.clave.forEach((c, i) => { if (Number(r[i]) === c) puntaje++; });
+  const total = def.clave.length;
+  const porcentaje = Math.round((puntaje * 100) / total);
+  if (puntaje / total < def.minimo) return responder(200, { ok: true, aprobado: false, puntaje, total, porcentaje });
+  if (!env.CERT_SECRET) return responder(200, { ok: false, error: "config" });
+
+  const fecha = new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10); // hora de Colombia
+  const datos = { n: nombre, c: id, f: fecha, r: Math.random().toString(36).slice(2, 8) };
+  const cuerpo = utf8aB64u(datos);
+  const firma = await firmar(cuerpo, env);
+  const certId = "PRO-" + firma.replace(/[^A-Za-z0-9]/g, "").slice(0, 8).toUpperCase();
+  return responder(200, { ok: true, aprobado: true, puntaje, total, porcentaje, id: certId, token: cuerpo + "." + firma });
+}
+
+async function verificar(request, env) {
+  if (request.method !== "POST") return responder(405, { ok: false });
+  let t = "";
+  try { t = String((await request.json()).token || ""); } catch (e) {}
+  const partes = t.split(".");
+  if (partes.length !== 2 || !env.CERT_SECRET) return responder(200, { ok: false });
+  try {
+    if ((await firmar(partes[0], env)) !== partes[1]) return responder(200, { ok: false });
+    const d = b64uaObj(partes[0]);
+    const def = CURSOS[d.c];
+    if (!def) return responder(200, { ok: false });
+    const certId = "PRO-" + partes[1].replace(/[^A-Za-z0-9]/g, "").slice(0, 8).toUpperCase();
+    return responder(200, { ok: true, nombre: d.n, curso: def.titulo, horas: def.horas, fecha: d.f, id: certId });
+  } catch (e) {
+    return responder(200, { ok: false });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// APLICACIONES (Bolsillo y Palabra Contable): acceso por código, validado en el servidor.
+// Secreto en Cloudflare: CODIGOS_APPS ("CODIGO=bolsillo-pro|palabra-plus,OTRO=palabra-premium,OTRO2=todos").
+// Los códigos del plan Master (secreto CODIGOS) abren el nivel más alto de todas las apps.
+// ---------------------------------------------------------------------------
+const APPS = { bolsillo: ["pro"], palabra: ["plus", "premium"] }; // de menor a mayor nivel
+
+function nivelApp(codigo, app, env) {
+  const c = String(codigo || "").trim().toUpperCase();
+  const niveles = APPS[app];
+  if (c.length < 6 || !niveles) return "";
+  const alto = niveles[niveles.length - 1];
+  if (planDeCodigo(c, env) === "master") return alto;
+  let mejor = "";
+  for (const par of String(env.CODIGOS_APPS || "").split(",")) {
+    const i = par.indexOf("=");
+    if (i < 1) continue;
+    if (par.slice(0, i).trim().toUpperCase() !== c) continue;
+    const lista = par.slice(i + 1).trim().toLowerCase().split("|").map((x) => x.trim());
+    if (lista.includes("todos")) mejor = alto;
+    for (const n of niveles) if (lista.includes(app + "-" + n)) mejor = n; // el último que coincide es el más alto
+  }
+  return mejor;
+}
+
+async function appAcceso(request, env) {
+  if (request.method !== "POST") return responder(405, { ok: false });
+  let b = {};
+  try { b = await request.json(); } catch (e) { return responder(400, { ok: false }); }
+  const nivel = nivelApp(b.codigo, String(b.app || ""), env);
+  if (!nivel) return responder(200, { ok: false });
+  return responder(200, { ok: true, nivel });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/chat") return chat(request, env);
     if (url.pathname === "/api/codigo") return codigo(request, env);
+    if (url.pathname === "/api/curso") return curso(request, env);
+    if (url.pathname === "/api/app") return appAcceso(request, env);
+    if (url.pathname === "/api/verificar") return verificar(request, env);
     return env.ASSETS.fetch(request); // el resto del sitio (index.html, calculadora.html, profesor.js)
   }
 };
