@@ -92,7 +92,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </head>
 <body>
 <div class="wrap">
-<header><div class="logo">Profesor</div><nav><a href="#areas">Áreas</a><a href="#planes">Planes</a><a href="#calculadoras">Calculadoras</a><a href="articulos.html">Artículos</a><a href="cursos.html">Cursos</a><a href="#publico">Para quién</a><a href="quien-soy.html">Quién soy</a></nav></header>
+<header><div class="logo">Profesor</div><nav><a href="#areas">Áreas</a><a href="#planes">Planes</a><a href="#calculadoras">Calculadoras</a><a href="articulos.html">Artículos</a><a href="#apps">Aplicaciones</a><a href="cursos.html">Cursos</a><a href="#publico">Para quién</a><a href="quien-soy.html">Quién soy</a></nav></header>
 
 <div class="hero">
 <div>
@@ -179,6 +179,15 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 <p class="note">El asistente usa estos artículos para responder y te dice de cuál sale la información.</p>
 </section>
 
+<section id="apps">
+<h2>Aplicaciones</h2>
+<div class="areas">
+<div><b>Bolsillo</b><span>Tu plata, clara: ingresos, gastos, presupuesto y meta de ahorro, con división de cuentas. Útil para aprender finanzas personales.</span><br><a class="btn" href="bolsillo.html" target="_blank" rel="noopener">Abrir Bolsillo</a></div>
+<div><b>Palabra Contable</b><span>Inglés para contadores: diccionario de términos con voz, tarjetas, quiz y frases para correos y reuniones.</span><br><a class="btn" href="palabra-contable.html" target="_blank" rel="noopener">Abrir Palabra Contable</a></div>
+</div>
+<p class="note">Son gratis para empezar. Sus planes pagos se activan con un código, igual que los planes de Profesor.</p>
+</section>
+
 <section id="cursos">
 <h2>Cursos de Excel</h2>
 <div class="areas">
@@ -206,9 +215,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </div>
 </section>
 
-<footer>Profesor · Contaduría con IA. La información es orientativa y no reemplaza la asesoría de un contador público.<br><a href="terminos.html">Términos de uso</a> · <a href="privacidad.html">Política de datos</a> · <a href="https://www.instagram.com/profesor.contable/" target="_blank" rel="noopener">Instagram @profesor.contable</a> · <a href="mailto:contacto.profesor.ia@gmail.com">contacto.profesor.ia@gmail.com</a></footer>
+<footer>Profesor · Contaduría con IA. La información es orientativa y no reemplaza la asesoría de un contador público.<br><a href="terminos.html">Términos de uso</a> · <a href="privacidad.html">Política de datos</a> · <a href="https://www.instagram.com/profesor.contable/" target="_blank" rel="noopener">Instagram @profesor.contable</a> · <a href="mailto:profesor.contable.ia@gmail.com">profesor.contable.ia@gmail.com</a></footer>
 </div>
 
+<script src="pagos.js"></script>
 <script src="profesor.js"></script>
 <script>
 var Q=["¿Qué es el IVA?","¿Cómo funciona la retención en la fuente?","¿Cómo se calcula la depreciación en línea recta?","¿Cómo se calcula el punto de equilibrio?","¿Cómo se registran los costos ambientales?"];
@@ -235,12 +245,12 @@ document.getElementById("bClose").onclick=function(){hist.hidden=true};
 document.getElementById("bNew").onclick=function(){chat=Profesor.nuevoChat();pintar();hist.hidden=true};
 Q.forEach(function(q){var b=document.createElement("button");b.type="button";b.textContent=q;b.onclick=function(){ask(q)};chips.appendChild(b)});
 var PRECIOS={estudiante:"$10.000",profesional:"$30.000",master:"$60.000"};
-var LLAVE="@PLATA3232015094",CORREO="contacto.profesor.ia@gmail.com";
+var PG=window.PAGOS||{llave:"@PLATA3232015094",nequi:"",correo:"profesor.contable.ia@gmail.com"},LLAVE=PG.llave,CORREO=PG.correo,DONDE="por Bre-B a la llave <b>"+LLAVE+"</b>"+(PG.nequi?" o por Nequi al <b>"+PG.nequi+"</b>":"");
 document.querySelectorAll(".plan .pick").forEach(function(b){b.onclick=function(){var id=b.parentNode.getAttribute("data-plan");var m=document.getElementById("planmsg");
 if(id==="gratis"){if(id===Profesor.plan())return;Profesor.setPlan(id);estado();m.textContent="Plan Gratis activado: tienes 5 preguntas al día en el asistente.";return}
-var p=Profesor.PLANS[id];m.innerHTML="<b>Plan "+p.nombre+" · "+PRECIOS[id]+" al mes.</b> Para activarlo: 1) Transfiere "+PRECIOS[id]+" por Bre-B a la llave <b>"+LLAVE+"</b>. 2) Envía el comprobante con tu nombre y el plan a <a href=\"mailto:"+CORREO+"?subject=Pago%20plan%20"+encodeURIComponent(p.nombre)+"\">"+CORREO+"</a>. 3) Cuando verifiquemos el pago te enviamos un código de activación: escríbelo en el cuadro de abajo y tu plan queda activo.";
+var p=Profesor.PLANS[id];m.innerHTML="<b>Plan "+p.nombre+" · "+PRECIOS[id]+" al mes.</b> Para activarlo: 1) Transfiere "+PRECIOS[id]+" "+DONDE+". 2) Envía el comprobante con tu nombre y el plan a <a href=\"mailto:"+CORREO+"?subject=Pago%20plan%20"+encodeURIComponent(p.nombre)+"\">"+CORREO+"</a>. 3) Cuando verifiquemos el pago te enviamos un código de activación: escríbelo en el cuadro de abajo y tu plan queda activo.";
 m.scrollIntoView({behavior:"smooth",block:"nearest"})}});
-document.querySelectorAll(".buy").forEach(function(b){b.onclick=function(){document.getElementById("buymsg").innerHTML="Para comprar: transfiere el valor por Bre-B a la llave <b>"+LLAVE+"</b> y envía el comprobante con el nombre de la plantilla a <a href=\"mailto:"+CORREO+"\">"+CORREO+"</a>. Te la enviamos cuando verifiquemos el pago."}});
+document.querySelectorAll(".buy").forEach(function(b){b.onclick=function(){document.getElementById("buymsg").innerHTML="Para comprar: transfiere el valor "+DONDE+" y envía el comprobante con el nombre de la plantilla a <a href=\"mailto:"+CORREO+"\">"+CORREO+"</a>. Te la enviamos cuando verifiquemos el pago."}});
 document.getElementById("f").onsubmit=function(e){e.preventDefault();var i=document.getElementById("q");if(i.value.trim()){ask(i.value.trim());i.value=""}};
 function activar(){var c=document.getElementById("cod").value.trim();var m=document.getElementById("planmsg");if(!c)return;m.textContent="Verificando código...";
 Profesor.activarCodigo(c).then(function(d){estado();if(d.ok){var n=Profesor.PLANS[d.plan].nombre;m.textContent="Plan "+n+" activado: ahora tienes "+Profesor.PLANS[d.plan].limite+" preguntas al día.";document.getElementById("cod").value=""}else{m.textContent=d.error?"No pude conectarme. Intenta de nuevo.":"Código no válido o vencido. Revisa que esté bien escrito."}})}
