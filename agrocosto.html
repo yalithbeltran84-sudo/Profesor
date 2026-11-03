@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgroCosto · costos de tu finca</title>
+<meta name="description" content="Registra los gastos de tu finca o proyecto y mira cuánto te cuesta producir cada litro, animal o hectárea.">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F2E8;--card:#FFFFFF;--ink:#1F2A1A;--mute:#5F6B58;--line:#DAD8C6;--acc:#4E7D2A;--accink:#FFFFFF;--amber:#D99A2B;--soft:#E8EBD8;--bad:#B8432F;--ok:#2E7D32;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121A10;--card:#1B2618;--ink:#EAF0E0;--mute:#A3B096;--line:#2E3D29;--acc:#8FC45A;--accink:#121A10;--amber:#EBB24B;--soft:#243020;--bad:#F0806C;--ok:#6FD27A}}
+:root[data-theme="dark"]{--bg:#121A10;--card:#1B2618;--ink:#EAF0E0;--mute:#A3B096;--line:#2E3D29;--acc:#8FC45A;--accink:#121A10;--amber:#EBB24B;--soft:#243020;--bad:#F0806C;--ok:#6FD27A}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 104px}
+a{color:var(--acc)}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+h1{font-size:28px;font-weight:800;margin:0;letter-spacing:-.02em;color:var(--acc)}
+h2{font-size:18px;margin:0 0 10px;font-weight:600}
+.badge{background:var(--soft);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;white-space:nowrap}
+.sub{color:var(--mute);margin:4px 0 12px;font-size:15px}
+.mute{color:var(--mute);font-size:14px}
+.back{margin:0 0 6px;font-size:14px}.back a{color:var(--mute)}
+.bar2{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.bar2 select{flex:1;min-width:130px}
+select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;font-size:16px}
+input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:1px}
+label{display:block;font-size:14px;color:var(--mute);margin:10px 0 4px}
+.chk{display:flex;align-items:center;gap:8px;color:var(--ink);margin-top:12px}.chk input{width:auto}
+.btn{width:100%;margin-top:14px;background:var(--acc);color:var(--accink);border:0;border-radius:14px;padding:13px;font:700 16px inherit;font-family:inherit;cursor:pointer}
+.btn.sec{background:var(--soft);color:var(--ink)}
+.btn.sm,.mini{width:auto;margin:0;padding:8px 14px;font-size:14px;border-radius:999px}
+.mini{background:var(--soft);color:var(--ink);border:0;font:700 14px inherit;font-family:inherit;cursor:pointer}
+.mini[disabled]{opacity:.5}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.hero{background:var(--acc);color:var(--accink);border-radius:22px;padding:20px}
+.hero small{opacity:.85;font-size:14px}
+.hero .big{font-size:42px;font-weight:800;letter-spacing:-.03em;margin:2px 0 12px}
+.row{display:flex;gap:10px}
+.row>div{flex:1;background:rgba(0,0,0,.14);border-radius:14px;padding:10px 12px}
+.row b{display:block;font-size:17px}
+.util{margin-top:12px;font-weight:700}
+.hnote{margin:8px 0 0;font-size:14px;opacity:.9}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.kv:last-of-type{border:0}.kv b{text-align:right}
+.in{color:var(--ok)}.out{color:var(--bad)}
+.hero .util.in,.hero .util.out{color:var(--accink)}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px}
+.seg button{flex:1;border:0;background:none;color:var(--mute);padding:9px;border-radius:10px;font:600 15px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink)}
+.lock{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--soft);border-radius:14px;padding:10px 12px;margin-top:14px;font-size:14px}
+.tx{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tx:last-child{border:0}.tx .a{font-weight:700}
+.x{background:none;border:0;color:var(--mute);font-size:18px;cursor:pointer;padding:6px}
+.cat{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin:10px 0;font-size:14px}
+.cat .meter{grid-column:1/-1;height:10px;background:var(--soft);border-radius:99px;overflow:hidden}
+.cat .meter i{display:block;height:100%;background:var(--acc);border-radius:99px}
+.stack{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--soft);margin:8px 0}
+.stack i:first-child{background:var(--amber)}.stack i:last-child{background:var(--acc)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+.leg span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:var(--amber)}.leg span+span:before{background:var(--acc)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpis div{background:var(--soft);border-radius:14px;padding:10px 12px}.kpis small{color:var(--mute)}.kpis b{display:block;font-size:18px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:right;padding:8px 6px;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}
+.rpr{display:flex;align-items:center;gap:8px;margin-top:8px}.rpr span{flex:1}.rpr input{width:90px}
+.plan{position:relative}.plan.cur{border:2.5px solid var(--acc)}.plan h2{font-size:22px;margin:0}
+.price{font-size:30px;font-weight:800;color:var(--acc)}
+.plan ul{padding-left:20px;margin:10px 0}
+.pop{position:absolute;top:-11px;right:16px;background:var(--amber);color:#1F2A1A;font-size:12px;font-weight:800;padding:3px 12px;border-radius:99px}
+#pay ol{padding-left:20px;margin:8px 0}#pay a{font-weight:700;overflow-wrap:anywhere}
+.crow{display:flex;gap:8px;margin-top:10px}.crow input{flex:1;min-width:0}.crow .btn{width:auto;margin:0;padding:0 20px}
+.view{display:none}.view.on{display:block}
+.empty{text-align:center;color:var(--mute);padding:16px 0}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;max-width:150px;border:0;background:none;color:var(--mute);font:600 14px inherit;font-family:inherit;padding:10px 4px;border-radius:12px;cursor:pointer}
+nav button.on{color:var(--accink);background:var(--acc)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:640px;border-radius:24px 24px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px));max-height:92vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:14px;display:none;z-index:30;max-width:90%;text-align:center}
+.err{color:var(--bad);font-size:14px;margin:8px 0 0}
+.prhead{display:none}
+@media print{
+ body{background:#fff;color:#000}nav,.back,.bar2,.noprint,header .badge,.toast,.modal,.lock{display:none!important}
+ .view{display:none!important}#v-inf{display:block!important}
+ .prhead{display:block;margin:0 0 10px}.card{border:1px solid #bbb;break-inside:avoid}
+ .stack i:first-child{background:#999}.stack i:last-child{background:#333}.stack{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .cat .meter i{background:#333;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="back"><a href="index.html#apps">← Volver a Profesor</a></p>
+  <header><h1>AgroCosto</h1><span class="badge" id="badge">Plan Gratis</span></header>
+  <p class="sub">Los costos de tu finca, claros: cuánto te cuesta producir cada litro, animal o hectárea.</p>
+
+  <div class="bar2" id="bar2">
+    <select id="proj" aria-label="Proyecto"></select>
+    <button class="mini" id="pNew" type="button">+ Nuevo</button>
+    <button class="mini" id="pEdit" type="button">Editar</button>
+    <select id="per" aria-label="Periodo"></select>
+  </div>
+
+  <section class="view on" id="v-home"><div id="home"></div></section>
+
+  <section class="view" id="v-add">
+    <div class="card" style="margin-top:0">
+      <h2>Nuevo registro</h2>
+      <div class="seg" id="tseg"><button class="on" data-t="g">Gasto</button><button data-t="i">Ingreso</button><button data-t="p">Producción</button></div>
+      <div id="form"></div>
+    </div>
+    <div class="card"><h2>Últimos registros</h2><div id="list"></div></div>
+  </section>
+
+  <section class="view" id="v-inf"><div id="inf"></div></section>
+
+  <section class="view" id="v-plans">
+    <h2 style="margin:0 0 4px;font-size:22px">Elige tu plan</h2>
+    <p class="sub" style="margin-top:0">Pagas por transferencia y activas tu plan con un código.</p>
+    <div id="plans"></div>
+    <div id="pay"></div>
+  </section>
+</div>
+
+<nav>
+  <button class="on" data-v="home">Resumen</button><button data-v="add">Registrar</button><button data-v="inf">Informes</button><button data-v="plans">Planes</button>
+</nav>
+
+<div class="modal" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmt">
+  <div class="sheet">
+    <h2 id="pmt" style="font-size:22px">Nuevo proyecto</h2>
+    <label for="pn">Nombre</label><input id="pn" maxlength="40" placeholder="Ej: Lechería, Lote de café, Cerdos de engorde" autocomplete="off">
+    <label for="pt">Tipo de proyecto</label><select id="pt"></select>
+    <label for="pu">¿En qué mides lo que produces?</label><select id="pu"></select>
+    <label for="pa">Número de animales (opcional)</label><input id="pa" type="number" inputmode="decimal" min="0" placeholder="Ej: 20">
+    <label for="ph">Hectáreas (opcional)</label><input id="ph" type="number" inputmode="decimal" min="0" placeholder="Ej: 15">
+    <button class="btn" id="pSave" type="button">Guardar</button>
+    <button class="btn sec" id="pDel" type="button" hidden>Eliminar este proyecto</button>
+    <button class="btn sec" id="pClose" type="button">Cancelar</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="pagos.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0}).format(n||0);
+const nf=(n,d)=>new Intl.NumberFormat("es-CO",{maximumFractionDigits:d==null?1:d}).format(n||0);
+const P=window.PAGOS||{llave:"@PLATA3232015094",nequi:"",correo:"profesor.contable.ia@gmail.com"};
+const donde=()=>"por Bre-B a la llave <b>"+esc(P.llave)+"</b>"+(P.nequi?" o por Nequi al <b>"+esc(P.nequi)+"</b>":"");
+const validar=(app,codigo)=>fetch("/api/app",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({app:app,codigo:codigo})}).then(r=>r.json());
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>ymd(new Date());
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+const CATS=[["Alimento y concentrado","var"],["Sanidad y medicinas","var"],["Mano de obra","fijo"],["Insumos agrícolas (semillas, abonos)","var"],["Arriendo","fijo"],["Servicios públicos","fijo"],["Transporte y fletes","var"],["Mantenimiento y reparaciones","fijo"],["Depreciación de maquinaria y equipos","fijo"],["Intereses y gastos financieros","fijo"],["Otros","var"]];
+const TIPOS={"Lechería":"litros","Porcicultura":"kilos","Ganadería de carne":"kilos","Avicultura":"unidades","Cultivo":"kilos","Piscicultura":"kilos","Otro":"unidades"};
+const US={litros:"litro",kilos:"kilo",animales:"animal",bultos:"bulto",cajas:"caja",unidades:"unidad"};
+const PERS=[["mes","Este mes"],["ant","Mes anterior"],["3m","Últimos 3 meses"],["anio","Este año"],["todo","Todo el tiempo"]];
+const RANK={free:0,productor:1,finca:2};
+const LIM={free:{proy:1,reg:40},productor:{proy:3,reg:1e9},finca:{proy:1e9,reg:1e9}};
+const PLANS=[
+ {id:"free",name:"Gratis",price:"$0",per:"para siempre",f:["1 proyecto","Hasta 40 registros","Costo por litro, kilo, animal y hectárea","Resumen del periodo"]},
+ {id:"productor",name:"Productor",price:"$14.900",per:"al mes",pop:true,f:["Hasta 3 proyectos","Registros ilimitados","Informes: costos fijos y variables, costos por categoría y punto de equilibrio","Exportar a Excel (CSV)"]},
+ {id:"finca",name:"Finca Pro",price:"$29.900",per:"al mes",f:["Todo lo de Productor","Proyectos ilimitados","Repartir gastos compartidos entre proyectos","Comparar proyectos entre sí","Informe para imprimir o guardar en PDF","Copia de seguridad y restauración"]},
+ {id:"coop",name:"Cooperativas y asociaciones",price:"Cotiza",per:"licencia por grupo",f:["Cuentas para varios productores","Acompañamiento para empezar","Reportes adaptados a tu organización"]}
+];
+
+let S={proy:[],mov:[],pro:[],sel:"",per:"mes",plan:"free",code:""};
+let tipo="g",view="home",editing=false;
+try{const r=localStorage.getItem("agrocosto");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+["proy","mov","pro"].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+if(!(S.plan in RANK))S.plan="free";
+if(!S.code)S.plan="free"; // un plan pago solo vale con un código verificado
+if(!S.proy.some(p=>p.id===S.sel))S.sel=S.proy[0]?S.proy[0].id:"";
+const save=()=>{try{localStorage.setItem("agrocosto",JSON.stringify(S))}catch(e){}};
+const has=p=>RANK[S.plan]>=RANK[p];
+const cur=()=>S.proy.find(p=>p.id===S.sel)||null;
+const nm=x=>(PLANS.find(p=>p.id===x)||{name:x}).name;
+function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.k);toast.k=setTimeout(()=>e.style.display="none",3200)}
+const lock=t=>`<div class="lock"><span>🔒 ${t}</span><button class="btn sm" data-go="plans" type="button">Ver planes</button></div>`;
+
+function inPeriod(d){d=String(d||"");const n=new Date(),y=n.getFullYear(),m=n.getMonth(),key=(yy,mm)=>yy+"-"+pad(mm+1),k=d.slice(0,7);
+  if(S.per==="todo")return true;
+  if(S.per==="anio")return d.slice(0,4)===String(y);
+  if(S.per==="mes")return k===key(y,m);
+  if(S.per==="ant"){const p=new Date(y,m-1,1);return k===key(p.getFullYear(),p.getMonth())}
+  if(S.per==="3m"){const p=new Date(y,m-2,1);return k>=key(p.getFullYear(),p.getMonth())&&k<=key(y,m)}
+  return true}
+function calc(pid){const r={cost:0,fijo:0,vari:0,ing:0,prod:0,cats:{}};
+  S.mov.forEach(m=>{if(!inPeriod(m.d))return;const pc=Number(m.rep&&m.rep[pid])||0;if(!pc)return;const v=(Number(m.a)||0)*pc/100;
+    if(m.t==="g"){r.cost+=v;if(m.f==="fijo")r.fijo+=v;else r.vari+=v;r.cats[m.c]=(r.cats[m.c]||0)+v}else r.ing+=v});
+  S.pro.forEach(x=>{if(x.pid===pid&&inPeriod(x.d))r.prod+=Number(x.q)||0});
+  return r}
+const perName=()=>(PERS.find(x=>x[0]===S.per)||[0,""])[1];
+
+/* ---------- barra de proyecto y periodo ---------- */
+function bar(){$("proj").innerHTML=S.proy.length?S.proy.map(p=>`<option value="${esc(p.id)}" ${p.id===S.sel?"selected":""}>${esc(p.n)}</option>`).join(""):`<option value="">Sin proyectos</option>`;
+  $("per").innerHTML=PERS.map(x=>`<option value="${x[0]}" ${x[0]===S.per?"selected":""}>${x[1]}</option>`).join("");
+  $("pEdit").disabled=!cur();$("badge").textContent="Plan "+nm(S.plan==="free"?"free":S.plan)}
+$("proj").onchange=e=>{S.sel=e.target.value;save();refresh();addForm()};
+$("per").onchange=e=>{S.per=e.target.value;save();refresh()};
+
+/* ---------- Resumen ---------- */
+function home(){const p=cur(),el=$("home");
+  if(!p){el.innerHTML=`<div class="card" style="margin-top:0"><h2>Empieza creando tu primer proyecto</h2><p class="mute">Un proyecto puede ser una finca, un lote, un hato o una línea de producción: leche, cerdos, café, plátano...</p><button class="btn" id="e1" type="button">Crear proyecto</button><button class="btn sec" id="e2" type="button">Cargar un ejemplo (lechería)</button></div>`+restCard();return}
+  const c=calc(p.id),u=US[p.u]||"unidad",cu=c.prod>0?c.cost/c.prod:0,ut=c.ing-c.cost;
+  el.innerHTML=`<div class="hero"><small>Producir cada ${esc(u)} te cuesta</small><div class="big">${c.prod>0?fmt(cu):"—"}</div>
+    <div class="row"><div><small>Costos</small><b>${fmt(c.cost)}</b></div><div><small>Ingresos</small><b>${fmt(c.ing)}</b></div></div>
+    <div class="util">Utilidad de ${esc(perName().toLowerCase())}: ${fmt(ut)}</div>${c.prod>0?"":`<p class="hnote">Registra tu producción para calcular el costo por ${esc(u)}.</p>`}</div>
+  <div class="card"><h2>¿Cuánto cuesta producir?</h2>
+    <div class="kv"><span>Por ${esc(u)}</span><b>${c.prod>0?fmt(cu):"—"}</b></div>
+    <div class="kv"><span>Por animal</span><b>${p.an>0?fmt(c.cost/p.an):'<span class="mute">Agrega los animales en «Editar»</span>'}</b></div>
+    <div class="kv"><span>Por hectárea</span><b>${p.ha>0?fmt(c.cost/p.ha):'<span class="mute">Agrega las hectáreas en «Editar»</span>'}</b></div>
+    <p class="mute" style="margin:10px 0 0">Producción del periodo: ${nf(c.prod)} ${esc(p.u)}.</p></div>
+  ${has("productor")?"":lock("Costos fijos y variables, costos por categoría y punto de equilibrio están en el plan Productor.")}
+  <p class="mute">Tus datos se guardan solo en este navegador. Si borras los datos del navegador, se pierden.</p>`}
+$("home").onclick=e=>{const t=e.target;if(t.id==="e1")openProj(false);if(t.id==="e2")demo();if(t.id==="bRes")$("fRes").click();if(t.dataset.go)go(t.dataset.go)};
+$("home").onchange=e=>{if(e.target.id==="fRes")restaurar(e.target)};
+
+/* ---------- Registrar ---------- */
+function repHTML(){if(S.proy.length<2)return"";
+  if(!has("finca"))return lock("Repartir un gasto entre varios proyectos está en Finca Pro.");
+  return `<label class="chk"><input type="checkbox" id="rp"> Repartir este gasto entre proyectos</label><div id="rpbox" hidden>${S.proy.map(p=>`<div class="rpr"><span>${esc(p.n)}</span><input type="number" inputmode="decimal" min="0" max="100" step="0.01" data-rp="${esc(p.id)}" value="${(100/S.proy.length).toFixed(2)}" aria-label="Porcentaje para ${esc(p.n)}"> %</div>`).join("")}<p class="mute">Los porcentajes deben sumar 100.</p></div>`}
+function addForm(){const p=cur();if(!p){$("form").innerHTML=`<p class="empty">Primero crea un proyecto en «Resumen».</p>`;return}
+  document.querySelectorAll("#tseg button").forEach(b=>b.classList.toggle("on",b.dataset.t===tipo));
+  const f=`<label for="fd">Fecha</label><input id="fd" type="date" value="${today()}">`;
+  if(tipo==="g")$("form").innerHTML=f+`<label for="fc">Categoría</label><select id="fc">${CATS.map(c=>`<option>${esc(c[0])}</option>`).join("")}</select>
+    <label for="fn">Descripción (opcional)</label><input id="fn" maxlength="60" placeholder="Ej: 10 bultos de concentrado" autocomplete="off">
+    <label for="fa">Valor ($)</label><input id="fa" type="number" inputmode="numeric" min="0" placeholder="0">
+    <label for="ff">Tipo de costo</label><select id="ff"><option value="var">Variable (cambia con lo que produces)</option><option value="fijo">Fijo (lo pagas igual si produces poco o mucho)</option></select>`+repHTML()+`<p class="err" id="ferr" aria-live="polite"></p><button class="btn" id="save" type="button">Guardar gasto</button>`;
+  else if(tipo==="i")$("form").innerHTML=f+`<label for="fn">Concepto</label><input id="fn" maxlength="60" placeholder="Ej: Venta de leche, venta de cerdos" autocomplete="off">
+    <label for="fa">Valor ($)</label><input id="fa" type="number" inputmode="numeric" min="0" placeholder="0"><p class="err" id="ferr" aria-live="polite"></p><button class="btn" id="save" type="button">Guardar ingreso</button>`;
+  else $("form").innerHTML=f+`<label for="fq">Cantidad producida (${esc(p.u)})</label><input id="fq" type="number" inputmode="decimal" min="0" placeholder="0">
+    <label for="fn">Nota (opcional)</label><input id="fn" maxlength="60" placeholder="Ej: ordeño de la semana" autocomplete="off"><p class="err" id="ferr" aria-live="polite"></p><button class="btn" id="save" type="button">Guardar producción</button>`;
+  const sel=$("fc");if(sel)sel.onchange=()=>{$("ff").value=(CATS.find(c=>c[0]===sel.value)||[0,"var"])[1]};
+  if(sel)$("ff").value=CATS[0][1];
+  const rp=$("rp");if(rp)rp.onchange=()=>{$("rpbox").hidden=!rp.checked}}
+$("tseg").onclick=e=>{if(e.target.dataset.t){tipo=e.target.dataset.t;addForm()}};
+$("form").onclick=e=>{const t=e.target;if(t.dataset.go)go(t.dataset.go);if(t.id==="save")guardarReg()};
+function guardarReg(){const p=cur();if(!p)return;const err=m=>{$("ferr").textContent=m};err("");
+  const d=$("fd").value;if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){err("Escribe una fecha válida.");return}
+  if(S.plan==="free"&&S.mov.length+S.pro.length>=LIM.free.reg){toast("El plan Gratis permite hasta "+LIM.free.reg+" registros. Mejora tu plan para seguir.");go("plans");return}
+  const n=($("fn").value||"").trim().slice(0,60);
+  if(tipo==="p"){const q=parseFloat($("fq").value);if(!(q>0)){err("Escribe la cantidad producida.");return}S.pro.push({id:uid(),pid:p.id,d:d,q:q,n:n});$("fq").value=""}
+  else{const a=parseFloat($("fa").value);if(!(a>0)){err("Escribe un valor mayor que cero.");return}
+    let rep={};rep[p.id]=100;
+    if(tipo==="g"&&$("rp")&&$("rp").checked){rep={};let s=0;document.querySelectorAll("[data-rp]").forEach(i=>{const v=Math.max(0,parseFloat(i.value)||0);if(v>0){rep[i.dataset.rp]=v;s+=v}});if(Math.abs(s-100)>0.5){err("Los porcentajes suman "+nf(s,2)+". Deben sumar 100.");return}}
+    const m={id:uid(),t:tipo,d:d,n:n,a:a,rep:rep};if(tipo==="g"){m.c=$("fc").value;m.f=$("ff").value}else m.c="Ingreso";
+    S.mov.push(m);$("fa").value=""}
+  $("fn").value="";save();refresh();toast("Guardado.")}
+function lista(){const p=cur(),el=$("list");if(!p){el.innerHTML=`<div class="empty">Aún no hay proyectos.</div>`;return}
+  const rows=[];S.mov.forEach(m=>{const pc=Number(m.rep&&m.rep[p.id])||0;if(pc)rows.push({id:m.id,k:"m",d:m.d,t:m.t,txt:(m.t==="g"?m.c:"Ingreso")+(m.n?" · "+m.n:""),v:(Number(m.a)||0)*pc/100,pc:pc})});
+  S.pro.forEach(x=>{if(x.pid===p.id)rows.push({id:x.id,k:"p",d:x.d,t:"p",txt:"Producción"+(x.n?" · "+x.n:""),q:x.q})});
+  rows.sort((a,b)=>String(b.d).localeCompare(String(a.d))||b.id.localeCompare(a.id));
+  el.innerHTML=rows.length?rows.slice(0,12).map(r=>`<div class="tx"><div><div class="a ${r.t==="i"?"in":r.t==="g"?"out":""}">${r.t==="p"?nf(r.q)+" "+esc(p.u):(r.t==="i"?"+":"−")+fmt(r.v)}${r.pc&&r.pc<100?` <span class="mute">(${nf(r.pc,2)} %)</span>`:""}</div><div class="mute">${esc(r.d)} · ${esc(r.txt)}</div></div><button class="x" aria-label="Borrar registro" data-del="${esc(r.id)}" data-k="${r.k}" type="button">✕</button></div>`).join(""):`<div class="empty">Todavía no hay registros en este proyecto.</div>`}
+$("list").onclick=e=>{const id=e.target.dataset.del;if(!id)return;if(e.target.dataset.k==="p")S.pro=S.pro.filter(x=>x.id!==id);
+  else{const p=cur();const m=S.mov.find(x=>x.id===id);if(m){delete m.rep[p.id];if(!Object.keys(m.rep).length)S.mov=S.mov.filter(x=>x.id!==id)}}
+  save();refresh()};
+
+/* ---------- Informes ---------- */
+function meter(label,v,total){const pc=total>0?v/total*100:0;return `<div class="cat"><span>${esc(label)}</span><b>${fmt(v)} · ${nf(pc,0)} %</b><div class="meter"><i style="width:${pc}%"></i></div></div>`}
+const restCard=()=>has("finca")?`<div class="card noprint"><h2>Restaurar copia de seguridad</h2><p class="mute" style="margin-top:0">Si cambiaste de equipo o borraste los datos, carga aquí tu copia.</p><button class="btn sec" id="bRes" type="button">Restaurar copia de seguridad</button><input id="fRes" type="file" accept=".json,application/json" hidden></div>`:"";
+function inf(){const p=cur(),el=$("inf");
+  if(!p){el.innerHTML=`<div class="card" style="margin-top:0"><p class="empty">Primero crea un proyecto en «Resumen».</p></div>`+restCard();return}
+  if(!has("productor")){el.innerHTML=`<div class="card" style="margin-top:0"><h2>Informes del plan Productor</h2><p class="mute">Con los informes ves en qué se va la plata de tu finca y cuánto necesitas producir para no perder:</p><ul class="mute" style="padding-left:20px"><li>Costos fijos y variables</li><li>Costos por categoría (alimento, mano de obra, sanidad...)</li><li>Punto de equilibrio en ${esc(p.u)}</li><li>Exportar a Excel</li></ul>${lock("Disponible desde $14.900 al mes.")}</div>`;return}
+  const c=calc(p.id),u=US[p.u]||"unidad",ut=c.ing-c.cost,mg=c.ing>0?ut/c.ing*100:0;
+  const cats=Object.entries(c.cats).sort((a,b)=>b[1]-a[1]);
+  let pe;const precio=c.prod>0?c.ing/c.prod:0,cvu=c.prod>0?c.vari/c.prod:0,mc=precio-cvu;
+  if(c.prod<=0||c.ing<=0)pe=`<p class="mute">Para calcularlo registra producción e ingresos en este periodo.</p>`;
+  else if(mc<=0)pe=`<p class="out"><b>Ojo:</b> con tu precio promedio de venta (${fmt(precio)} por ${esc(u)}), cada ${esc(u)} no alcanza a cubrir su costo variable (${fmt(cvu)}). Revisa precios o costos de alimento e insumos.</p>`;
+  else{const q=c.fijo/mc;pe=`<div class="kv"><span>Precio promedio de venta</span><b>${fmt(precio)} / ${esc(u)}</b></div><div class="kv"><span>Costo variable por ${esc(u)}</span><b>${fmt(cvu)}</b></div><div class="kv"><span>Margen por ${esc(u)}</span><b>${fmt(mc)}</b></div><div class="kv"><span>Punto de equilibrio</span><b>${nf(q)} ${esc(p.u)}</b></div><p class="mute" style="margin:8px 0 0">Necesitas producir y vender ${nf(q)} ${esc(p.u)} en este periodo para cubrir tus costos. Llevas ${nf(c.prod)} (${nf(c.prod/q*100,0)} %). El precio se calcula con tus ingresos totales ÷ lo producido.</p>`}
+  let extra="";
+  if(has("finca")){
+    const rows=S.proy.map(x=>{const k=calc(x.id);return `<tr><td>${esc(x.n)}</td><td>${fmt(k.cost)}</td><td>${fmt(k.ing)}</td><td>${fmt(k.ing-k.cost)}</td><td>${k.prod>0?fmt(k.cost/k.prod):"—"}</td></tr>`}).join("");
+    extra=`<div class="card"><h2>Comparar proyectos</h2><div style="overflow-x:auto"><table><tr><th>Proyecto</th><th>Costos</th><th>Ingresos</th><th>Utilidad</th><th>Costo/unidad</th></tr>${rows}</table></div></div>
+    <div class="card noprint"><h2>Informe y copia de seguridad</h2><button class="btn" id="bPrint" type="button">Imprimir o guardar en PDF</button><button class="btn sec" id="bBak" type="button">Descargar copia de seguridad</button><button class="btn sec" id="bRes" type="button">Restaurar copia de seguridad</button><input id="fRes" type="file" accept=".json,application/json" hidden></div>`}
+  else extra=`<div class="noprint">`+lock("Comparar proyectos, repartir gastos compartidos, imprimir el informe y la copia de seguridad están en Finca Pro.")+`</div>`;
+  el.innerHTML=`<div class="prhead"><h2>Informe de costos · ${esc(p.n)}</h2><p>${esc(perName())} · generado el ${esc(today())}</p></div>
+  <div class="card" style="margin-top:0"><div class="kpis"><div><small>Costos</small><b>${fmt(c.cost)}</b></div><div><small>Ingresos</small><b>${fmt(c.ing)}</b></div><div><small>Utilidad</small><b class="${ut>=0?"in":"out"}">${fmt(ut)}</b></div><div><small>Margen</small><b>${c.ing>0?nf(mg)+" %":"—"}</b></div></div></div>
+  <div class="card"><h2>Costos fijos y variables</h2><div class="stack"><i style="width:${c.cost>0?c.fijo/c.cost*100:0}%"></i><i style="width:${c.cost>0?c.vari/c.cost*100:0}%"></i></div><div class="leg"><span>Fijos ${fmt(c.fijo)}</span><span>Variables ${fmt(c.vari)}</span></div></div>
+  <div class="card"><h2>Costos por categoría</h2>${cats.length?cats.map(x=>meter(x[0],x[1],c.cost)).join(""):`<p class="empty">No hay gastos en este periodo.</p>`}</div>
+  <div class="card"><h2>Punto de equilibrio</h2>${pe}</div>${extra}
+  <div class="card noprint"><h2>Exportar</h2><button class="btn sec" id="bCsv" type="button">Descargar para Excel (CSV)</button><p class="mute" style="margin:10px 0 0">Para repartir costos indirectos con más detalle usa la calculadora de <a href="costeo-abc.html" target="_blank" rel="noopener">Costeo ABC</a>.</p></div>`}
+function descargar(nombre,texto,tipoMime){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([texto],{type:tipoMime}));a.download=nombre;document.body.appendChild(a);a.click();a.remove()}
+const csvc=t=>{t=String(t==null?"":t);return '"'+(/^[=+\-@\t\r]/.test(t)?"'"+t:t).replace(/"/g,'""')+'"'};
+function csv(){const p=cur();if(!p)return;const L=["Fecha;Tipo;Categoria;Descripcion;Clasificacion;Valor del proyecto;Cantidad"];
+  S.mov.forEach(m=>{const pc=Number(m.rep&&m.rep[p.id])||0;if(!pc||!inPeriod(m.d))return;L.push([m.d,m.t==="g"?"Gasto":"Ingreso",csvc(m.c),csvc(m.n),m.t==="g"?(m.f==="fijo"?"Fijo":"Variable"):"",Math.round((Number(m.a)||0)*pc)/100,""].join(";"))});
+  S.pro.forEach(x=>{if(x.pid===p.id&&inPeriod(x.d))L.push([x.d,"Producción","",csvc(x.n),"","",x.q].join(";"))});
+  descargar("agrocosto-"+p.n.replace(/[^\w\-]+/g,"_")+".csv","﻿"+L.join("\n"),"text/csv;charset=utf-8")}
+function limpiar(o){const s=x=>String(x==null?"":x).slice(0,60),n=x=>Number(x)||0;
+  const proy=(o.proy||[]).filter(p=>p&&p.id&&p.n).map(p=>({id:s(p.id),n:s(p.n),tipo:s(p.tipo),u:US[p.u]?p.u:"unidades",an:n(p.an),ha:n(p.ha)}));
+  const mov=(o.mov||[]).filter(m=>m&&m.id&&m.rep&&typeof m.rep==="object").map(m=>{const rep={};Object.keys(m.rep).forEach(k=>{if(n(m.rep[k])>0)rep[s(k)]=n(m.rep[k])});return{id:s(m.id),t:m.t==="i"?"i":"g",d:s(m.d).slice(0,10),n:s(m.n),a:n(m.a),c:s(m.c),f:m.f==="fijo"?"fijo":"var",rep:rep}});
+  const pro=(o.pro||[]).filter(x=>x&&x.id&&x.pid).map(x=>({id:s(x.id),pid:s(x.pid),d:s(x.d).slice(0,10),q:n(x.q),n:s(x.n)}));
+  return{proy:proy,mov:mov,pro:pro}}
+$("inf").onclick=e=>{const t=e.target;if(t.dataset.go)go(t.dataset.go);
+  if(t.id==="bCsv")csv();
+  if(t.id==="bPrint")window.print();
+  if(t.id==="bBak")descargar("agrocosto-copia-"+today()+".json",JSON.stringify({v:1,proy:S.proy,mov:S.mov,pro:S.pro}),"application/json");
+  if(t.id==="bRes")$("fRes").click()};
+function restaurar(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const o=limpiar(JSON.parse(r.result));if(!o.proy.length)throw 0;if(S.proy.length&&!confirm("Esto reemplazará los datos actuales de AgroCosto por los de la copia. ¿Continuar?"))return;S.proy=o.proy;S.mov=o.mov;S.pro=o.pro;S.sel=o.proy[0].id;save();refresh();addForm();toast("Copia restaurada.")}catch(x){toast("No pude leer esa copia de seguridad.")}};r.readAsText(f);inp.value=""}
+$("inf").onchange=e=>{if(e.target.id==="fRes")restaurar(e.target)};
+
+/* ---------- Proyectos ---------- */
+function fillSel(){$("pt").innerHTML=Object.keys(TIPOS).map(t=>`<option>${esc(t)}</option>`).join("");$("pu").innerHTML=Object.keys(US).map(u=>`<option>${esc(u)}</option>`).join("")}
+$("pt").onchange=()=>{$("pu").value=TIPOS[$("pt").value]||"unidades"};
+function openProj(edit){const p=edit?cur():null;if(edit&&!p)return;
+  if(!edit&&S.proy.length>=LIM[S.plan].proy){toast("Tu plan permite "+LIM[S.plan].proy+" proyecto"+(LIM[S.plan].proy>1?"s":"")+". Mejora tu plan para agregar más.");go("plans");return}
+  editing=edit;$("pmt").textContent=edit?"Editar proyecto":"Nuevo proyecto";$("pn").value=p?p.n:"";$("pt").value=p&&TIPOS[p.tipo]?p.tipo:"Lechería";$("pu").value=p?p.u:TIPOS["Lechería"];$("pa").value=p&&p.an?p.an:"";$("ph").value=p&&p.ha?p.ha:"";$("pDel").hidden=!edit;
+  $("pm").classList.add("on");setTimeout(()=>$("pn").focus(),50)}
+const shut=()=>$("pm").classList.remove("on");
+$("pNew").onclick=()=>openProj(false);$("pEdit").onclick=()=>openProj(true);$("pClose").onclick=shut;
+$("pm").onclick=e=>{if(e.target.id==="pm")shut()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")shut()});
+$("pSave").onclick=()=>{const n=$("pn").value.trim();if(!n){$("pn").focus();return}
+  const o={n:n.slice(0,40),tipo:$("pt").value,u:$("pu").value,an:Math.max(0,parseFloat($("pa").value)||0),ha:Math.max(0,parseFloat($("ph").value)||0)};
+  if(editing)Object.assign(cur(),o);else{if(S.proy.length>=LIM[S.plan].proy){shut();go("plans");return}const p=Object.assign({id:uid()},o);S.proy.push(p);S.sel=p.id}
+  save();shut();refresh();addForm()};
+$("pDel").onclick=()=>{const p=cur();if(!p||!confirm("¿Eliminar «"+p.n+"» y sus registros? Esto no se puede deshacer."))return;
+  S.mov.forEach(m=>{if(m.rep)delete m.rep[p.id]});S.mov=S.mov.filter(m=>m.rep&&Object.keys(m.rep).length);S.pro=S.pro.filter(x=>x.pid!==p.id);S.proy=S.proy.filter(x=>x.id!==p.id);S.sel=S.proy[0]?S.proy[0].id:"";
+  save();shut();refresh();addForm()};
+function demo(){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),D=k=>ymd(new Date(y,m,k)),id=uid();
+  S.proy.push({id:id,n:"Lechería (ejemplo)",tipo:"Lechería",u:"litros",an:20,ha:15});S.sel=id;
+  const g=(d,c,t,a,f)=>S.mov.push({id:uid(),t:"g",d:D(d),n:t,a:a,c:c,f:f,rep:{[id]:100}}),i=(d,t,a)=>S.mov.push({id:uid(),t:"i",d:D(d),n:t,a:a,c:"Ingreso",rep:{[id]:100}});
+  g(2,"Alimento y concentrado","Concentrado y sal mineralizada",6200000,"var");g(3,"Sanidad y medicinas","Vacunas y vitaminas",900000,"var");g(5,"Mano de obra","Jornales",3000000,"fijo");
+  g(8,"Servicios públicos","Energía y agua",600000,"fijo");g(12,"Mantenimiento y reparaciones","Reparación del equipo de ordeño",450000,"fijo");g(15,"Depreciación de maquinaria y equipos","Equipo de ordeño",500000,"fijo");
+  [8,15,22,28].forEach(d=>i(d,"Venta de leche",5100000));[7,14,21,28].forEach(d=>S.pro.push({id:uid(),pid:id,d:D(d),q:3000,n:"Producción de la semana"}));
+  S.per="mes";save();refresh();addForm();toast("Cargué un ejemplo de lechería. Puedes borrarlo en «Editar».")}
+
+/* ---------- Planes ---------- */
+function plans(){$("plans").innerHTML=PLANS.map(p=>{const cu=S.plan===p.id;
+  return `<article class="card plan ${cu?"cur":""}">${p.pop?'<span class="pop">Más popular</span>':""}<h2>${esc(p.name)}</h2><div class="price">${esc(p.price)}</div><div class="mute">${esc(p.per)}</div><ul>${p.f.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+  <button class="btn ${cu||p.id==="free"?"sec":""}" data-plan="${p.id}" type="button" ${p.id==="free"?"disabled":""}>${cu?"Plan actual":p.id==="coop"?"Hablar con nosotros":p.id==="free"?"Incluido siempre":"Pagar y activar"}</button></article>`}).join("")}
+$("plans").onclick=e=>{const id=e.target.dataset.plan;if(!id||id==="free")return;
+  if(id==="coop"){location.href="mailto:"+P.correo+"?subject="+encodeURIComponent("AgroCosto para cooperativas y asociaciones");return}
+  if(S.plan===id)return;const pl=PLANS.find(x=>x.id===id);
+  $("pay").innerHTML=`<article class="card" id="pay-card"><h2>Activar el plan ${esc(pl.name)}</h2><b>${esc(pl.price)} al mes</b>
+  <ol><li>Transfiere el valor ${donde()}.</li><li>Envía el comprobante con tu nombre y el plan (${esc(pl.name)}) a <a href="mailto:${esc(P.correo)}?subject=${encodeURIComponent("Pago AgroCosto "+pl.name)}">${esc(P.correo)}</a>.</li><li>Cuando verifiquemos el pago te enviamos un código. Escríbelo aquí.</li></ol>
+  <div class="crow"><input id="code" placeholder="Código de activación" aria-label="Código de activación" autocomplete="off"><button class="btn" id="act" type="button">Activar</button></div>
+  <p class="mute" id="cmsg" aria-live="polite" style="margin:8px 0 0"></p><p class="mute" style="margin:4px 0 0">Si tienes el plan Master de Profesor, usa el mismo código.</p></article>`;
+  $("pay-card").scrollIntoView({behavior:"smooth",block:"center"})};
+$("pay").onclick=e=>{if(e.target.id!=="act")return;const c=$("code").value.trim();if(!c)return;$("cmsg").textContent="Verificando...";
+  validar("agro",c).then(d=>{if(d.ok){S.plan=d.nivel;S.code=c;save();$("pay").innerHTML="";refresh();addForm();toast("Plan "+nm(d.nivel)+" activado. ¡Gracias!")}
+    else $("cmsg").textContent="Código no válido o vencido. Revisa que esté bien escrito."}).catch(()=>{$("cmsg").textContent="No pude conectarme. Intenta de nuevo."})};
+$("pay").onkeydown=e=>{if(e.key==="Enter"&&e.target.id==="code")$("act").click()};
+
+/* ---------- Navegación ---------- */
+function go(v){view=v;["home","add","inf","plans"].forEach(x=>$("v-"+x).classList.toggle("on",x===v));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  $("bar2").hidden=(v==="plans");if(v==="add")addForm();scrollTo(0,0)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+function refresh(){bar();home();lista();inf();plans()}
+fillSel();refresh();addForm();
+if(S.code){validar("agro",S.code).then(d=>{const n=d.ok?d.nivel:"free";if(!d.ok)S.code="";if(S.plan!==n){S.plan=n;save();refresh();addForm()}}).catch(()=>{})} // si el código ya no es válido, vuelve a gratis
+</script>
+</body>
+</html>
