@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Palabra Contable – inglés para contadores</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF3F0;--card:#FFFFFF;--ink:#4A1F33;--mute:#8A5A6B;--line:#F6D3D6;--acc:#E0457B;--accink:#fff;--peach:#FFB08F;--soft:#FFE4E4;--coral:#FF7B6B;--ok:#2E9A6B;--bad:#D93B4F;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#25101B;--card:#341A28;--ink:#FFE9EE;--mute:#D9A3B5;--line:#4F2A3D;--acc:#FF7AA5;--accink:#25101B;--peach:#FFB08F;--soft:#43223A;--coral:#FF907F;--ok:#5BD6A0;--bad:#FF8C9A}}
+:root[data-theme="dark"]{--bg:#25101B;--card:#341A28;--ink:#FFE9EE;--mute:#D9A3B5;--line:#4F2A3D;--acc:#FF7AA5;--accink:#25101B;--peach:#FFB08F;--soft:#43223A;--coral:#FF907F;--ok:#5BD6A0;--bad:#FF8C9A}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Quicksand,"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:500;line-height:1.5}
+.wrap{max-width:680px;margin:0 auto;padding:18px 16px 104px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+h1{font-size:28px;margin:0;font-weight:700;letter-spacing:-.02em;color:var(--acc)}
+.streak{background:var(--soft);border-radius:99px;padding:6px 12px;font-size:14px;font-weight:700;white-space:nowrap}
+.sub{color:var(--mute);margin:4px 0 14px;font-size:15px}
+.search{position:relative}
+.search input{padding:16px 16px 16px 20px;border:2px solid var(--peach);border-radius:99px;font-size:17px;background:var(--card)}
+input,select{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;font-size:16px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+.chip{flex:none;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:99px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.chip.on{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:16px;margin-top:12px}
+.card.day{background:var(--soft);border-color:var(--peach)}
+.t{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.en{font-size:20px;font-weight:700;color:var(--acc)}
+.es{font-size:15px;color:var(--mute)}
+.tag{display:inline-block;background:var(--soft);padding:2px 10px;border-radius:99px;font-size:12px;font-weight:700;color:var(--mute);margin-top:6px}
+.ex{margin:10px 0 0;padding-left:12px;border-left:4px solid var(--peach);font-size:15px}
+.ex small{display:block;color:var(--mute);font-size:14px}
+.ib{background:var(--soft);border:0;border-radius:50%;width:38px;height:38px;font-size:17px;cursor:pointer;flex:none}
+.ib.on{background:var(--acc)}
+.lock{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--soft);border-radius:14px;padding:10px 12px;margin-top:10px;font-size:14px}
+.btn{width:100%;margin-top:14px;background:var(--acc);color:var(--accink);border:0;border-radius:99px;padding:14px;font:700 16px inherit;font-family:inherit;cursor:pointer}
+.btn.sec{background:var(--soft);color:var(--ink)}.btn.sm{width:auto;margin:0;padding:8px 16px;font-size:14px}
+.btn.coral{background:var(--coral);color:#fff}
+.seg{display:flex;background:var(--soft);border-radius:99px;padding:4px;margin-top:4px}
+.seg button{flex:1;border:0;background:none;color:var(--mute);padding:10px;border-radius:99px;font:700 15px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--acc)}
+.flash{text-align:center;padding:30px 16px;min-height:200px;cursor:pointer}
+.flash .big{font-size:30px;font-weight:700;color:var(--acc);margin:6px 0}
+.opt{display:block;width:100%;text-align:left;margin-top:10px;background:var(--bg);color:var(--ink);border:2px solid var(--line);border-radius:16px;padding:13px;font:600 16px inherit;font-family:inherit;cursor:pointer}
+.opt.good{border-color:var(--ok);background:var(--soft)}.opt.bad{border-color:var(--bad)}
+.bar{height:10px;background:var(--soft);border-radius:99px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:99px}
+.mute{color:var(--mute);font-size:14px}
+.plan{position:relative}
+.plan.cur{border-color:var(--acc);border-width:2.5px}
+.plan h2{margin:0;font-size:22px}
+.price{font-size:30px;font-weight:700;color:var(--acc)}
+.plan ul{padding-left:20px;margin:10px 0}
+.pop{position:absolute;top:-11px;right:16px;background:var(--coral);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:99px}
+.view{display:none}.view.on{display:block}
+.empty{text-align:center;color:var(--mute);padding:22px 0}
+#pay ol{padding-left:20px;margin:8px 0}#pay a{color:var(--acc);font-weight:700;overflow-wrap:anywhere}.crow{display:flex;gap:8px;margin-top:10px}.crow input{flex:1;min-width:0}.crow .btn{width:auto;margin:0;padding:0 20px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1.5px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;max-width:170px;border:0;background:none;color:var(--mute);font:700 13px inherit;font-family:inherit;padding:10px 4px;border-radius:99px;cursor:pointer}
+nav button.on{color:var(--accink);background:var(--acc)}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:14px;display:none;z-index:9;max-width:90%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="mute" style="margin:0 0 8px"><a href="index.html#apps" style="color:var(--mute)">← Volver a Profesor</a></p>
+  <header><h1>Palabra Contable</h1><span class="streak" id="streak">Racha: 0 días</span></header>
+  <p class="sub">El inglés que necesita una contadora, con ejemplos reales, voz y práctica.</p>
+
+  <section class="view on" id="v-dict">
+    <div class="search"><input id="q" type="search" placeholder="Busca en español o inglés: depreciación, asset…" aria-label="Buscar término" autocomplete="off"></div>
+    <div class="chips" id="cats"></div>
+    <div id="day"></div>
+    <div id="res"></div>
+  </section>
+
+  <section class="view" id="v-prac">
+    <div class="seg" id="pseg"><button class="on" data-m="cards">Tarjetas</button><button data-m="quiz">Quiz</button></div>
+    <div id="pbody"></div>
+  </section>
+
+  <section class="view" id="v-phr">
+    <div class="seg" id="fseg"><button class="on" data-m="mail">Correos y reuniones</button><button data-m="int">Entrevista</button></div>
+    <div id="fbody"></div>
+  </section>
+
+  <section class="view" id="v-plans">
+    <h2 style="margin:0 0 4px;font-size:22px">Elige tu plan</h2>
+    <p class="sub" style="margin-top:0">Cambia o cancela cuando quieras. Pagas por transferencia y activas tu plan con un código.</p>
+    <div id="plans"></div>
+    <div id="pay"></div>
+  </section>
+</div>
+
+<nav>
+  <button class="on" data-v="dict">Diccionario</button><button data-v="prac">Practicar</button><button data-v="phr">Frases</button><button data-v="plans">Planes</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>ymd(new Date());
+const yday=()=>{const d=new Date();d.setDate(d.getDate()-1);return ymd(d)};
+
+/* [español, inglés, categoría, ejemplo en inglés, ejemplo en español] */
+const T=[
+["Activo","Asset","Balance","The company's main asset is its inventory.","El principal activo de la empresa es su inventario."],
+["Pasivo","Liability","Balance","Accounts payable are a current liability.","Las cuentas por pagar son un pasivo corriente."],
+["Patrimonio","Equity","Balance","Shareholders' equity increased by ten percent.","El patrimonio de los accionistas aumentó diez por ciento."],
+["Balance general","Balance sheet","Balance","The balance sheet shows assets, liabilities and equity.","El balance general muestra activos, pasivos y patrimonio."],
+["Estado de resultados","Income statement","Resultados","The income statement reports revenue and expenses.","El estado de resultados presenta ingresos y gastos."],
+["Ingresos","Revenue","Resultados","Revenue grew steadily during the year.","Los ingresos crecieron de forma constante durante el año."],
+["Gastos operativos","Operating expenses","Resultados","Operating expenses include rent and salaries.","Los gastos operativos incluyen arriendo y salarios."],
+["Utilidad neta","Net income","Resultados","Net income was higher than expected.","La utilidad neta fue mayor de lo esperado."],
+["Utilidad bruta","Gross profit","Resultados","Gross profit is revenue minus the cost of goods sold.","La utilidad bruta es el ingreso menos el costo de ventas."],
+["Costo de ventas","Cost of goods sold (COGS)","Resultados","COGS rose because of higher supplier prices.","El costo de ventas subió por los mayores precios de los proveedores."],
+["Estados financieros","Financial statements","Balance","We will deliver the financial statements next week.","Entregaremos los estados financieros la próxima semana."],
+["Flujo de efectivo","Cash flow","Balance","Positive cash flow keeps the business running.","Un flujo de efectivo positivo mantiene el negocio funcionando."],
+["Cuentas por cobrar","Accounts receivable","Balance","Accounts receivable increased in December.","Las cuentas por cobrar aumentaron en diciembre."],
+["Cuentas por pagar","Accounts payable","Balance","We pay accounts payable every thirty days.","Pagamos las cuentas por pagar cada treinta días."],
+["Inventarios","Inventory","Balance","We count the inventory at the end of each month.","Contamos el inventario al final de cada mes."],
+["Asiento contable","Journal entry","Registro","Please post this journal entry before the close.","Por favor registre este asiento contable antes del cierre."],
+["Débito","Debit","Registro","Debit the expense account and credit cash.","Debite la cuenta de gasto y acredite caja."],
+["Crédito","Credit","Registro","The credit side must equal the debit side.","El lado del crédito debe igualar al del débito."],
+["Libro diario","General journal","Registro","Every transaction starts in the general journal.","Toda transacción comienza en el libro diario."],
+["Libro mayor","General ledger","Registro","The general ledger summarizes all accounts.","El libro mayor resume todas las cuentas."],
+["Conciliación bancaria","Bank reconciliation","Control","The bank reconciliation shows two pending checks.","La conciliación bancaria muestra dos cheques pendientes."],
+["Cierre contable","Period-end close","Control","The period-end close takes three business days.","El cierre contable toma tres días hábiles."],
+["Auditoría","Audit","Control","The external audit starts in March.","La auditoría externa empieza en marzo."],
+["Revisor fiscal","Statutory auditor","Control","The statutory auditor signed the opinion.","El revisor fiscal firmó el dictamen."],
+["Contador público","Certified public accountant (CPA)","Control","She is a certified public accountant.","Ella es contadora pública."],
+["Depreciación","Depreciation","Registro","Depreciation spreads the cost of an asset over its useful life.","La depreciación distribuye el costo de un activo durante su vida útil."],
+["Amortización","Amortization","Registro","Amortization applies to intangible assets.","La amortización aplica a los activos intangibles."],
+["Deterioro","Impairment","Registro","We recorded an impairment loss on the equipment.","Registramos una pérdida por deterioro en el equipo."],
+["Causación","Accrual","Registro","We record the expense under the accrual basis.","Registramos el gasto con base en la causación."],
+["Provisión","Provision","Registro","The company created a provision for bad debts.","La empresa creó una provisión para deudas incobrables."],
+["Valor razonable","Fair value","Registro","Investments are measured at fair value.","Las inversiones se miden a valor razonable."],
+["Declaración de renta","Income tax return","Impuestos","The income tax return is due in August.","La declaración de renta vence en agosto."],
+["IVA","Value-added tax (VAT)","Impuestos","The price includes value-added tax.","El precio incluye el IVA."],
+["Retención en la fuente","Withholding tax","Impuestos","The employer deducts withholding tax from salaries.","El empleador descuenta la retención en la fuente de los salarios."],
+["Impuestos diferidos","Deferred taxes","Impuestos","Deferred taxes arise from temporary differences.","Los impuestos diferidos surgen de diferencias temporales."],
+["Nómina","Payroll","Impuestos","Payroll is processed on the last day of the month.","La nómina se procesa el último día del mes."],
+["Presupuesto","Budget","Análisis","We are under budget this quarter.","Estamos por debajo del presupuesto este trimestre."],
+["Capital de trabajo","Working capital","Análisis","Working capital measures short-term liquidity.","El capital de trabajo mide la liquidez a corto plazo."],
+["Razón corriente","Current ratio","Análisis","A current ratio above one is usually healthy.","Una razón corriente superior a uno suele ser saludable."],
+["Punto de equilibrio","Break-even point","Análisis","We reach the break-even point at 500 units.","Alcanzamos el punto de equilibrio con 500 unidades."],
+["Margen de contribución","Contribution margin","Análisis","The contribution margin is forty percent.","El margen de contribución es del cuarenta por ciento."],
+["Normas Internacionales de Información Financiera","International Financial Reporting Standards (IFRS)","Análisis","The group reports under IFRS.","El grupo reporta bajo las NIIF."]
+];
+const PH=[
+["I am writing to follow up on invoice number 1042.","Le escribo para dar seguimiento a la factura número 1042."],
+["Please find attached the financial statements for the period ended December 31.","Adjunto los estados financieros del período terminado el 31 de diciembre."],
+["Could you send us the supporting documents by Friday?","¿Podría enviarnos los documentos de soporte para el viernes?"],
+["We noticed a discrepancy in the bank reconciliation.","Notamos una discrepancia en la conciliación bancaria."],
+["The tax return must be filed before the deadline.","La declaración de impuestos debe presentarse antes del vencimiento."],
+["Our fee for this engagement is fixed and billed monthly.","Nuestros honorarios por este encargo son fijos y se facturan mensualmente."],
+["Let me walk you through the main variances in the budget.","Permítame explicarle las principales variaciones del presupuesto."],
+["I would like to schedule a meeting to review the audit findings.","Me gustaría programar una reunión para revisar los hallazgos de la auditoría."]
+];
+const IV=[
+["Tell me about yourself.","I am a public accountant with experience in bookkeeping and tax compliance. I enjoy turning numbers into clear information that helps people make decisions.","Cuéntame de ti. Resume tu perfil, tu experiencia y lo que te gusta de tu trabajo."],
+["Why did you choose accounting?","I like order and accuracy, and I like helping businesses understand their financial health.","¿Por qué elegiste la contabilidad? Habla de tu gusto por el orden y por ayudar a los negocios."],
+["How do you make sure your work is accurate?","I double-check my entries, reconcile accounts every month, and keep clear supporting documents for every transaction.","¿Cómo garantizas la exactitud? Menciona revisión, conciliaciones y soportes."],
+["Describe a time you found an error in a report.","I noticed that a payment was recorded twice. I told my supervisor, corrected the journal entry, and added a review step to avoid it in the future.","Describe un error que encontraste: qué viste, qué hiciste y qué mejoró después."],
+["How do you handle tight deadlines?","I plan backwards from the due date, prioritize the most critical tasks, and communicate early if I need more information.","¿Cómo manejas fechas límite? Planeación, prioridades y comunicación temprana."]
+];
+const CATS=["Todas","Balance","Resultados","Registro","Impuestos","Control","Análisis","Guardadas"];
+const FREE_N=20;
+const PLANS=[
+ {id:"free",name:"Gratis",price:"$0",per:"para siempre",f:["20 términos con ejemplos y voz","Tarjetas de estudio","1 quiz por día","2 frases profesionales de muestra"],cta:"Plan actual"},
+ {id:"plus",name:"Plus",m:"$12.900",a:"$99.000",price:"$12.900",per:"al mes · $99.000 al año",f:["Los 42 términos contables","Repaso espaciado: la app te muestra lo que olvidas","Quiz ilimitado","Todas las frases para correos y reuniones"],pop:true},
+ {id:"premium",name:"Premium",m:"$29.900",a:"$249.000",price:"$29.900",per:"al mes · $249.000 al año",f:["Todo lo de Plus","Simulador de entrevista de trabajo en inglés","Respuestas modelo con traducción","Pide nuevos términos por correo, con prioridad"]},
+ {id:"inst",name:"Universidades y firmas",price:"Cotiza",per:"licencia por grupo",f:["Cuentas para cursos o equipos completos","Contenido adaptado a tu programa","Reporte de avance por estudiante"],cta:"Hablar con ventas"}
+];
+const RANK={free:0,plus:1,premium:2};
+
+let S={plan:"free",code:"",fav:{},box:{},streak:0,last:"",q:{d:"",n:0}};
+try{const r=localStorage.getItem("palabra");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem("palabra",JSON.stringify(S))}catch(e){}};
+if(!S.code)S.plan="free"; // un plan pago solo vale con un código verificado
+const P=window.PAGOS||{llave:"@PLATA3232015094",nequi:"",correo:"profesor.contable.ia@gmail.com"};
+const donde=()=>"por Bre-B a la llave <b>"+esc(P.llave)+"</b>"+(P.nequi?" o por Nequi al <b>"+esc(P.nequi)+"</b>":"");
+const validar=(app,codigo)=>fetch("/api/app",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({app:app,codigo:codigo})}).then(r=>r.json());
+const has=p=>RANK[S.plan]>=RANK[p];
+const avail=()=>has("plus")?T.map((_,i)=>i):T.slice(0,FREE_N).map((_,i)=>i);
+const unlocked=i=>has("plus")||i<FREE_N;
+function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.k);toast.k=setTimeout(()=>e.style.display="none",2400)}
+function say(text){try{const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){toast("Tu navegador no tiene voz disponible.")}}
+function touch(){const t=today();if(S.last===t)return;S.streak=S.last===yday()?S.streak+1:1;S.last=t;save();renderTop()}
+function renderTop(){const live=S.last===today()||S.last===yday()?S.streak:0;$("streak").textContent="Racha: "+live+(live===1?" día":" días")}
+function go(v){["dict","prac","phr","plans"].forEach(x=>$("v-"+x).classList.toggle("on",x===v));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  if(v==="plans")renderPlans();if(v==="prac")renderPrac();if(v==="phr")renderPhr();scrollTo(0,0)}
+const lockRow=txt=>`<div class="lock"><span>🔒 ${txt}</span><button class="btn sm" data-go="plans">Ver planes</button></div>`;
+
+/* Diccionario */
+let cat="Todas";
+function termCard(i,big){
+  const t=T[i];
+  if(!unlocked(i))return`<article class="card"><div class="t"><div><div class="es" style="font-size:18px;font-weight:700;color:var(--ink)">${esc(t[0])}</div><span class="tag">${t[2]}</span></div></div>${lockRow("La traducción y el ejemplo están en Plus.")}</article>`;
+  return`<article class="card ${big?"day":""}"><div class="t"><div><div class="en">${esc(t[1])}</div><div class="es">${esc(t[0])}</div><span class="tag">${t[2]}</span></div>
+  <div style="display:flex;gap:6px"><button class="ib" data-say="${i}" aria-label="Escuchar pronunciación">🔊</button><button class="ib ${S.fav[i]?"on":""}" data-fav="${i}" aria-label="Guardar término">${S.fav[i]?"★":"☆"}</button></div></div>
+  <p class="ex">${esc(t[3])}<small>${esc(t[4])}</small></p><button class="btn sec sm" style="margin-top:10px" data-sayex="${i}">🔊 Escuchar el ejemplo</button></article>`;
+}
+function renderDict(){
+  $("cats").innerHTML=CATS.map(c=>`<button class="chip ${c===cat?"on":""}" data-cat="${c}">${c==="Guardadas"?"★ Guardadas":c}</button>`).join("");
+  const q=norm($("q").value);
+  const idx=T.map((_,i)=>i).filter(i=>{const t=T[i];
+    if(cat==="Guardadas"&&!S.fav[i])return false;if(cat!=="Todas"&&cat!=="Guardadas"&&t[2]!==cat)return false;
+    return !q||norm(t[0]).includes(q)||norm(t[1]).includes(q)});
+  const d=new Date(),di=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%FREE_N;
+  $("day").innerHTML=!q&&cat==="Todas"?`<p class="mute" style="margin:14px 0 0">Término del día</p>${termCard(di,true)}<p class="mute" style="margin:18px 0 0">Todos los términos</p>`:"";
+  $("res").innerHTML=idx.length?idx.map(i=>termCard(i)).join(""):`<div class="empty">No encontramos "${esc($("q").value)}". Prueba con otra palabra o categoría.<br><span class="mute">Pronto: pregunta cualquier palabra a la IA.</span></div>`;
+}
+$("q").oninput=renderDict;
+$("cats").onclick=e=>{if(e.target.dataset.cat){cat=e.target.dataset.cat;renderDict()}};
+$("v-dict").onclick=e=>{const d=e.target.dataset;
+  if(d.say!==undefined)say(T[d.say][1].replace(/\s*\(.*\)/,""));
+  if(d.sayex!==undefined)say(T[d.sayex][3]);
+  if(d.fav!==undefined){S.fav[d.fav]=!S.fav[d.fav];save();renderDict()}
+  if(d.go)go(d.go)};
+
+/* Practicar */
+let pm="cards",fc={i:null,shown:false},qz=null;
+function pickCard(){
+  const pool=avail();
+  if(!has("plus"))return pool[Math.floor(Math.random()*pool.length)];
+  const low=Math.min(...pool.map(i=>S.box[i]||0)),c=pool.filter(i=>(S.box[i]||0)===low&&i!==fc.i);
+  const use=c.length?c:pool.filter(i=>i!==fc.i);return use[Math.floor(Math.random()*use.length)];
+}
+function renderPrac(){
+  document.querySelectorAll("#pseg button").forEach(b=>b.classList.toggle("on",b.dataset.m===pm));
+  pm==="cards"?renderCards():renderQuiz();
+}
+function renderCards(){
+  if(fc.i===null)fc.i=pickCard();const t=T[fc.i],pool=avail();
+  const known=pool.filter(i=>(S.box[i]||0)>=3).length;
+  $("pbody").innerHTML=`<article class="card flash" id="flash" tabindex="0" role="button" aria-label="Voltear tarjeta"><span class="tag">${t[2]}</span>
+  ${fc.shown?`<div class="big">${esc(t[1])}</div><div class="es">${esc(t[0])}</div><p class="ex" style="text-align:left">${esc(t[3])}<small>${esc(t[4])}</small></p><button class="btn sec sm" style="margin-top:14px" data-say="1">🔊 Escuchar</button>`:`<div class="big" style="color:var(--ink)">${esc(t[0])}</div><p class="mute">¿Cómo se dice en inglés? Toca la tarjeta.</p>`}</article>
+  ${fc.shown?`<div style="display:flex;gap:10px"><button class="btn sec" data-k="0">Repasar otra vez</button><button class="btn" data-k="1">La sabía</button></div>`:""}
+  <div class="bar"><i style="width:${known/pool.length*100}%"></i></div><p class="mute" style="margin:6px 0 0">${has("plus")?`Dominadas: ${known} de ${pool.length}. La app te muestra primero lo que menos sabes.`:`Con Plus, la app recuerda lo que dominas y te repite lo que olvidas.`}</p>`;
+}
+function startQuiz(){
+  const t=today();if(S.q.d!==t)S.q={d:t,n:0};
+  if(!has("plus")&&S.q.n>=1){qz={locked:true};return}
+  S.q.n++;save();
+  const pool=avail().sort(()=>Math.random()-.5).slice(0,5);
+  qz={qs:pool.map(i=>{const dir=Math.random()<.5;const others=avail().filter(j=>j!==i).sort(()=>Math.random()-.5).slice(0,3);
+    const opts=[i,...others].sort(()=>Math.random()-.5);return{i,dir,opts}}),n:0,score:0,done:false,ans:false};
+}
+function renderQuiz(){
+  if(!qz)startQuiz();
+  if(qz.locked){$("pbody").innerHTML=`<div class="card"><h2 style="margin:0">Ya hiciste tu quiz de hoy</h2><p class="mute">El plan gratis incluye 1 quiz por día. Con Plus practicas sin límite.</p><button class="btn" data-go="plans">Ver planes</button></div>`;return}
+  if(qz.done){touch();$("pbody").innerHTML=`<div class="card" style="text-align:center"><div class="en" style="font-size:36px">${qz.score} / ${qz.qs.length}</div><p>${qz.score>=4?"Excelente trabajo.":qz.score>=2?"Vas bien. Repite para afianzar.":"Sigue practicando: cada intento ayuda."}</p><button class="btn" id="again">Otro quiz</button></div>`;
+    $("again").onclick=()=>{qz=null;renderQuiz()};return}
+  const q=qz.qs[qz.n],t=T[q.i];
+  $("pbody").innerHTML=`<div class="card"><p class="mute" style="margin:0">Pregunta ${qz.n+1} de ${qz.qs.length}</p><h2 style="margin:6px 0 0;font-size:22px">${q.dir?`¿Qué significa "${esc(t[1])}"?`:`¿Cómo se dice "${esc(t[0])}" en inglés?`}</h2>
+  ${q.opts.map(j=>`<button class="opt" data-o="${j}">${esc(q.dir?T[j][0]:T[j][1])}</button>`).join("")}<div id="fb"></div></div>`;
+}
+$("pbody").onclick=e=>{const d=e.target.dataset;
+  if(d.go)go(d.go);
+  if(d.say){say(T[fc.i][1].replace(/\s*\(.*\)/,""));return}
+  if(e.target.closest("#flash")&&!fc.shown){fc.shown=true;renderCards();return}
+  if(d.k!==undefined){const i=fc.i;if(has("plus"))S.box[i]=d.k==="1"?Math.min((S.box[i]||0)+1,3):1;touch();save();fc.i=pickCard();fc.shown=false;renderCards()}
+  if(d.o!==undefined&&qz&&!qz.ans){qz.ans=true;const q=qz.qs[qz.n],ok=+d.o===q.i;if(ok)qz.score++;
+    document.querySelectorAll(".opt").forEach(b=>{if(+b.dataset.o===q.i)b.classList.add("good");else if(b===e.target)b.classList.add("bad")});
+    const t=T[q.i];$("fb").innerHTML=`<p class="ex">${ok?"Correcto.":"Casi."} <b>${esc(t[1])}</b> = ${esc(t[0])}<small>${esc(t[3])}</small></p><button class="btn" id="nx">${qz.n+1<qz.qs.length?"Siguiente":"Ver resultado"}</button>`;
+    $("nx").onclick=()=>{qz.ans=false;qz.n++;if(qz.n>=qz.qs.length)qz.done=true;renderQuiz()}}};
+$("pseg").onclick=e=>{if(e.target.dataset.m){pm=e.target.dataset.m;if(pm==="quiz")qz=null;renderPrac()}};
+
+/* Frases */
+let fm="mail";
+function renderPhr(){
+  document.querySelectorAll("#fseg button").forEach(b=>b.classList.toggle("on",b.dataset.m===fm));
+  if(fm==="mail"){
+    $("fbody").innerHTML=PH.map((p,i)=>i<2||has("plus")?`<article class="card"><div class="t"><div><div class="en" style="font-size:17px">${esc(p[0])}</div><div class="es">${esc(p[1])}</div></div><button class="ib" data-sp="${i}" aria-label="Escuchar frase">🔊</button></div></article>`
+      :`<article class="card"><div class="es" style="color:var(--ink)">${esc(p[1])}</div>${lockRow("La frase en inglés está en Plus.")}</article>`).join("");
+  }else if(!has("premium")){
+    $("fbody").innerHTML=`<div class="card"><h2 style="margin:0">Simulador de entrevista</h2><p class="mute">Practica las preguntas más comunes en inglés para puestos contables, con respuestas modelo y su traducción. Incluido en Premium.</p><p style="margin:0"><b>Ejemplo de pregunta:</b> "${esc(IV[0][0])}"</p>${lockRow("Desbloquea las 5 preguntas con respuesta modelo.")}</div>`;
+  }else{
+    $("fbody").innerHTML=IV.map((q,i)=>`<article class="card"><div class="t"><div class="en" style="font-size:18px">${esc(q[0])}</div><button class="ib" data-si="${i}" aria-label="Escuchar pregunta">🔊</button></div><p class="es" style="margin:8px 0 0">${esc(q[2])}</p><button class="btn sec sm" style="margin-top:10px" data-show="${i}">Ver respuesta modelo</button><div id="ans${i}"></div></article>`).join("");
+  }
+}
+$("fseg").onclick=e=>{if(e.target.dataset.m){fm=e.target.dataset.m;renderPhr()}};
+$("fbody").onclick=e=>{const d=e.target.dataset;
+  if(d.go)go(d.go);
+  if(d.sp!==undefined)say(PH[d.sp][0]);
+  if(d.si!==undefined)say(IV[d.si][0]);
+  if(d.show!==undefined){const q=IV[d.show];$("ans"+d.show).innerHTML=`<p class="ex">${esc(q[1])}</p><button class="btn sec sm" style="margin-top:8px" data-sa="${d.show}">🔊 Escuchar respuesta</button>`}
+  if(d.sa!==undefined)say(IV[d.sa][1])};
+
+/* Planes */
+function renderPlans(){
+  $("plans").innerHTML=PLANS.map(p=>{const cur=S.plan===p.id;
+    return`<article class="card plan ${cur?"cur":""}">${p.pop?'<span class="pop">Más popular</span>':""}<h2>${p.name}</h2><div class="price">${p.price}</div><div class="mute">${p.per}</div>
+    <ul>${p.f.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <button class="btn ${cur||p.id==="free"?"sec":""}" data-plan="${p.id}" ${p.id==="free"?"disabled":""}>${cur?"Plan actual":p.id==="inst"?"Hablar con ventas":p.id==="free"?"Incluido siempre":"Pagar y activar"}</button></article>`}).join("");
+}
+$("plans").onclick=e=>{const id=e.target.dataset.plan;if(!id||id==="free")return;
+  if(id==="inst"){location.href="mailto:"+P.correo+"?subject="+encodeURIComponent("Palabra Contable para universidades y firmas");return}
+  if(S.plan===id)return;
+  const pl=PLANS.find(x=>x.id===id);
+  $("pay").innerHTML=`<article class="card" id="pay-card"><h2 style="margin:0;font-size:20px">Activar el plan ${pl.name}</h2><b>${pl.m} al mes</b> <span class="mute">o ${pl.a} al año</span>
+  <ol><li>Transfiere el valor ${donde()}.</li><li>Envía el comprobante con tu nombre y el plan (${pl.name}, mensual o anual) a <a href="mailto:${esc(P.correo)}?subject=${encodeURIComponent("Pago Palabra Contable "+pl.name)}">${esc(P.correo)}</a>.</li><li>Cuando verifiquemos el pago te enviamos un código. Escríbelo aquí.</li></ol>
+  <div class="crow"><input id="code" placeholder="Código de activación" aria-label="Código de activación" autocomplete="off"><button class="btn" id="act" type="button">Activar</button></div>
+  <p class="mute" id="cmsg" aria-live="polite" style="margin:8px 0 0"></p><p class="mute" style="margin:4px 0 0">Si tienes el plan Master de Profesor, usa el mismo código.</p></article>`;
+  $("pay-card").scrollIntoView({behavior:"smooth",block:"center"})};
+$("pay").onclick=e=>{if(e.target.id!=="act")return;const c=$("code").value.trim();if(!c)return;$("cmsg").textContent="Verificando...";
+  validar("palabra",c).then(d=>{if(d.ok){S.plan=d.nivel;S.code=c;save();renderPlans();renderDict();$("pay").innerHTML="";toast("Plan "+PLANS.find(x=>x.id===d.nivel).name+" activado. ¡Gracias!")}
+    else $("cmsg").textContent="Código no válido o vencido. Revisa que esté bien escrito."}).catch(()=>{$("cmsg").textContent="No pude conectarme. Intenta de nuevo."})};
+$("pay").onkeydown=e=>{if(e.key==="Enter"&&e.target.id==="code")$("act").click()};
+if(S.code){validar("palabra",S.code).then(d=>{const n=d.ok?d.nivel:"free";if(!d.ok)S.code="";if(S.plan!==n){S.plan=n;save();renderDict();renderPlans()}}).catch(()=>{})} // si el código ya no es válido, vuelve a gratis
+
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+renderTop();renderDict();
+</script>
+</body>
+</html>

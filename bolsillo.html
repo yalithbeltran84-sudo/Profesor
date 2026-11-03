@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bolsillo – tu plata, clara</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3F5;--card:#fff;--ink:#10222F;--mute:#5B6E7A;--line:#D8E2E7;--acc:#F5B82E;--accink:#10222F;--ok:#1F9D75;--bad:#D8524A;--soft:#E3ECF0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1820;--card:#13242F;--ink:#E8F0F3;--mute:#8CA2AE;--line:#24394600;--line:#243946;--soft:#1B303C;--ok:#3CC79A;--bad:#F07A71}}
+:root[data-theme="dark"]{--bg:#0C1820;--card:#13242F;--ink:#E8F0F3;--mute:#8CA2AE;--line:#243946;--soft:#1B303C;--ok:#3CC79A;--bad:#F07A71}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 90px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+h1{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em}
+.pro-btn{background:var(--acc);color:var(--accink);border:0;border-radius:999px;padding:8px 14px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.hero{background:var(--ink);color:var(--bg);border-radius:22px;padding:22px}
+.hero small{opacity:.75;font-size:14px}
+.hero .big{font-size:44px;font-weight:800;letter-spacing:-.03em;margin:2px 0 14px}
+.row{display:flex;gap:10px}
+.row>div{flex:1;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 12px}
+.row b{display:block;font-size:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+h2{font-size:17px;margin:0 0 10px;font-weight:600}
+.bar{height:12px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok);border-radius:99px;transition:width .4s}
+.bar i.warn{background:var(--acc)}.bar i.over{background:var(--bad)}
+.mute{color:var(--mute);font-size:14px}
+label{display:block;font-size:14px;color:var(--mute);margin:10px 0 4px}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+.btn{width:100%;margin-top:14px;background:var(--ink);color:var(--bg);border:0;border-radius:14px;padding:13px;font:600 16px inherit;font-family:inherit;cursor:pointer}
+.btn.sec{background:var(--soft);color:var(--ink)}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px}
+.seg button{flex:1;border:0;background:none;color:var(--mute);padding:9px;border-radius:10px;font:600 15px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink)}
+.cat{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;margin:9px 0;font-size:14px}
+.tx{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.tx:last-child{border:0}
+.tx .a{font-weight:600}.in{color:var(--ok)}.out{color:var(--bad)}
+.x{background:none;border:0;color:var(--mute);font-size:18px;cursor:pointer;padding:6px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;max-width:180px;border:0;background:none;color:var(--mute);font:600 14px inherit;font-family:inherit;padding:10px;border-radius:12px;cursor:pointer}
+nav button.on{color:var(--ink);background:var(--soft)}
+.view{display:none}.view.on{display:block}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet ul{padding-left:20px;margin:10px 0}
+.price{font-size:32px;font-weight:800}
+.res{background:var(--soft);border-radius:14px;padding:14px;margin-top:14px;text-align:center}
+.res b{font-size:30px;display:block}
+.empty{text-align:center;color:var(--mute);padding:18px 0}
+.sheet{max-height:92vh;overflow:auto}.sheet ol{padding-left:20px;margin:8px 0}.sheet a{color:var(--ink);font-weight:600;overflow-wrap:anywhere}
+.crow{display:flex;gap:8px;margin-top:10px}.crow input{flex:1;min-width:0}.crow .btn{width:auto;margin:0;padding:0 18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="mute" style="margin:0 0 8px"><a href="index.html#apps" style="color:var(--mute)">← Volver a Profesor</a></p>
+  <header><h1>Bolsillo</h1><button class="pro-btn" id="proTop">Pro</button></header>
+
+  <section class="view on" id="v-home">
+    <div class="hero">
+      <small>Te queda este mes</small>
+      <div class="big" id="left">$0</div>
+      <div class="row"><div><small>Ingresos</small><b id="inc">$0</b></div><div><small>Gastos</small><b id="exp">$0</b></div></div>
+    </div>
+    <div class="card">
+      <h2>Presupuesto del mes</h2>
+      <div class="bar"><i id="bbar" style="width:0"></i></div>
+      <p class="mute" id="btxt" style="margin:8px 0 0"></p>
+      <label for="budget">Tu límite de gasto mensual</label>
+      <input id="budget" type="number" inputmode="numeric" placeholder="Ej: 1500000">
+    </div>
+    <div class="card"><h2>Dónde se va tu plata</h2><div id="cats"></div></div>
+    <div class="card">
+      <h2>Meta de ahorro</h2>
+      <div class="bar"><i id="gbar" style="width:0"></i></div>
+      <p class="mute" id="gtxt" style="margin:8px 0 0"></p>
+      <label for="goalName">¿Para qué ahorras?</label>
+      <input id="goalName" placeholder="Ej: Viaje, computador, emergencias">
+      <label for="goalAmt">Meta</label>
+      <input id="goalAmt" type="number" inputmode="numeric" placeholder="Monto">
+      <label for="goalSaved">Ya ahorrado</label>
+      <input id="goalSaved" type="number" inputmode="numeric" placeholder="Monto">
+    </div>
+  </section>
+
+  <section class="view" id="v-add">
+    <div class="card" style="margin-top:0">
+      <h2>Nuevo movimiento</h2>
+      <div class="seg" id="type"><button class="on" data-t="out">Gasto</button><button data-t="in">Ingreso</button></div>
+      <label for="amt">Monto</label>
+      <input id="amt" type="number" inputmode="numeric" placeholder="0">
+      <label for="cat">Categoría</label>
+      <select id="cat"></select>
+      <label for="note">Nota (opcional)</label>
+      <input id="note" placeholder="Ej: almuerzo, bus, arriendo">
+      <button class="btn" id="save">Guardar movimiento</button>
+    </div>
+    <div class="card"><h2>Últimos movimientos</h2><div id="list"></div>
+      <button class="btn sec" id="export">Exportar a Excel (Pro)</button>
+    </div>
+  </section>
+
+  <section class="view" id="v-split">
+    <div class="card" style="margin-top:0">
+      <h2>Dividir una cuenta</h2>
+      <p class="mute" style="margin-top:0">Para salidas con amigos, compañeros o familia.</p>
+      <label for="sTotal">Total de la cuenta</label>
+      <input id="sTotal" type="number" inputmode="numeric" placeholder="0">
+      <label for="sPeople">Personas</label>
+      <input id="sPeople" type="number" inputmode="numeric" value="2" min="1">
+      <label for="sTip">Propina (%)</label>
+      <input id="sTip" type="number" inputmode="numeric" value="10" min="0">
+      <div class="res"><span class="mute">Cada persona paga</span><b id="sRes">$0</b><span class="mute" id="sSub"></span></div>
+    </div>
+  </section>
+</div>
+
+<nav>
+  <button class="on" data-v="home">Resumen</button>
+  <button data-v="add">Movimientos</button>
+  <button data-v="split">Dividir</button>
+</nav>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="sheet">
+    <h2 id="mt" style="font-size:22px">Bolsillo Pro</h2>
+    <div class="price">$9.900 <span class="mute">/ mes</span></div>
+    <ul>
+      <li>Exportar tus movimientos a Excel (archivo CSV)</li>
+      <li>Próximamente: grupos compartidos y reportes por mes</li>
+    </ul>
+    <b>Cómo activarlo</b>
+    <ol id="steps"></ol>
+    <label for="code">Código de activación</label>
+    <div class="crow"><input id="code" placeholder="Escribe tu código" autocomplete="off"><button class="btn" id="activate" type="button">Activar</button></div>
+    <p class="mute" id="cmsg" aria-live="polite" style="margin:8px 0 0"></p>
+    <p class="mute" style="margin:6px 0 0">Si tienes el plan Master de Profesor, usa el mismo código.</p>
+    <button class="btn sec" id="close">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const CATS={out:["Comida","Transporte","Vivienda","Estudio","Salud","Ocio","Otros"],in:["Salario","Freelance","Mesada","Otros"]};
+const fmt=n=>new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0}).format(n||0);
+const $=id=>document.getElementById(id);
+let S={tx:[],budget:0,goal:{name:"",amt:0,saved:0},pro:false,code:""};
+let type="out";
+try{const r=localStorage.getItem("bolsillo");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem("bolsillo",JSON.stringify(S))}catch(e){}};
+if(!S.code)S.pro=false; // el plan Pro solo vale con un código verificado
+const monthKey=d=>d.slice(0,7);
+const nowKey=()=>new Date().toISOString().slice(0,7);
+
+function fillCats(){$("cat").innerHTML=CATS[type].map(c=>`<option>${c}</option>`).join("")}
+function render(){
+  const m=S.tx.filter(t=>monthKey(t.d)===nowKey());
+  const inc=m.filter(t=>t.t==="in").reduce((a,t)=>a+t.a,0);
+  const exp=m.filter(t=>t.t==="out").reduce((a,t)=>a+t.a,0);
+  $("left").textContent=fmt(inc-exp);$("inc").textContent=fmt(inc);$("exp").textContent=fmt(exp);
+  const b=S.budget,pct=b?Math.min(exp/b*100,100):0,bb=$("bbar");
+  bb.style.width=pct+"%";bb.className=pct>=100?"over":pct>=80?"warn":"";
+  $("btxt").textContent=b?(exp>b?`Te pasaste por ${fmt(exp-b)}`:`Has usado ${Math.round(pct)}% · te quedan ${fmt(b-exp)}`):"Define un límite para ver tu avance.";
+  $("budget").value=b||"";
+  const by={};m.filter(t=>t.t==="out").forEach(t=>by[t.c]=(by[t.c]||0)+t.a);
+  const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]);
+  $("cats").innerHTML=rows.length?rows.map(([c,v])=>`<div class="cat"><span>${c}</span><div class="bar"><i style="width:${v/exp*100}%"></i></div><b>${fmt(v)}</b></div>`).join(""):`<div class="empty">Aún no hay gastos este mes. Registra el primero en Movimientos.</div>`;
+  const g=S.goal,gp=g.amt?Math.min(g.saved/g.amt*100,100):0;
+  $("gbar").style.width=gp+"%";
+  $("gtxt").textContent=g.amt?`${g.name||"Tu meta"}: ${fmt(g.saved)} de ${fmt(g.amt)} (${Math.round(gp)}%)`:"Crea una meta y míra cómo avanzas.";
+  $("goalName").value=g.name;$("goalAmt").value=g.amt||"";$("goalSaved").value=g.saved||"";
+  const last=[...S.tx].sort((a,b)=>b.id-a.id).slice(0,8);
+  $("list").innerHTML=last.length?last.map(t=>`<div class="tx"><div><div class="a ${t.t}">${t.t==="in"?"+":"−"}${fmt(t.a)}</div><div class="mute">${t.c}${t.n?" · "+esc(t.n):""}</div></div><button class="x" aria-label="Borrar" data-id="${t.id}">✕</button></div>`).join(""):`<div class="empty">Todavía no hay movimientos.</div>`;
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const P=window.PAGOS||{llave:"@PLATA3232015094",nequi:"",correo:"profesor.contable.ia@gmail.com"};
+const donde=()=>"por Bre-B a la llave <b>"+esc(P.llave)+"</b>"+(P.nequi?" o por Nequi al <b>"+esc(P.nequi)+"</b>":"");
+const validar=(app,codigo)=>fetch("/api/app",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({app:app,codigo:codigo})}).then(r=>r.json());
+
+
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
+  scrollTo(0,0)});
+document.querySelectorAll("#type button").forEach(b=>b.onclick=()=>{type=b.dataset.t;
+  document.querySelectorAll("#type button").forEach(x=>x.classList.toggle("on",x===b));fillCats()});
+$("save").onclick=()=>{
+  const a=parseFloat($("amt").value);
+  if(!a||a<=0){$("amt").focus();return}
+  S.tx.push({id:Date.now(),t:type,a,c:$("cat").value,n:$("note").value.trim(),d:new Date().toISOString().slice(0,10)});
+  $("amt").value="";$("note").value="";save();render()};
+$("list").onclick=e=>{const id=e.target.dataset.id;if(id){S.tx=S.tx.filter(t=>t.id!=id);save();render()}};
+$("budget").onchange=e=>{S.budget=parseFloat(e.target.value)||0;save();render()};
+["goalName","goalAmt","goalSaved"].forEach(id=>$(id).onchange=()=>{
+  S.goal={name:$("goalName").value.trim(),amt:parseFloat($("goalAmt").value)||0,saved:parseFloat($("goalSaved").value)||0};save();render()});
+
+function split(){
+  const t=parseFloat($("sTotal").value)||0,p=Math.max(parseInt($("sPeople").value)||1,1),tip=parseFloat($("sTip").value)||0;
+  const total=t*(1+tip/100);
+  $("sRes").textContent=fmt(total/p);
+  $("sSub").textContent=t?`Total con propina: ${fmt(total)}`:"";
+}
+["sTotal","sPeople","sTip"].forEach(id=>$(id).oninput=split);
+
+const open=()=>$("modal").classList.add("on"),shut=()=>$("modal").classList.remove("on");
+$("proTop").onclick=open;$("close").onclick=shut;
+$("modal").onclick=e=>{if(e.target.id==="modal")shut()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")shut()});
+const setPro=()=>{$("proTop").textContent=S.pro?"Pro activo":"Pro";$("export").textContent=S.pro?"Exportar a Excel":"Exportar a Excel (Pro)"};
+$("steps").innerHTML="<li>Transfiere $9.900 "+donde()+".</li><li>Envía el comprobante con tu nombre y «Bolsillo Pro» a <a href=\"mailto:"+esc(P.correo)+"?subject=Pago%20Bolsillo%20Pro\">"+esc(P.correo)+"</a>.</li><li>Cuando verifiquemos el pago te enviamos un código. Escríbelo aquí abajo.</li>";
+$("activate").onclick=()=>{const c=$("code").value.trim();if(!c)return;$("cmsg").textContent="Verificando...";
+  validar("bolsillo",c).then(d=>{if(d.ok){S.pro=true;S.code=c;save();setPro();$("code").value="";$("cmsg").textContent="Pro activado. ¡Gracias!";setTimeout(shut,1200)}
+    else $("cmsg").textContent="Código no válido o vencido. Revisa que esté bien escrito."}).catch(()=>{$("cmsg").textContent="No pude conectarme. Intenta de nuevo."})};
+$("code").onkeydown=e=>{if(e.key==="Enter")$("activate").click()};
+$("export").onclick=()=>{
+  if(!S.pro){open();return}
+  const safe=t=>{t=String(t||"");return '"'+(/^[=+\-@]/.test(t)?"'"+t:t).replace(/"/g,'""')+'"'};
+  const csv="\uFEFFFecha;Tipo;Categoria;Monto;Nota\n"+S.tx.map(t=>[t.d,t.t==="in"?"Ingreso":"Gasto",t.c,t.a,safe(t.n)].join(";")).join("\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="bolsillo-movimientos.csv";document.body.appendChild(a);a.click();a.remove();
+};
+setPro();
+if(S.code){validar("bolsillo",S.code).then(d=>{if(d.ok===false){S.pro=false;S.code="";save();setPro()}}).catch(()=>{})} // si el código ya no es válido, vuelve a gratis
+fillCats();render();split();
+</script>
+</body>
+</html>
