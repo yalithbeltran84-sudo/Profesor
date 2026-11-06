@@ -25,7 +25,7 @@
   }
   function guardarPlan(p, c) {
     mem.plan = p; set(K.plan, p);
-    if (p === "gratis") { mem.cod = ""; quitar(K.cod); }
+    if (p === "gratis") { mem.cod = ""; quitar(K.cod); try { fetch("/api/codigo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ salir: true }) }); } catch (e) {} }
     else if (c) { mem.cod = c; set(K.cod, c); }
   }
   // Desde la página solo se puede volver a Gratis; los planes pagos se activan con activarCodigo.
@@ -74,6 +74,14 @@
       if (d && d.ok) contar();
       return d;
     }).catch(function () { return { ok: false, answer: "No pude conectarme. Intenta de nuevo." }; });
+  }
+
+  // Al cargar: confirma el código guardado con el servidor (renueva el acceso a las calculadoras o vuelve a Gratis si venció).
+  if (codigo()) {
+    fetch("/api/codigo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ codigo: codigo() }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && d.ok === false) guardarPlan("gratis"); else if (d && d.ok && PLANS[d.plan] && d.plan !== plan()) guardarPlan(d.plan, codigo()); })
+      .catch(function () {});
   }
 
   window.Profesor = { PLANS: PLANS, plan: plan, setPlan: setPlan, activarCodigo: activarCodigo, usadas: usadas, restantes: restantes,
