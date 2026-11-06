@@ -319,7 +319,7 @@ $("plans").onclick=e=>{const id=e.target.dataset.plan;if(!id||id==="free")return
   $("pay").innerHTML=`<article class="card" id="pay-card"><h2>Activar el plan ${esc(pl.name)}</h2><b>${esc(pl.price)} al mes</b>
   <ol><li>Transfiere el valor ${donde()}.</li><li>Envía el comprobante con tu nombre y el plan (${esc(pl.name)}) a <a href="mailto:${esc(P.correo)}?subject=${encodeURIComponent("Pago FichaContable "+pl.name)}">${esc(P.correo)}</a>.</li><li>Cuando verifiquemos el pago te enviamos un código. Escríbelo aquí.</li></ol>
   <div class="crow"><input id="code" placeholder="Código de activación" aria-label="Código de activación" autocomplete="off"><button class="btn" id="act" type="button">Activar</button></div>
-  <p class="mute" id="cmsg" aria-live="polite" style="margin:8px 0 0"></p><p class="mute" style="margin:4px 0 0">Si tienes el plan Master de Profesor, usa el mismo código.</p></article>`;
+  <p class="mute" id="cmsg" aria-live="polite" style="margin:8px 0 0"></p></article>`;
   $("pay-card").scrollIntoView({behavior:"smooth",block:"center"})};
 $("pay").onclick=e=>{if(e.target.id!=="act")return;const c=$("code").value.trim();if(!c)return;$("cmsg").textContent="Verificando...";
   validar("fichas",c).then(d=>{if(d.ok){S.plan=d.nivel;S.code=c;save();$("pay").innerHTML="";hdr();plans();study();R=null;menu();toast("Plan "+planName()+" activado. ¡Gracias!")}
