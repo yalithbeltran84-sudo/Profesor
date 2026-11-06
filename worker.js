@@ -18,10 +18,10 @@ const CONTENIDO = `
 [Artículo: Tasas de interés y tasa de usura] Tasas de interés: la misma tasa puede expresarse como mensual vencida, efectiva anual (EA) o nominal anual mes vencida. Conversiones: de EA a mensual (1 + EA) elevado a 1/12 menos 1; de mensual a EA (1 + MV) elevado a 12 menos 1; de nominal a mensual se divide entre 12. Ejemplo: 2% mensual equivale a 26,82% EA y a 24% nominal. La usura es el tope máximo de cobro, 1,5 veces el interés bancario corriente, certificado por la Superintendencia Financiera cada mes; el de consumo y ordinario de octubre de 2026 fue 28,59% EA y debe confirmarse en la Superfinanciera. El costo real incluye seguros y comisiones.
 [Artículo: Costos ambientales] Son los recursos que una empresa destina a prevenir, reducir o reparar su impacto ambiental. Según el caso se registran como gasto del periodo o como mayor valor de un activo, conforme a la norma contable aplicable.
 [Artículo: Costos de desarrollar software] Los costos de un desarrollo de software pueden reconocerse como activo intangible o como gasto, según cumplan los criterios de la norma contable aplicable a la empresa.
-[Herramientas del sitio: calculadoras gratis] Están en la sección Calculadoras de Profesor y se abren en otra pestaña, sin registro; los datos no salen del navegador. Son 23: Liquidación laboral (cesantías, intereses, prima, vacaciones, indemnización); Calculadora de crédito (cuota, amortización, abonos extra, costo real, tope de usura); PUC de Colombia (buscador de cuentas, naturaleza débito o crédito); Retención en la fuente por salarios (artículo 383); Retención por conceptos (servicios, honorarios, compras, arrendamientos, con base mínima en UVT, ReteIVA y ReteICA); IVA (agregar o sacar IVA, IVA por pagar o saldo a favor); Depreciación de activos (línea recta, saldo decreciente, suma de dígitos, unidades de producción); Nómina (devengado, recargos, deducciones, aportes del empleador, provisiones, costo total, asiento); Punto de equilibrio; Indicadores financieros; Conversor de tasas; Interés simple y compuesto; Precio de venta y margen; Kardex de inventarios (promedio ponderado y PEPS); Costeo ABC; Costo de producción; VPN, TIR y valor presente; Intereses de mora y sanciones (extemporaneidad y sanción mínima); Renta de personas naturales (tabla del artículo 241); Flujo de caja proyectado; Análisis vertical y horizontal; Conciliación bancaria; Seguridad social de independientes.
-[Herramientas del sitio: cursos] Cursos de Excel para contabilidad en la sección Cursos. Excel Básico está disponible (8 horas, 7 módulos, el módulo 1 es gratis, quiz final y certificado de participación; el certificado no es oficial ni un título). Excel Intermedio y Excel Avanzado están próximamente. Se accede con un código de acceso que se recibe al comprar; el plan Master incluye los cursos. Para precios, dile que los consulte en la sección Cursos.
+[Herramientas del sitio: calculadoras por plan] Están en la sección Calculadoras de Profesor y se abren en otra pestaña; los datos no salen del navegador. Son 23 y se abren según el plan, con el código de activación: Gratis abre 6 (Calculadora de crédito, PUC, IVA, Interés simple y compuesto, Conversor de tasas, Precio de venta y margen); Estudiante abre esas 6 y 6 más (Depreciación, Punto de equilibrio, Indicadores financieros, Kardex, Costeo ABC, Costo de producción), 12 en total; Profesional suma 6 más (Liquidación laboral, Nómina, Retención por salarios, Retención por conceptos, Seguridad social de independientes, Intereses de mora y sanciones), 18 en total; Master abre las 23 (suma Renta de personas naturales, VPN-TIR, Flujo de caja proyectado, Análisis vertical y horizontal, Conciliación bancaria). Detalle de las 23: Liquidación laboral (cesantías, intereses, prima, vacaciones, indemnización); Calculadora de crédito (cuota, amortización, abonos extra, costo real, tope de usura); PUC de Colombia (buscador de cuentas, naturaleza débito o crédito); Retención en la fuente por salarios (artículo 383); Retención por conceptos (servicios, honorarios, compras, arrendamientos, con base mínima en UVT, ReteIVA y ReteICA); IVA (agregar o sacar IVA, IVA por pagar o saldo a favor); Depreciación de activos (línea recta, saldo decreciente, suma de dígitos, unidades de producción); Nómina (devengado, recargos, deducciones, aportes del empleador, provisiones, costo total, asiento); Punto de equilibrio; Indicadores financieros; Conversor de tasas; Interés simple y compuesto; Precio de venta y margen; Kardex de inventarios (promedio ponderado y PEPS); Costeo ABC; Costo de producción; VPN, TIR y valor presente; Intereses de mora y sanciones (extemporaneidad y sanción mínima); Renta de personas naturales (tabla del artículo 241); Flujo de caja proyectado; Análisis vertical y horizontal; Conciliación bancaria; Seguridad social de independientes.
+[Herramientas del sitio: cursos] Cursos de Excel para contabilidad en la sección Cursos. Excel Básico está disponible (8 horas, 7 módulos, el módulo 1 es gratis, quiz final y certificado de participación; el certificado no es oficial ni un título). Excel Intermedio y Excel Avanzado están próximamente. Se accede con un código de acceso que se recibe al comprar cada curso; los cursos se compran aparte y no están incluidos en los planes de la IA. Para precios, dile que los consulte en la sección Cursos.
 [Herramientas del sitio: aplicaciones] Aplicaciones: Bolsillo: finanzas personales (ingresos, gastos, presupuesto mensual, meta de ahorro y división de cuentas). Palabra Contable: inglés para contadores (diccionario de términos contables con voz, tarjetas, quiz, frases para correos y reuniones y simulador de entrevista en los planes pagos). AgroCosto: costos agropecuarios; se registran gastos, ingresos y producción de una finca o proyecto (lechería, cerdos, cultivos) y calcula el costo por litro, kilo, animal y hectárea, los costos fijos y variables y el punto de equilibrio; los planes pagos permiten más proyectos, informes, repartir gastos compartidos entre proyectos y copia de seguridad. FichaContable: tarjetas de estudio para memorizar las cuentas del PUC con su naturaleza débito o crédito y las normas NIC y NIIF, con juego de débito o crédito, quizzes, simulacro de examen y una guía explicativa. Las cuatro tienen versión gratis y planes pagos que se activan con un código.
-[Herramientas del sitio: planes y pagos] Planes de la IA: Gratis (5 preguntas al día), Estudiante (30, $10.000 al mes), Profesional (100, $30.000 al mes) y Master (300, $60.000 al mes, incluye los cursos). El pago por ahora es por transferencia (Bre-B o Nequi): se envía el comprobante al correo de Profesor y se recibe un código de activación.
+[Herramientas del sitio: planes y pagos] Planes de la IA: Gratis (5 preguntas al día), Estudiante (30, $10.000 al mes), Profesional (100, $30.000 al mes) y Master (300, $60.000 al mes, con las 23 calculadoras). Las aplicaciones y los cursos de Excel NO están incluidos en ningún plan de la IA: cada uno se compra aparte y se activa con su propio código. El pago por ahora es por transferencia (Bre-B o Nequi): se envía el comprobante al correo de Profesor y se recibe un código de activación.
 [Herramientas del sitio: plantillas] Plantilla de flujo de caja mensual y plantilla de depreciación de activos, en Excel, que se compran por transferencia y se entregan manualmente.
 `; // Aquí agregarás tus propios artículos.
 
@@ -54,6 +54,10 @@ const responder = (status, obj) => new Response(JSON.stringify(obj), { status, h
 
 // Devuelve el plan que corresponde a un código de activación, o "" si no es válido.
 // El plan lo decide siempre el servidor; lo que diga el navegador no cuenta.
+// Vencimiento opcional: "CODIGO=estudiante@2026-12-05" deja de valer después de esa fecha (hora de Colombia).
+const hoyCO = () => new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10);
+const vencido = (hasta) => !!hasta && /^\d{4}-\d{2}-\d{2}$/.test(hasta.trim()) && hoyCO() > hasta.trim();
+
 function planDeCodigo(codigo, env) {
   const c = String(codigo || "").trim().toUpperCase();
   if (c.length < 6) return "";
@@ -62,22 +66,33 @@ function planDeCodigo(codigo, env) {
     const i = par.indexOf("=");
     if (i < 1) continue;
     const cod = par.slice(0, i).trim().toUpperCase();
-    const plan = par.slice(i + 1).trim().toLowerCase();
-    if (cod === c && PLANES[plan] && plan !== "gratis") return plan;
+    const [plan, hasta] = par.slice(i + 1).trim().toLowerCase().split("@");
+    if (cod === c && PLANES[plan] && plan !== "gratis" && !vencido(hasta)) return plan;
   }
   return "";
 }
 
 // Verifica un código y dice a qué plan da acceso.
+const COOKIE = "pcod";
+const cookieDe = (request) => {
+  const m = String(request.headers.get("Cookie") || "").match(new RegExp("(?:^|;\\s*)" + COOKIE + "=([^;]*)"));
+  if (!m) return "";
+  try { return decodeURIComponent(m[1]); } catch (e) { return ""; }
+};
+const setCookie = (valor, borrar) => COOKIE + "=" + (borrar ? "" : encodeURIComponent(valor)) + "; Path=/; Max-Age=" + (borrar ? 0 : 2592000) + "; HttpOnly; Secure; SameSite=Lax";
+
 async function codigo(request, env) {
   if (request.method !== "POST") {
     return responder(405, { ok: false });
   }
-  let c = "";
-  try { c = String((await request.json()).codigo || ""); } catch (e) {}
+  let b = {};
+  try { b = await request.json(); } catch (e) {}
+  const r = (cuerpo, cookie) => { const x = responder(200, cuerpo); x.headers.append("Set-Cookie", cookie); return x; };
+  if (b.salir) return r({ ok: true }, setCookie("", true));
+  const c = String(b.codigo || "");
   const plan = planDeCodigo(c, env);
-  if (!plan) return responder(200, { ok: false });
-  return responder(200, { ok: true, plan });
+  if (!plan) return r({ ok: false }, setCookie("", true));
+  return r({ ok: true, plan }, setCookie(c.trim(), false));
 }
 
 async function chat(request, env) {
@@ -147,8 +162,13 @@ async function chat(request, env) {
 // CURSOS: acceso por código, quiz corregido en el servidor y certificado firmado.
 // Secretos en Cloudflare: CODIGOS_CURSO ("CODIGO=excel-basico|excel-intermedio,OTRO=todos")
 // y CERT_SECRET (una frase larga y secreta que firma los certificados).
-// Los códigos del plan Master (secreto CODIGOS) también abren todos los cursos.
+// Los cursos NO se incluyen en el plan Master (ver MASTER_INCLUYE): se venden aparte.
 // ---------------------------------------------------------------------------
+// Qué abre el código del plan Master además de la IA. Cámbialo aquí cuando quieras:
+//   cursos: false -> los cursos de Excel se venden aparte (solo abren con un código de CODIGOS_CURSO)
+//   apps:   false -> las aplicaciones se venden aparte (solo abren con un código de CODIGOS_APPS); true -> el Master abre el nivel más alto de todas
+const MASTER_INCLUYE = { cursos: false, apps: false };
+
 const CURSOS = {
   "excel-basico": {
     titulo: "Excel Básico para contabilidad",
@@ -159,15 +179,187 @@ const CURSOS = {
   }
 };
 
+// Contenido PAGADO del curso: vive aquí, en el servidor, y solo se entrega con un código válido.
+// video: pega el ID de YouTube (video "no listado"). archivo: nombre de un .xlsx guardado en la carpeta _cursos/excel-basico/ (ver instrucciones).
+const MODULOS = {
+  "excel-basico": [
+ {
+  "n": 2,
+  "titulo": "Formato y orden",
+  "horas": "1 h",
+  "video": "",
+  "archivo": "",
+  "lecciones": [
+   [
+    "2.1 Formato de celdas",
+    "Con Ctrl + 1 abres Formato de celdas. Usa Moneda o Contabilidad para los pesos, Porcentaje para tasas y Fecha para fechas. Cambia solo cómo se ve el dato, no su valor."
+   ],
+   [
+    "2.2 Alineación, bordes y relleno",
+    "Alinea los textos a la izquierda y los números a la derecha. Usa bordes finos y un solo color de relleno para los títulos. Evita combinar celdas: complica ordenar y filtrar."
+   ],
+   [
+    "2.3 Anchos, ajuste de texto e inmovilizar paneles",
+    "Haz doble clic en el borde de la columna para ajustar su ancho. «Ajustar texto» parte frases largas en varias líneas. En Vista > Inmovilizar paneles dejas fija la fila de títulos al bajar."
+   ],
+   [
+    "2.4 Formato como tabla",
+    "Con Ctrl + T conviertes un rango en tabla: trae filtros, colores por filas y crece sola cuando agregas datos. Nómbrala en Diseño de tabla para encontrarla fácil."
+   ]
+  ]
+ },
+ {
+  "n": 3,
+  "titulo": "Fórmulas básicas",
+  "horas": "1,5 h",
+  "video": "",
+  "archivo": "",
+  "lecciones": [
+   [
+    "3.1 Operadores y orden de operaciones",
+    "Toda fórmula empieza con =. Excel usa + - * / y ^. Primero resuelve paréntesis, luego potencias, luego multiplicación y división, y al final suma y resta. Ante la duda, usa paréntesis."
+   ],
+   [
+    "3.2 Referencias relativas, absolutas y mixtas",
+    "Al copiar una fórmula, A1 se desplaza (relativa). $A$1 se queda fija (absoluta). Con la tecla F4 alternas entre A1, $A$1, A$1 y $A1."
+   ],
+   [
+    "3.3 Porcentajes, IVA y descuentos",
+    "Para calcular el IVA de un valor en B2 usa =B2*19%. Para el total con IVA usa =B2*1,19 (en Excel en español la coma es el separador decimal). Para un descuento del 10 %: =B2*(1-10%)."
+   ],
+   [
+    "3.4 Errores comunes",
+    "#¡DIV/0! es dividir entre cero o entre una celda vacía. #¿NOMBRE? es una función mal escrita. #¡REF! es una referencia que ya no existe. #¡VALOR! es operar texto como número. Lee el error y revisa la celda que menciona."
+   ]
+  ]
+ },
+ {
+  "n": 4,
+  "titulo": "Funciones esenciales",
+  "horas": "1,5 h",
+  "video": "",
+  "archivo": "",
+  "lecciones": [
+   [
+    "4.1 SUMA, PROMEDIO, MAX y MIN",
+    "=SUMA(B2:B20) suma un rango, =PROMEDIO(B2:B20) calcula el promedio, =MAX(B2:B20) y =MIN(B2:B20) devuelven el mayor y el menor. Con Alt + = insertas una suma automática."
+   ],
+   [
+    "4.2 CONTAR, CONTARA y CONTAR.SI",
+    "CONTAR cuenta celdas con números, CONTARA cuenta celdas con cualquier dato y CONTAR.SI cuenta las que cumplen una condición, por ejemplo =CONTAR.SI(C2:C50;\"Pagada\")."
+   ],
+   [
+    "4.3 La función SI",
+    "=SI(prueba;si_verdadero;si_falso). Ejemplo: =SI(B2>=60;\"Aprobó\";\"Reprobó\"). Sirve para clasificar facturas, marcar vencimientos o validar que un cuadre dé cero."
+   ],
+   [
+    "4.4 SUMAR.SI y REDONDEAR",
+    "=SUMAR.SI(rango;criterio;rango_suma) suma solo lo que cumple la condición, por ejemplo los gastos de una cuenta. =REDONDEAR(B2;0) redondea al entero y evita diferencias de centavos en los reportes."
+   ]
+  ]
+ },
+ {
+  "n": 5,
+  "titulo": "Datos: ordenar, filtrar y formato condicional",
+  "horas": "1 h",
+  "video": "",
+  "archivo": "",
+  "lecciones": [
+   [
+    "5.1 Ordenar datos",
+    "En Datos > Ordenar puedes ordenar por uno o varios criterios, por ejemplo por cuenta y luego por fecha. Selecciona toda la tabla antes de ordenar para que las filas no se desarmen."
+   ],
+   [
+    "5.2 Filtros",
+    "Con Ctrl + Mayús + L activas los filtros. Filtra por texto, número o fecha y mira solo lo que necesitas sin borrar nada. Para volver a ver todo, borra el filtro."
+   ],
+   [
+    "5.3 Quitar duplicados",
+    "En Datos > Quitar duplicados eliminas filas repetidas según las columnas que elijas. Haz antes una copia de la hoja: esta acción no se puede revisar fila por fila."
+   ],
+   [
+    "5.4 Formato condicional",
+    "En Inicio > Formato condicional resaltas celdas según una regla: facturas vencidas en rojo, saldos negativos, los 10 mayores valores o barras de datos. Cambia solo cuando cambian los datos."
+   ]
+  ]
+ },
+ {
+  "n": 6,
+  "titulo": "Gráficos y reportes",
+  "horas": "1 h",
+  "video": "",
+  "archivo": "",
+  "lecciones": [
+   [
+    "6.1 Elegir el gráfico correcto",
+    "Columnas para comparar categorías, líneas para ver cambios en el tiempo y circular solo para partes de un todo con pocas categorías. Si dudas, usa columnas."
+   ],
+   [
+    "6.2 Crear y mejorar un gráfico",
+    "Selecciona los datos, ve a Insertar y elige el gráfico. Ponle título claro, agrega etiquetas de datos si ayudan y quita lo que sobre: líneas de cuadrícula, leyendas repetidas y colores sin sentido."
+   ],
+   [
+    "6.3 Preparar la impresión",
+    "En Disposición de página define el área de impresión, la orientación y «Ajustar a una página de ancho». Repite la fila de títulos en cada hoja con Imprimir títulos."
+   ],
+   [
+    "6.4 Exportar a PDF y proteger la hoja",
+    "En Archivo > Exportar creas un PDF para enviar. Con Revisar > Proteger hoja evitas que alguien cambie tus fórmulas por accidente."
+   ]
+  ]
+ },
+ {
+  "n": 7,
+  "titulo": "Práctica contable",
+  "horas": "1 h",
+  "video": "",
+  "archivo": "",
+  "lecciones": [
+   [
+    "7.1 Libro de ingresos y gastos",
+    "Arma una tabla con fecha, tercero, concepto, ingreso y gasto. Agrega una columna de saldo acumulado con una fórmula que sume el ingreso y reste el gasto de cada fila."
+   ],
+   [
+    "7.2 Balance de prueba",
+    "Lista las cuentas con su saldo débito y su saldo crédito. Suma cada columna y comprueba con =SI(suma_débito=suma_crédito;\"Cuadra\";\"No cuadra\") que la partida doble esté completa."
+   ],
+   [
+    "7.3 Estado de resultados sencillo",
+    "Con SUMAR.SI trae los ingresos, costos y gastos de tu libro. Calcula la utilidad y los porcentajes sobre ventas para ver cuánto de cada peso queda como ganancia."
+   ],
+   [
+    "7.4 Repaso y quiz final",
+    "Revisa tus formatos, fórmulas y gráficos con un archivo propio. Cuando te sientas listo, responde el quiz final más abajo para obtener tu certificado."
+   ]
+  ]
+ }
+]
+};
+const PREGUNTAS = {
+  "excel-basico": [{"p": "En Excel, ¿cómo se llama el cruce de una fila con una columna?", "o": ["Rango", "Celda", "Hoja", "Libro"]}, {"p": "¿Con qué símbolo debe comenzar toda fórmula?", "o": ["=", "$", "#", "&"]}, {"p": "¿Qué hace la fórmula =SUMA(B2:B6)?", "o": ["Multiplica B2 por B6", "Cuenta cuántas celdas hay", "Suma los valores de B2 hasta B6", "Calcula el promedio de B2 y B6"]}, {"p": "¿Cuál referencia mantiene fija la celda al copiar la fórmula hacia abajo?", "o": ["A1", "A1:A5", "$A$1", "=A1"]}, {"p": "Si A1 contiene 200 y B1 contiene 15 %, ¿qué resultado da =A1*B1?", "o": ["15", "215", "30", "3.000"]}, {"p": "¿Qué función cuenta cuántas celdas contienen números?", "o": ["SUMA", "PROMEDIO", "CONTAR", "MAX"]}, {"p": "Si A1 vale 45, ¿qué muestra =SI(A1>=60;\"Aprobó\";\"Reprobó\")?", "o": ["Aprobó", "Reprobó", "45", "Error"]}, {"p": "¿Qué formato conviene para mostrar valores en pesos?", "o": ["Fecha", "Moneda o Contabilidad", "Texto", "Porcentaje"]}, {"p": "¿Qué tipo de gráfico es mejor para mostrar cómo cambian las ventas mes a mes?", "o": ["Circular", "Embudo", "Mapa", "Líneas"]}, {"p": "¿Para qué sirve «Quitar duplicados»?", "o": ["Ordenar de menor a mayor", "Eliminar filas repetidas", "Sumar valores iguales", "Proteger la hoja"]}]
+};
+
+// Freno básico contra quien prueba códigos al azar (por IP, en memoria del servidor).
+const fallos = new Map();
+const ipDe = (request) => request.headers.get("CF-Connecting-IP") || "x";
+function bloqueado(ip) { const f = fallos.get(ip); return !!f && f.n >= 20 && Date.now() - f.t < 600000; }
+function falla(ip) {
+  if (fallos.size > 5000) fallos.clear();
+  const f = fallos.get(ip);
+  if (!f || Date.now() - f.t >= 600000) fallos.set(ip, { n: 1, t: Date.now() }); else f.n++;
+}
+
 function accesoCurso(codigo, curso, env) {
   const c = String(codigo || "").trim().toUpperCase();
   if (c.length < 6 || !CURSOS[curso]) return false;
-  if (planDeCodigo(c, env) === "master") return true;
+  if (MASTER_INCLUYE.cursos && planDeCodigo(c, env) === "master") return true;
   for (const par of String(env.CODIGOS_CURSO || "").split(",")) {
     const i = par.indexOf("=");
     if (i < 1) continue;
     if (par.slice(0, i).trim().toUpperCase() !== c) continue;
-    const lista = par.slice(i + 1).trim().toLowerCase().split("|");
+    const [valor, hasta] = par.slice(i + 1).trim().toLowerCase().split("@");
+    if (vencido(hasta)) continue;
+    const lista = valor.split("|").map((x) => x.trim());
     if (lista.includes("todos") || lista.includes(curso)) return true;
   }
   return false;
@@ -189,8 +381,20 @@ async function curso(request, env) {
   const id = String(b.curso || "");
   const def = CURSOS[id];
   if (!def) return responder(200, { ok: false, error: "curso" });
-  if (!accesoCurso(b.codigo, id, env)) return responder(200, { ok: false, error: "codigo" });
+  const ip = ipDe(request);
+  if (bloqueado(ip)) return responder(429, { ok: false, error: "intentos" });
+  if (!accesoCurso(b.codigo, id, env)) { falla(ip); return responder(200, { ok: false, error: "codigo" }); }
   if (b.accion === "validar") return responder(200, { ok: true });
+  if (b.accion === "contenido") {
+    return responder(200, { ok: true, modulos: MODULOS[id].map((m) => ({ n: m.n, titulo: m.titulo, horas: m.horas, video: m.video, archivo: !!m.archivo, lecciones: m.lecciones })), preguntas: PREGUNTAS[id] });
+  }
+  if (b.accion === "archivo") {
+    const m = MODULOS[id].find((x) => x.n === Number(b.modulo));
+    if (!m || !m.archivo || !/^[\w.-]+$/.test(m.archivo)) return responder(404, { ok: false });
+    const r = await env.ASSETS.fetch(new Request(new URL("/_cursos/" + id + "/" + m.archivo, request.url)));
+    if (!r.ok) return responder(404, { ok: false });
+    return new Response(r.body, { headers: { "Content-Type": r.headers.get("Content-Type") || "application/octet-stream", "Content-Disposition": 'attachment; filename="' + m.archivo + '"', "Cache-Control": "no-store" } });
+  }
   if (b.accion !== "quiz") return responder(400, { ok: false });
 
   const nombre = String(b.nombre || "").trim().replace(/\s+/g, " ");
@@ -233,7 +437,7 @@ async function verificar(request, env) {
 // ---------------------------------------------------------------------------
 // APLICACIONES (Bolsillo y Palabra Contable): acceso por código, validado en el servidor.
 // Secreto en Cloudflare: CODIGOS_APPS ("CODIGO=bolsillo-pro|palabra-plus|agro-productor,OTRO=palabra-premium|agro-finca,OTRO2=todos").
-// Los códigos del plan Master (secreto CODIGOS) abren el nivel más alto de todas las apps.
+// Si MASTER_INCLUYE.apps es true, los códigos del plan Master (secreto CODIGOS) abren el nivel más alto de todas las apps.
 // ---------------------------------------------------------------------------
 const APPS = { bolsillo: ["pro"], palabra: ["plus", "premium"], agro: ["productor", "finca"], fichas: ["plus", "premium"] }; // de menor a mayor nivel
 
@@ -242,13 +446,15 @@ function nivelApp(codigo, app, env) {
   const niveles = APPS[app];
   if (c.length < 6 || !niveles) return "";
   const alto = niveles[niveles.length - 1];
-  if (planDeCodigo(c, env) === "master") return alto;
+  if (MASTER_INCLUYE.apps && planDeCodigo(c, env) === "master") return alto;
   let mejor = "";
   for (const par of String(env.CODIGOS_APPS || "").split(",")) {
     const i = par.indexOf("=");
     if (i < 1) continue;
     if (par.slice(0, i).trim().toUpperCase() !== c) continue;
-    const lista = par.slice(i + 1).trim().toLowerCase().split("|").map((x) => x.trim());
+    const [valor, hasta] = par.slice(i + 1).trim().toLowerCase().split("@");
+    if (vencido(hasta)) continue;
+    const lista = valor.split("|").map((x) => x.trim());
     if (lista.includes("todos")) mejor = alto;
     for (const n of niveles) if (lista.includes(app + "-" + n)) mejor = n; // el último que coincide es el más alto
   }
@@ -259,9 +465,47 @@ async function appAcceso(request, env) {
   if (request.method !== "POST") return responder(405, { ok: false });
   let b = {};
   try { b = await request.json(); } catch (e) { return responder(400, { ok: false }); }
+  const ip = ipDe(request);
+  if (bloqueado(ip)) return responder(429, { ok: false, error: "intentos" });
   const nivel = nivelApp(b.codigo, String(b.app || ""), env);
-  if (!nivel) return responder(200, { ok: false });
+  if (!nivel) { falla(ip); return responder(200, { ok: false }); }
   return responder(200, { ok: true, nivel });
+}
+
+// Rutas que NUNCA deben poder descargarse como archivo público: este mismo código (contiene los módulos
+// pagados y las respuestas del quiz), la configuración y los archivos pagados. Se revisa en minúsculas y decodificado.
+function privada(ruta) {
+  let p = ruta;
+  try { p = decodeURIComponent(ruta); } catch (e) { return true; }
+  p = p.toLowerCase().replace(/\/+/g, "/");
+  return /(^|\/)(_cursos|netlify|functions|node_modules|\.git[^/]*|\.assetsignore|\.dev\.vars[^/]*)(\/|$)/.test(p) ||
+    /(^|\/)(worker[^/]*\.(js|mjs|ts)|wrangler[^/]*|package(-lock)?\.json|agregar-al-index\.txt|secretos[^/]*|control-de-codigos[^/]*)$/.test(p);
+}
+
+// Calculadoras por plan (acumulativo): Gratis 6, Estudiante 12, Profesional 18, Master 23.
+// 0 = gratis, 1 = estudiante, 2 = profesional, 3 = master. Se hace cumplir aquí, en el servidor:
+// sin el plan, la página de la calculadora ni siquiera se entrega. Para mover una calculadora de plan, cambia su número.
+const CALCS = {
+  "credito": 0, "puc": 0, "iva": 0, "interes": 0, "tasas": 0, "precio": 0,
+  "depreciacion": 1, "puntoequilibrio": 1, "indicadores": 1, "kardex": 1, "costeo-abc": 1, "costo-produccion": 1,
+  "calculadora": 2, "nomina": 2, "retencion": 2, "retencion-conceptos": 2, "independientes": 2, "mora-sanciones": 2,
+  "renta": 3, "vpn-tir": 3, "flujo-caja": 3, "analisis-financiero": 3, "conciliacion": 3
+};
+const RANGO = { gratis: 0, estudiante: 1, profesional: 2, master: 3 };
+const NOMBRE_PLAN = ["Gratis", "Estudiante", "Profesional", "Master"];
+
+function slugDe(ruta) {
+  let p = ruta;
+  try { p = decodeURIComponent(ruta); } catch (e) { return ""; }
+  return p.toLowerCase().replace(/\/+/g, "/").replace(/^\/|\/$/g, "").replace(/\.html?$/, "").replace(/\/$/, "");
+}
+
+function paginaBloqueada(nivel) {
+  const plan = NOMBRE_PLAN[nivel];
+  const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Calculadora del plan ${plan} · Profesor</title>
+<style>body{margin:0;font:18px/1.5 system-ui,sans-serif;background:#faf8f3;color:#1c1c1c;display:grid;place-items:center;min-height:100vh;padding:16px}main{max-width:460px;background:#fff;border:2px solid #d9d4c7;border-radius:8px;padding:28px}h1{font-size:24px;margin:0 0 8px}a{display:inline-block;margin-top:14px;background:#1f6b45;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;font-weight:700}p{margin:8px 0}</style></head>
+<body><main><h1>Esta calculadora es del plan ${plan}</h1><p>Se abre con el código de activación del plan ${plan}${nivel < 3 ? " o de un plan superior" : ""}.</p><p>Si ya lo tienes, escríbelo en la sección Planes del inicio y vuelve a abrir la calculadora.</p><a href="/index.html#planes">Ver planes y activar mi código</a></main></body></html>`;
+  return new Response(html, { status: 403, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
 }
 
 export default {
@@ -272,6 +516,15 @@ export default {
     if (url.pathname === "/api/curso") return curso(request, env);
     if (url.pathname === "/api/app") return appAcceso(request, env);
     if (url.pathname === "/api/verificar") return verificar(request, env);
+    if (privada(url.pathname)) return new Response("No encontrado", { status: 404 }); // código del servidor y archivos pagados: nunca se entregan como archivo público
+    const necesario = CALCS[slugDe(url.pathname)];
+    if (necesario > 0) {
+      const plan = planDeCodigo(cookieDe(request), env) || "gratis";
+      if (RANGO[plan] < necesario) return paginaBloqueada(necesario);
+      const r = await env.ASSETS.fetch(request);
+      const h = new Headers(r.headers); h.set("Cache-Control", "private, no-store");
+      return new Response(r.body, { status: r.status, headers: h });
+    }
     return env.ASSETS.fetch(request); // el resto del sitio (index.html, calculadora.html, profesor.js)
   }
 };
