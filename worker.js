@@ -19,7 +19,7 @@ const CONTENIDO = `
 [Artículo: Costos ambientales] Son los recursos que una empresa destina a prevenir, reducir o reparar su impacto ambiental. Según el caso se registran como gasto del periodo o como mayor valor de un activo, conforme a la norma contable aplicable.
 [Artículo: Costos de desarrollar software] Los costos de un desarrollo de software pueden reconocerse como activo intangible o como gasto, según cumplan los criterios de la norma contable aplicable a la empresa.
 [Herramientas del sitio: calculadoras por plan] Están en la sección Calculadoras de Profesor y se abren en otra pestaña; los datos no salen del navegador. Son 23 y se abren según el plan, con el código de activación: Gratis abre 6 (Calculadora de crédito, PUC, IVA, Interés simple y compuesto, Conversor de tasas, Precio de venta y margen); Estudiante abre esas 6 y 6 más (Depreciación, Punto de equilibrio, Indicadores financieros, Kardex, Costeo ABC, Costo de producción), 12 en total; Profesional suma 6 más (Liquidación laboral, Nómina, Retención por salarios, Retención por conceptos, Seguridad social de independientes, Intereses de mora y sanciones), 18 en total; Master abre las 23 (suma Renta de personas naturales, VPN-TIR, Flujo de caja proyectado, Análisis vertical y horizontal, Conciliación bancaria). Detalle de las 23: Liquidación laboral (cesantías, intereses, prima, vacaciones, indemnización); Calculadora de crédito (cuota, amortización, abonos extra, costo real, tope de usura); PUC de Colombia (buscador de cuentas, naturaleza débito o crédito); Retención en la fuente por salarios (artículo 383); Retención por conceptos (servicios, honorarios, compras, arrendamientos, con base mínima en UVT, ReteIVA y ReteICA); IVA (agregar o sacar IVA, IVA por pagar o saldo a favor); Depreciación de activos (línea recta, saldo decreciente, suma de dígitos, unidades de producción); Nómina (devengado, recargos, deducciones, aportes del empleador, provisiones, costo total, asiento); Punto de equilibrio; Indicadores financieros; Conversor de tasas; Interés simple y compuesto; Precio de venta y margen; Kardex de inventarios (promedio ponderado y PEPS); Costeo ABC; Costo de producción; VPN, TIR y valor presente; Intereses de mora y sanciones (extemporaneidad y sanción mínima); Renta de personas naturales (tabla del artículo 241); Flujo de caja proyectado; Análisis vertical y horizontal; Conciliación bancaria; Seguridad social de independientes.
-[Herramientas del sitio: cursos] Cursos de Excel para contabilidad en la sección Cursos. Excel Básico está disponible (8 horas, 7 módulos, el módulo 1 es gratis, quiz final y certificado de participación; el certificado no es oficial ni un título). Excel Intermedio y Excel Avanzado están próximamente. Se accede con un código de acceso que se recibe al comprar cada curso; los cursos se compran aparte y no están incluidos en los planes de la IA. Para precios, dile que los consulte en la sección Cursos.
+[Herramientas del sitio: cursos] Cursos de Excel para contabilidad en la sección Cursos. Excel Básico está disponible (8 horas, 7 módulos, todo el curso se abre con el código de acceso, quiz final y certificado de participación; el certificado no es oficial ni un título). Excel Intermedio y Excel Avanzado están próximamente. Se accede con un código de acceso que se recibe al comprar cada curso; los cursos se compran aparte y no están incluidos en los planes de la IA. Para precios, dile que los consulte en la sección Cursos.
 [Herramientas del sitio: aplicaciones] Aplicaciones: Bolsillo: finanzas personales (ingresos, gastos, presupuesto mensual, meta de ahorro y división de cuentas). Palabra Contable: inglés para contadores (diccionario de términos contables con voz, tarjetas, quiz, frases para correos y reuniones y simulador de entrevista en los planes pagos). AgroCosto: costos agropecuarios; se registran gastos, ingresos y producción de una finca o proyecto (lechería, cerdos, cultivos) y calcula el costo por litro, kilo, animal y hectárea, los costos fijos y variables y el punto de equilibrio; los planes pagos permiten más proyectos, informes, repartir gastos compartidos entre proyectos y copia de seguridad. FichaContable: tarjetas de estudio para memorizar las cuentas del PUC con su naturaleza débito o crédito y las normas NIC y NIIF, con juego de débito o crédito, quizzes, simulacro de examen y una guía explicativa. Las cuatro tienen versión gratis y planes pagos que se activan con un código.
 [Herramientas del sitio: planes y pagos] Planes de la IA: Gratis (5 preguntas al día), Estudiante (30, $10.000 al mes), Profesional (100, $30.000 al mes) y Master (300, $60.000 al mes, con las 23 calculadoras). Las aplicaciones y los cursos de Excel NO están incluidos en ningún plan de la IA: cada uno se compra aparte y se activa con su propio código. El pago por ahora es por transferencia (Bre-B o Nequi): se envía el comprobante al correo de Profesor y se recibe un código de activación.
 [Herramientas del sitio: plantillas] Plantilla de flujo de caja mensual y plantilla de depreciación de activos, en Excel, que se compran por transferencia y se entregan manualmente.
@@ -183,6 +183,19 @@ const CURSOS = {
 // video: pega el ID de YouTube (video "no listado"). archivo: nombre de un .xlsx guardado en la carpeta _cursos/excel-basico/ (ver instrucciones).
 const MODULOS = {
   "excel-basico": [
+ {
+  "n": 1,
+  "titulo": "Primeros pasos",
+  "horas": "1 h",
+  "video": "",
+  "archivo": "practica-modulo-1.xlsx",
+  "lecciones": [
+   ["1.1 La pantalla de Excel", "Conoce la cinta de opciones, la barra de fórmulas, el cuadro de nombres y las pestañas de las hojas. Casi todo lo que haces en Excel parte de estos cuatro lugares."],
+   ["1.2 Libros, hojas, filas y columnas", "Un libro de Excel tiene una o varias hojas. Las columnas se nombran con letras y las filas con números, así que la celda A1 es el cruce de la columna A con la fila 1."],
+   ["1.3 Escribir y editar datos", "Excel distingue texto y números. Escribe en una celda y confirma con Enter o Tab. Para corregir sin borrar todo, entra a la celda con F2. Si te equivocas, deshaz con Ctrl + Z."],
+   ["1.4 Guardar y abrir archivos", "Guarda tu trabajo seguido y usa nombres claros, por ejemplo «gastos-octubre». El formato normal es .xlsx. Antes de cerrar, confirma que quedó guardado."]
+  ]
+ },
  {
   "n": 2,
   "titulo": "Formato y orden",
@@ -479,7 +492,7 @@ function privada(ruta) {
   try { p = decodeURIComponent(ruta); } catch (e) { return true; }
   p = p.toLowerCase().replace(/\/+/g, "/");
   return /(^|\/)(_cursos|netlify|functions|node_modules|\.git[^/]*|\.assetsignore|\.dev\.vars[^/]*)(\/|$)/.test(p) ||
-    /(^|\/)(worker[^/]*\.(js|mjs|ts)|wrangler[^/]*|package(-lock)?\.json|agregar-al-index\.txt|secretos[^/]*|control-de-codigos[^/]*)$/.test(p);
+    /(^|\/)(worker[^/]*\.(js|mjs|ts)|wrangler[^/]*|package(-lock)?\.json|agregar-al-index\.txt|practica-modulo[^/]*|secretos[^/]*|control-de-codigos[^/]*)$/.test(p);
 }
 
 // Calculadoras por plan (acumulativo): Gratis 6, Estudiante 12, Profesional 18, Master 23.
