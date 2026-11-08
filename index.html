@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Profesor · Contaduría con IA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&family=Kaushan+Script&display=swap">
 <style>
 :root{--bg:#F1F5F2;--ink:#12261F;--mute:#4C6159;--line:#C9D6CF;--green:#0F3D3E;--amber:#E9A927;--paper:#FFFFFF;--soft:#E3ECE7;--on:#F1F5F2;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -16,7 +16,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Newsreader,Geo
 h1,h2,h3,.sans{font-family:"Bricolage Grotesque",system-ui,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
 header{display:flex;flex-direction:column;align-items:center;gap:6px;padding:24px 0 8px}
-.logo{font:800 30px "Bricolage Grotesque",sans-serif;color:var(--green);text-align:center}
+.logo{font:800 clamp(38px,5.2vw,46px) "Bricolage Grotesque",sans-serif;color:var(--green);text-align:center}
 nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px}
 nav a{color:var(--mute);text-decoration:none;font:500 15px "Bricolage Grotesque",sans-serif}
 nav a:hover{color:var(--ink)}
@@ -62,6 +62,7 @@ form button{border:0;background:var(--green);color:var(--on);padding:0 18px;font
 .note{font:14px "Bricolage Grotesque",sans-serif;color:var(--mute);margin:10px 0 0}
 section{padding:48px 0;border-top:1px solid var(--line)}
 h2{font-size:clamp(26px,3.4vw,36px);margin:0 0 24px;letter-spacing:-.01em}
+h2.letra{font-family:"Kaushan Script","Bricolage Grotesque",cursive;font-weight:400;font-size:clamp(34px,5vw,52px);letter-spacing:0;line-height:1.15;color:var(--green)}
 .areas{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
 .areas div{padding:14px 0;border-bottom:1px solid var(--line)}
 .areas b{font:700 18px "Bricolage Grotesque",sans-serif;display:block}
@@ -143,7 +144,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </section>
 
 <section id="calculadoras">
-<h2>Calculadoras</h2>
+<h2 class="letra">Calculadoras</h2>
 <p class="note">6 gratis · 12 con Estudiante · 18 con Profesional · 23 con Master. Se abren con el código de tu plan.</p>
 <div class="areas">
 <div data-nivel="2"><b>Liquidación laboral</b> <em class="lv">Profesional</em><span>Cesantías, intereses, prima, vacaciones e indemnización con valores de 2026, la fórmula de cada concepto y el asiento contable.</span><br><a class="btn" href="calculadora.html" target="_blank" rel="noopener">Abrir calculadora</a></div>
@@ -174,7 +175,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </section>
 
 <section id="articulos">
-<h2>Artículos con sus fuentes</h2>
+<h2 class="letra">Artículos con sus fuentes</h2>
 <div class="areas">
 <div><b>IVA, retención y nómina</b><span>Guías cortas con ejemplos y los enlaces a la DIAN, el Estatuto Tributario y el Código Sustantivo del Trabajo.</span></div>
 <div><b>NIIF, PUC y contabilidad pública</b><span>Estados financieros, inventarios, activos biológicos y el marco de la Contaduría General de la Nación.</span><br><a class="btn" href="articulos.html" target="_blank" rel="noopener">Ver los artículos</a></div>
@@ -183,7 +184,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </section>
 
 <section id="apps">
-<h2>Aplicaciones</h2>
+<h2 class="letra">Aplicaciones</h2>
 <div class="areas">
 <div><b>Bolsillo</b><span>Tu plata, clara: ingresos, gastos, presupuesto y meta de ahorro, con división de cuentas. Útil para aprender finanzas personales.</span><br><a class="btn" href="bolsillo.html" target="_blank" rel="noopener">Abrir Bolsillo</a></div>
 <div><b>Palabra Contable</b><span>Inglés para contadores: diccionario de términos con voz, tarjetas, quiz y frases para correos y reuniones.</span><br><a class="btn" href="palabra-contable.html" target="_blank" rel="noopener">Abrir Palabra Contable</a></div>
@@ -194,16 +195,16 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </section>
 
 <section id="cursos">
-<h2>Cursos de Excel</h2>
+<h2 class="letra">Cursos de Excel</h2>
 <div class="areas">
-<div><b>Excel Básico</b><span>8 horas, 7 módulos, quiz final y certificado de participación. El módulo 1 es gratis.</span><br><a class="btn" href="curso-excel-basico.html">Ver el curso</a></div>
+<div><b>Excel Básico</b><span>8 horas, 7 módulos, quiz final y certificado de participación. Se activa con tu código de acceso.</span><br><a class="btn" href="curso-excel-basico.html">Ver el curso</a></div>
 <div><b>Excel Intermedio y Avanzado</b><span>Funciones de búsqueda, tablas dinámicas, Power Query y modelos financieros. Próximamente.</span><br><a class="btn" href="cursos.html">Ver todos los cursos</a></div>
 </div>
 <p class="note">Cada curso se compra por separado, con su propio código de acceso.</p>
 </section>
 
 <section id="plantillas">
-<h2>Plantillas descargables</h2>
+<h2 class="letra">Plantillas descargables</h2>
 <div class="areas">
 <div><b>Flujo de caja mensual</b><span>Excel · $15.000</span><br><button class="btn buy" type="button">Comprar plantilla</button></div>
 <div><b>Depreciación de activos</b><span>Excel · $10.000</span><br><button class="btn buy" type="button">Comprar plantilla</button></div>
