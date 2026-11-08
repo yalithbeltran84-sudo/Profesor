@@ -516,8 +516,20 @@ function slugDe(ruta) {
 function paginaBloqueada(nivel) {
   const plan = NOMBRE_PLAN[nivel];
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Calculadora del plan ${plan} · Profesor</title>
-<style>body{margin:0;font:18px/1.5 system-ui,sans-serif;background:#faf8f3;color:#1c1c1c;display:grid;place-items:center;min-height:100vh;padding:16px}main{max-width:460px;background:#fff;border:2px solid #d9d4c7;border-radius:8px;padding:28px}h1{font-size:24px;margin:0 0 8px}a{display:inline-block;margin-top:14px;background:#1f6b45;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;font-weight:700}p{margin:8px 0}</style></head>
-<body><main><h1>Esta calculadora es del plan ${plan}</h1><p>Se abre con el código de activación del plan ${plan}${nivel < 3 ? " o de un plan superior" : ""}.</p><p>Si ya lo tienes, escríbelo en la sección Planes del inicio y vuelve a abrir la calculadora.</p><a href="/index.html#planes">Ver planes y activar mi código</a></main></body></html>`;
+<style>body{margin:0;font:18px/1.5 system-ui,sans-serif;background:#f1f5f2;color:#12261f;display:grid;place-items:center;min-height:100vh;padding:16px}main{max-width:480px;width:100%;background:#fff;border:2px solid #c9d6cf;border-radius:8px;padding:28px}h1{font-size:24px;margin:0 0 8px}p{margin:8px 0}.row{display:flex;gap:8px;margin:14px 0 6px}input{flex:1;min-width:0;font:inherit;padding:11px 12px;border:1px solid #c9d6cf;border-radius:6px}button{font:inherit;font-weight:700;background:#0f3d3e;color:#fff;border:0;border-radius:6px;padding:11px 18px;cursor:pointer}#m{font-size:16px;color:#c00000;min-height:24px}a{color:#0f3d3e;font-weight:700}</style></head>
+<body><main><h1>🔒 Esta calculadora es del plan ${plan}</h1><p>Escribe tu código de activación del plan ${plan}${nivel < 3 ? " o de un plan superior" : ""} para abrirla.</p>
+<div class="row"><input id="c" placeholder="Código de activación" autocomplete="off" aria-label="Código de activación"><button id="b" type="button">Activar</button></div><p id="m" aria-live="polite"></p>
+<p><a href="/index.html#planes">Ver planes y cómo conseguir el código</a> · <a href="/index.html">Volver al inicio</a></p></main>
+<script>
+var NEED=${nivel},R={gratis:0,estudiante:1,profesional:2,master:3},N=["Gratis","Estudiante","Profesional","Master"];
+function go(){var c=document.getElementById("c").value.trim(),m=document.getElementById("m");if(!c)return;m.style.color="#4c6159";m.textContent="Verificando...";
+fetch("/api/codigo",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({codigo:c})}).then(function(r){return r.json()}).then(function(d){
+if(!d.ok){m.style.color="#c00000";m.textContent="Código no válido. Revisa que esté bien escrito.";return}
+try{localStorage.setItem("profesor_plan",JSON.stringify(d.plan));localStorage.setItem("profesor_codigo",JSON.stringify(c))}catch(e){}
+if(R[d.plan]>=NEED){location.reload()}else{m.style.color="#c00000";m.textContent="Ese código es del plan "+N[R[d.plan]]+". Esta calculadora necesita el plan "+N[NEED]+" o uno superior."}
+}).catch(function(){m.style.color="#c00000";m.textContent="No pude conectarme. Intenta de nuevo."})}
+document.getElementById("b").onclick=go;document.getElementById("c").onkeydown=function(e){if(e.key==="Enter")go()};
+</script></body></html>`;
   return new Response(html, { status: 403, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
 }
 
