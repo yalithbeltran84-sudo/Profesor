@@ -64,7 +64,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 <p class="meta">8 horas · 7 módulos · quiz y certificado</p>
 <ul><li>Pantalla, celdas, hojas y archivos</li><li>Formato, fórmulas y funciones esenciales</li><li>Ordenar, filtrar y formato condicional</li><li>Gráficos, reportes y práctica contable</li></ul>
 <div class="precio" data-precio="basico"></div>
-<a class="btn alt" href="curso-excel-basico.html">Ver módulo 1 gratis</a>
+<a class="btn alt" href="curso-excel-basico.html">Ver el temario</a>
 <button class="btn" type="button" data-comprar="basico">Comprar curso</button>
 </article>
 
@@ -87,7 +87,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 </article>
 
 </div>
-<p class="mini" style="margin-top:14px">El plan Master incluye todos los cursos mientras esté activo. Cuando un curso nuevo se publique, te avisamos por Instagram y por correo.</p>
+<p class="mini" style="margin-top:14px">Cada curso se compra por separado y se activa con su propio código. Cuando un curso nuevo se publique, te avisamos por Instagram y por correo.</p>
 </section>
 
 <section id="como-pagar">
@@ -105,10 +105,12 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--mute);fo
 
 <footer>Profesor · Contaduría con IA · <a href="terminos.html">Términos de uso</a> · <a href="privacidad.html">Política de datos</a> · <a href="https://www.instagram.com/profesor.contable/" target="_blank" rel="noopener">@profesor.contable</a> · <a href="mailto:profesor.contable.ia@gmail.com">profesor.contable.ia@gmail.com</a></footer>
 </div>
+<script src="pagos.js"></script>
 <script>
-// ====== EDITA AQUÍ ======
-var LLAVE="@PLATA3232015094";
-var CORREO="profesor.contable.ia@gmail.com";
+var PG=window.PAGOS||{llave:"@PLATA3232015094",nequi:"",correo:"profesor.contable.ia@gmail.com"};
+var LLAVE=PG.llave,CORREO=PG.correo;
+var DONDE="por Bre-B a la llave <b>"+LLAVE+"</b>"+(PG.nequi?" o por Nequi al <b>"+PG.nequi+"</b>":"");
+// ====== EDITA AQUÍ (precios) ======
 var CURSOS={
   basico:{nombre:"Excel Básico",precio:39000},
   intermedio:{nombre:"Excel Intermedio",precio:59000},
@@ -120,7 +122,7 @@ document.querySelectorAll("[data-precio]").forEach(function(e){var c=CURSOS[e.ge
 document.querySelectorAll("[data-comprar]").forEach(function(b){b.onclick=function(){
   var c=CURSOS[b.getAttribute("data-comprar")],p=document.getElementById("pago");
   p.innerHTML="<b>"+c.nombre+" · "+pesos(c.precio)+"</b><ol>"
-   +"<li>Transfiere "+pesos(c.precio)+" por Bre-B a la llave <b>"+LLAVE+"</b>.</li>"
+   +"<li>Transfiere "+pesos(c.precio)+" "+DONDE+".</li>"
    +"<li>Envía el comprobante con tu nombre y el curso a <a href=\"mailto:"+CORREO+"?subject="+encodeURIComponent("Pago curso "+c.nombre)+"\">"+CORREO+"</a>.</li>"
    +"<li>Cuando verifiquemos el pago te enviamos tu código de acceso. Con ese código abres el quiz y descargas tu certificado.</li></ol>"
    +"<p class=\"mini\" style=\"margin:10px 0 0\">Por ahora el pago es por transferencia y la entrega del código es manual.</p>";
