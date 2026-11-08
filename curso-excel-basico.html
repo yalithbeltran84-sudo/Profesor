@@ -55,25 +55,19 @@ fieldset label{display:block;padding:5px 0;font-size:16px;color:var(--ink);curso
 <header><a class="logo" href="index.html">Profesor</a><nav><a href="index.html">Inicio</a><a href="index.html#cursos">Cursos</a><a href="terminos.html">Términos de uso</a></nav></header>
 
 <h1>Excel Básico para contabilidad</h1>
-<p class="lead">8 horas · 7 módulos · quiz final y certificado. Este es el módulo de muestra del curso.</p>
+<p class="lead">8 horas · 7 módulos · quiz final y certificado. Todo el curso se abre con tu código de acceso.</p>
 
 <section>
 <h2>Contenido del curso</h2>
-<ol class="mods"><li class="mod on"><b>Módulo 1</b> · Primeros pasos<small>1 h · disponible</small></li><li class="mod"><b>Módulo 2</b> · Formato y orden<small>1 h · próximamente</small></li><li class="mod"><b>Módulo 3</b> · Fórmulas básicas<small>1,5 h · próximamente</small></li><li class="mod"><b>Módulo 4</b> · Funciones esenciales<small>1,5 h · próximamente</small></li><li class="mod"><b>Módulo 5</b> · Datos: ordenar, filtrar y formato condicional<small>1 h · próximamente</small></li><li class="mod"><b>Módulo 6</b> · Gráficos y reportes<small>1 h · próximamente</small></li><li class="mod"><b>Módulo 7</b> · Práctica contable<small>1 h · próximamente</small></li></ol>
+<ol class="mods"><li class="mod" data-m="1"><b>Módulo 1</b> · Primeros pasos<small>1 h · con código de acceso</small></li><li class="mod" data-m="2"><b>Módulo 2</b> · Formato y orden<small>1 h · con código de acceso</small></li><li class="mod" data-m="3"><b>Módulo 3</b> · Fórmulas básicas<small>1,5 h · con código de acceso</small></li><li class="mod" data-m="4"><b>Módulo 4</b> · Funciones esenciales<small>1,5 h · con código de acceso</small></li><li class="mod" data-m="5"><b>Módulo 5</b> · Datos: ordenar, filtrar y formato condicional<small>1 h · con código de acceso</small></li><li class="mod" data-m="6"><b>Módulo 6</b> · Gráficos y reportes<small>1 h · con código de acceso</small></li><li class="mod" data-m="7"><b>Módulo 7</b> · Práctica contable<small>1 h · con código de acceso</small></li></ol>
 </section>
 
-<section>
-<h2>Módulo 1 · Primeros pasos</h2>
-<div class="video" id="video">El video de este módulo se publicará pronto.</div>
-<p><a href="practica-modulo-1.xlsx" download>Descargar el archivo de práctica del módulo 1</a></p>
-<div class="lec"><label><input type="checkbox" data-l="1.1"> <b>1.1 La pantalla de Excel</b></label><p>Conoce la cinta de opciones, la barra de fórmulas, el cuadro de nombres y las pestañas de las hojas. Casi todo lo que haces en Excel parte de estos cuatro lugares.</p></div><div class="lec"><label><input type="checkbox" data-l="1.2"> <b>1.2 Libros, hojas, filas y columnas</b></label><p>Un libro de Excel tiene una o varias hojas. Las columnas se nombran con letras y las filas con números, así que la celda A1 es el cruce de la columna A con la fila 1.</p></div><div class="lec"><label><input type="checkbox" data-l="1.3"> <b>1.3 Escribir y editar datos</b></label><p>Excel distingue texto y números. Escribe en una celda y confirma con Enter o Tab. Para corregir sin borrar todo, entra a la celda con F2. Si te equivocas, deshaz con Ctrl + Z.</p></div><div class="lec"><label><input type="checkbox" data-l="1.4"> <b>1.4 Guardar y abrir archivos</b></label><p>Guarda tu trabajo seguido y usa nombres claros, por ejemplo «gastos-octubre». El formato normal es .xlsx. Antes de cerrar, confirma que quedó guardado.</p></div>
-<p class="msg" id="prog"></p><div class="bar"><i id="barra"></i></div>
-<p class="msg">Este módulo es gratis. Para el resto del curso, el quiz final y el certificado necesitas tu código de acceso.</p>
-</section>
+
+<div id="pagos-mod"></div>
 
 <section>
-<h2>Quiz final y certificado</h2>
-<p>Escribe el código que recibiste al comprar el curso (o con el plan Master).</p>
+<h2>Módulos 1 a 7, quiz final y certificado</h2>
+<p>Escribe el código de acceso que recibiste al comprar el curso. Al entrar se abren los 7 módulos y el quiz.</p>
 <div class="row"><input type="text" id="cod" placeholder="Código de acceso" aria-label="Código de acceso" autocomplete="off"><button class="btn" type="button" id="entrar">Entrar</button></div>
 <p class="msg" id="gate"></p>
 <div id="quiz" hidden>
@@ -91,24 +85,35 @@ fieldset label{display:block;padding:5px 0;font-size:16px;color:var(--ink);curso
 </div>
 <script>
 var CURSO="excel-basico",KC="profesor_curso_codigo",KP="profesor_curso_excel_basico";
-var VIDEO_MODULO_1=""; // Cuando grabes el video, pega aquí el ID del video de YouTube (por ejemplo "dQw4w9WgXcQ")
-var PREG=[{"p": "En Excel, ¿cómo se llama el cruce de una fila con una columna?", "o": ["Rango", "Celda", "Hoja", "Libro"]}, {"p": "¿Con qué símbolo debe comenzar toda fórmula?", "o": ["=", "$", "#", "&"]}, {"p": "¿Qué hace la fórmula =SUMA(B2:B6)?", "o": ["Multiplica B2 por B6", "Cuenta cuántas celdas hay", "Suma los valores de B2 hasta B6", "Calcula el promedio de B2 y B6"]}, {"p": "¿Cuál referencia mantiene fija la celda al copiar la fórmula hacia abajo?", "o": ["A1", "A1:A5", "$A$1", "=A1"]}, {"p": "Si A1 contiene 200 y B1 contiene 15 %, ¿qué resultado da =A1*B1?", "o": ["15", "215", "30", "3.000"]}, {"p": "¿Qué función cuenta cuántas celdas contienen números?", "o": ["SUMA", "PROMEDIO", "CONTAR", "MAX"]}, {"p": "Si A1 vale 45, ¿qué muestra =SI(A1>=60;\"Aprobó\";\"Reprobó\")?", "o": ["Aprobó", "Reprobó", "45", "Error"]}, {"p": "¿Qué formato conviene para mostrar valores en pesos?", "o": ["Fecha", "Moneda o Contabilidad", "Texto", "Porcentaje"]}, {"p": "¿Qué tipo de gráfico es mejor para mostrar cómo cambian las ventas mes a mes?", "o": ["Circular", "Embudo", "Mapa", "Líneas"]}, {"p": "¿Para qué sirve «Quitar duplicados»?", "o": ["Ordenar de menor a mayor", "Eliminar filas repetidas", "Sumar valores iguales", "Proteger la hoja"]}];
+var PREG=[]; // las preguntas llegan del servidor solo con un código válido
 var $=function(i){return document.getElementById(i)},codigo="";
 function guardar(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function leer(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function post(accion,extra){return fetch("/api/curso",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({accion:accion,curso:CURSO,codigo:codigo},extra||{}))}).then(function(r){return r.json()})}
-if(VIDEO_MODULO_1){$("video").innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(VIDEO_MODULO_1)+'" title="Módulo 1" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>'}
 // Progreso del módulo 1 (se guarda en este navegador)
 var hechas=(leer(KP,{}).lecciones)||{},checks=document.querySelectorAll("input[data-l]");
-function progreso(){var n=0;checks.forEach(function(c){if(c.checked)n++});$("prog").textContent="Llevas "+n+" de "+checks.length+" lecciones del módulo 1.";$("barra").style.width=(n*100/checks.length)+"%"}
-checks.forEach(function(c){c.checked=!!hechas[c.getAttribute("data-l")];c.onchange=function(){hechas[c.getAttribute("data-l")]=c.checked;var p=leer(KP,{});p.lecciones=hechas;guardar(KP,p);progreso()}});progreso();
-// Preguntas
-var pr=$("preg");PREG.forEach(function(q,i){var f=document.createElement("fieldset"),l=document.createElement("legend");l.textContent=(i+1)+". "+q.p;f.appendChild(l);
-q.o.forEach(function(t,j){var lb=document.createElement("label"),r=document.createElement("input");r.type="radio";r.name="q"+i;r.value=j;lb.appendChild(r);lb.appendChild(document.createTextNode(" "+t));f.appendChild(lb)});pr.appendChild(f)});
+function progreso(){var cs=document.querySelectorAll("input[data-l]"),n=0;if(!cs.length){$("prog").textContent="";$("barra").style.width="0";return}cs.forEach(function(c){if(c.checked)n++});$("prog").textContent="Llevas "+n+" de "+cs.length+" lecciones"+(cs.length>4?".":" del módulo 1.");$("barra").style.width=(n*100/cs.length)+"%"}
+function enlazar(c){c.checked=!!hechas[c.getAttribute("data-l")];c.onchange=function(){hechas[c.getAttribute("data-l")]=c.checked;var p=leer(KP,{});p.lecciones=hechas;guardar(KP,p);progreso()}}
+checks.forEach(enlazar);
+// Preguntas (llegan del servidor)
+function pintarPreg(){var pr=$("preg");pr.innerHTML="";PREG.forEach(function(q,i){var f=document.createElement("fieldset"),l=document.createElement("legend");l.textContent=(i+1)+". "+q.p;f.appendChild(l);
+q.o.forEach(function(t,j){var lb=document.createElement("label"),r=document.createElement("input");r.type="radio";r.name="q"+i;r.value=j;lb.appendChild(r);lb.appendChild(document.createTextNode(" "+t));f.appendChild(lb)});pr.appendChild(f)})}
+// Módulos pagados (llegan del servidor)
+function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML}
+function pintarModulos(ms){var box=$("pagos-mod");box.innerHTML="";ms.forEach(function(m){
+var s=document.createElement("section");s.id="modulo-"+m.n;
+var v=m.video?'<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(m.video)+'" title="Módulo '+m.n+'" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>':'<div class="video">El video de este módulo se publicará pronto.</div>';
+var a=m.archivo?'<p><button class="btn" type="button" data-arch="'+m.n+'">Descargar el archivo de práctica del módulo '+m.n+'</button></p>':'';
+var ls=m.lecciones.map(function(l,i){var id=m.n+"."+(i+1);return '<div class="lec"><label><input type="checkbox" data-l="'+id+'"> <b>'+esc(l[0])+'</b></label><p>'+esc(l[1])+'</p></div>'}).join("");
+s.innerHTML="<h2>Módulo "+m.n+" · "+esc(m.titulo)+"</h2>"+v+a+ls;box.appendChild(s);
+var li=document.querySelector('.mod[data-m="'+m.n+'"]');if(li){li.className="mod on";li.querySelector("small").textContent=m.horas+" · disponible"}});
+box.querySelectorAll("input[data-l]").forEach(enlazar);progreso();
+box.querySelectorAll("[data-arch]").forEach(function(b){b.onclick=function(){fetch("/api/curso",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accion:"archivo",curso:CURSO,codigo:codigo,modulo:Number(b.getAttribute("data-arch"))})}).then(function(r){if(!r.ok)throw 0;return r.blob()}).then(function(bl){var u=URL.createObjectURL(bl),a=document.createElement("a");a.href=u;a.download="practica-modulo-"+b.getAttribute("data-arch")+".xlsx";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},3000)}).catch(function(){alert("No pude descargar el archivo. Intenta de nuevo.")})}})}
+function cerrarPagado(){PREG=[];$("preg").innerHTML="";$("pagos-mod").innerHTML="";document.querySelectorAll(".mod[data-m]").forEach(function(li){li.className="mod";li.querySelector("small").textContent=li.querySelector("small").textContent.replace(/ · disponible$/," · con código de acceso")});progreso()}
 // Acceso
-function abrir(ok,txt){$("quiz").hidden=!ok;var g=$("gate");g.textContent=txt||"";g.className="msg "+(ok?"ok":"err")}
+function abrir(ok,txt){$("quiz").hidden=!ok;if(!ok)cerrarPagado();var g=$("gate");g.textContent=txt||"";g.className="msg "+(ok?"ok":"err")}
 function entrar(c,silencioso){codigo=c.trim();if(!codigo)return;$("gate").textContent="Verificando...";$("gate").className="msg";
-post("validar").then(function(d){if(d.ok){guardar(KC,codigo);abrir(true,"Acceso confirmado.")}else{abrir(false,silencioso?"":"Código no válido para este curso. Revisa que esté bien escrito.")}}).catch(function(){abrir(false,"No pude conectarme. Intenta de nuevo.")})}
+post("contenido").then(function(d){if(d.ok){guardar(KC,codigo);PREG=d.preguntas;pintarPreg();pintarModulos(d.modulos);abrir(true,"Acceso confirmado. Ya puedes ver los 7 módulos.")}else{abrir(false,silencioso?"":(d.error==="intentos"?"Demasiados intentos. Espera unos minutos.":"Código no válido para este curso. Revisa que esté bien escrito."))}}).catch(function(){abrir(false,"No pude conectarme. Intenta de nuevo.")})}
 $("entrar").onclick=function(){entrar($("cod").value)};$("cod").onkeydown=function(e){if(e.key==="Enter")entrar($("cod").value)};
 var guardado=leer(KC,"");if(guardado)entrar(guardado,true);
 // Enviar quiz
